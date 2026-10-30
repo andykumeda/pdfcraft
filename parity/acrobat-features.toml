@@ -9616,8 +9616,8 @@ milestone = "M13"
 status = "partial"
 commands = []
 tools = ["doc_info", "doc_set_info", "text_extract", "text_edit", "page_rotate", "comment_add", "form_fill"]
-evidence = []
-notes = "Private integrated assistant preview implementation uses shared native providers, in-window chat and existing validated tools. Native/provider/portable acceptance is tracked in docs/assistant-implementation.md; no production or other-platform qualification is claimed."
+evidence = ["crates/ui-egui/src/assistant/host/turn_tests.rs::one_selected_fake_provider_edits_the_live_document_through_the_full_tool_turn", "crates/ui-egui/src/assistant.rs::panel_has_one_shared_settings_control_and_opens_its_editor", "crates/automation/src/tests.rs::shared_session_tools_edit_read_back_undo_redo_save_and_reopen_the_live_document"]
+notes = "Private integrated assistant preview, locally verified and installed, uses shared native providers, in-window chat and existing validated tools. Native/provider/portable acceptance is tracked in docs/assistant-implementation.md; no production or other-platform qualification is claimed."
 
 [[feature]]
 id = "misc.ai-summary"

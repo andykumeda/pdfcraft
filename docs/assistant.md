@@ -1,7 +1,10 @@
 # Integrated desktop assistant preview
 
-Status: implementation in progress; compiled/native acceptance and delivery are tracked in
-[the task ledger](assistant-implementation.md). This is a private preview, not a public release.
+Status: private preview **0.15.0 (`dd68eaed`)** is installed at
+`/Applications/PDFCraft Assistant Preview.app`. Native panel/Settings, local Ollama
+inspection/rotation/read-back/Undo and save/reopen passed. It is ad-hoc signed and not
+notarized. See [the delivery ledger](assistant-implementation.md) for exact source, checks,
+DMG/checksum and remaining other-Mac/Codex acceptance. No public release or push occurred.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
 and checked menu entry indicate that the native side panel is open. Settings opens the shared in-panel connection editor. The same editor is available through

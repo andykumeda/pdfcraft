@@ -70,7 +70,7 @@
 > **Last reviewed:** 2026-10-18 - **Last updated:** 2026-10-18 - **Change:** minor (M4 #3309: bounded iterative named-destination pruning on page deletion; estimates unchanged)
 > **Last reviewed:** 2026-10-18 - **Last updated:** 2026-10-18 - **Change:** minor (M1 #2658: macOS atomic saves retain destination extended attributes, including Finder tags, and reject partial resource-fork reads after size changes. Metadata failures retain the original PDF and unsaved edit. Estimates unchanged)
 
-Private assistant preview integration is in progress; see [the ledger](docs/assistant-implementation.md).
+Private assistant preview is implemented, locally verified and installed; see [the ledger](docs/assistant-implementation.md).
 No public release or readiness estimate changed.
 
 PdfCraft's one-page summary: how close it is to Adobe Acrobat Pro's offline feature set, and what

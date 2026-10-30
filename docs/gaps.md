@@ -386,8 +386,8 @@ update the numbers.
 
 ### 23. Local AI provider
 
-- **Private preview in progress:** shared Codex/OpenAI-compatible providers and an integrated
-  assistant are being connected to existing PDF commands; see [acceptance ledger](assistant-implementation.md).
+- **Private preview implemented and locally verified:** shared Codex/OpenAI-compatible providers and an integrated
+  assistant call existing PDF commands; see [acceptance ledger](assistant-implementation.md).
 - **Still unqualified:** production assistant acceptance and the
   features on it: summarize, ask with page citations, alternate-text and redaction suggestions.
   Acrobat's AI Assistant is a cloud service and out of scope.

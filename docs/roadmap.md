@@ -359,5 +359,5 @@ Estimates unchanged.
 | 2026-10-10 | major | Created from ROADMAP.md §Milestones, §Critical path, §Risks and §Where we're lacking. Merged the duplicated M1, M2, M3 and M14 rows, re-measured Done and Remaining, added Current focus and the ranked upcoming milestones |
 | 2026-10-18 | minor | #3227: M11: integrate upstream b0e5c6eb; retain partial target-version compatibility claims and effective-version reporting, correcting the borrowed version parser lifetime. Scope and estimates unchanged. |
 
-Private integrated assistant preview: implementation in progress; acceptance and delivery are
+Private integrated assistant preview: implemented, locally verified and installed; acceptance and delivery are
 tracked in [the ledger](assistant-implementation.md). No milestone completion is claimed.
