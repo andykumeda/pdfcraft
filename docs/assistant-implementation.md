@@ -2,7 +2,7 @@
 
 Updated 2026-10-29. **Implemented, tested, packaged and Deployed locally.**
 Current delivery: **0.15.0 (`dd68eaed`)**, `/Applications/PDFCraft Assistant Preview.app`.
-No push, public release or external publication occurred. Live Codex/hosted-provider and other-Mac acceptance remain open.
+No public release was created. The user subsequently authorized a GitHub fork and branch push; see the source distribution record below. Live Codex/hosted-provider and other-Mac acceptance remain open.
 
 Reference: WordCraft `4dd7cf7d`, craft-libs `bf932b91643c287502d539b88f08abd5796c9447`.
 PDFCraft baseline `726ecf26`; referenced local `plan/` source documents were absent at baseline.
@@ -130,3 +130,16 @@ read/edit/read-back/Undo/save/reopen. Live PDFCraft Codex and hosted API inferen
 local-model reliability, native Windows/Linux/FreeBSD, and large/complex real-document acceptance
 remain unperformed. The initial assistant intentionally exposes only the documented tool subset;
 it does not establish full external-MCP or Acrobat AI parity.
+
+## Authorized source distribution
+
+After local delivery, the user explicitly authorized creating `andykumeda/pdfcraft` and
+pushing `feat/integrated-assistant` there, without a public release. The upstream push to
+`storytold/pdfcraft` was rejected with HTTP 403; no upstream branch was changed. The fork
+was created successfully under the verified `andykumeda` account. `origin` remains upstream;
+the `fork` remote targets `https://github.com/andykumeda/pdfcraft.git`.
+
+This documentation-only source distribution update does not change the installed build or
+DMG source `dd68eaeda15c93d895111c35f705050744d75686`. No GitHub release, tag, installer upload,
+or upstream pull request is part of this authorization. Branch publication is verified by
+comparing the remote branch commit to local HEAD after pushing.

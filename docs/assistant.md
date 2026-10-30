@@ -4,7 +4,7 @@ Status: private preview **0.15.0 (`dd68eaed`)** is installed at
 `/Applications/PDFCraft Assistant Preview.app`. Native panel/Settings, local Ollama
 inspection/rotation/read-back/Undo and save/reopen passed. It is ad-hoc signed and not
 notarized. See [the delivery ledger](assistant-implementation.md) for exact source, checks,
-DMG/checksum and remaining other-Mac/Codex acceptance. No public release or push occurred.
+DMG/checksum and remaining other-Mac/Codex acceptance. No public release was created. The user subsequently authorized pushing the source branch to the `andykumeda/pdfcraft` fork.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
 and checked menu entry indicate that the native side panel is open. Settings opens the shared in-panel connection editor. The same editor is available through
