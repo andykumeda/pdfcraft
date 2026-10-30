@@ -4,7 +4,7 @@ Status: implementation in progress; compiled/native acceptance and delivery are 
 [the task ledger](assistant-implementation.md). This is a private preview, not a public release.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
-and checked menu entry indicate that the native side panel is open. Its Settings button opens
+and checked menu entry indicate that the native side panel is open. Settings opens the shared in-panel connection editor. The same editor is available through
 **Preferences → Assistant settings**. One model handles both chat and requested PDF actions.
 
 Use the shared connection/model controls for Codex or OpenAI-compatible providers, including

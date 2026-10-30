@@ -32,3 +32,24 @@ Allowed states: Not started, In progress, Blocked, Verified, Deployed.
 - Native visual/provider acceptance and packaging remain pending. Source commits are being prepared; no installation or public release has occurred.
 - Read-only compatibility discovery: Codex CLI 0.165.0 is available; Ollama 0.40.13 reports installed tool-capable `qwen3:4b-instruct-2507-q4_K_M`. No Codex inference or model download was performed.
 - No preview has been packaged or installed. No private document or live inference used.
+
+## First native candidate and visual correction
+
+Source `7cb1bccf1b9a4ee3b18d34f14e645b35afdd13cc` built successfully as ARM64 release
+in 15m35s. Version/commit-labelled DMG and ZIP plus checksums were produced. Assembled,
+mounted and extracted apps passed strict signature/version checks; signing is ad-hoc,
+not Developer ID signed or notarized. This candidate was **not installed**.
+
+The real toolbar opened the assistant and showed the expected local route using an isolated
+profile and synthetic PDF. Panel and Preferences Settings screenshots were inspected. Visual
+inspection found a redundant header Settings button beside the shared widget's own control.
+The wrapper button is removed; the shared editor remains, and both Settings surfaces show the
+same effective configuration. A synthetic regression failed with the old second button
+(2 controls instead of 1), then passed after restoring the fix. The candidate quit normally
+with no save prompt or document changes. No inference was sent. A corrected source build and
+native/provider acceptance remain pending. Logs: `/private/tmp/pdfcraft-assistant-settings-{mutant,restored}.log`.
+
+Corrected-source gates passed: scoped tests **2281 passed / 8 ignored / zero failed**,
+Clippy, fmt, layers, assets, parity, dependency/advisory policy and WASM (31 crates).
+Exit codes: `/private/tmp/pdfcraft-assistant-visual-fix-checks.json`. Corrected release
+packaging and native/local-provider acceptance remain pending.

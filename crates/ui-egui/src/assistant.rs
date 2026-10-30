@@ -78,6 +78,10 @@ pub fn pane(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
         app.assistant.widget.target_label =
             app.active_ids().and_then(|(_, id)| app.session.get(id)).map(|doc| doc.name.clone()).unwrap_or_else(|| "No active PDF".into());
     }
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.widget.settings_open {
+        configuration(app, ui);
+    }
     let id = egui::Id::unique("assistant");
     let actions = craft_ui::assistant::show(ui, id, &mut app.assistant.widget, |text| tl!(text).into());
     apply_actions(app, actions);
@@ -93,6 +97,11 @@ pub fn settings(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
     let actions = craft_ui::assistant::settings(ui, id, &mut app.assistant.widget.settings, |text| tl!(text).into());
     apply_actions(app, actions);
     #[cfg(not(target_arch = "wasm32"))]
+    configuration(app, ui);
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn configuration(app: &PdfCraftApp, ui: &mut egui::Ui) {
     if let Some(id) = &app.assistant.widget.settings.app_id
         && let Ok(choice) = craft_ai_native::resolve_choice(&app.assistant.widget.settings.store, id)
     {
@@ -164,10 +173,6 @@ pub(crate) fn panel(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
         egui::Panel::right("assistant_panel").default_size(360.0).size_range(280.0..=600.0).resizable(true).show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(tl!("Assistant"));
-                if ui.button(tl!("Settings")).clicked() {
-                    app.assistant.settings_open = true;
-                    app.dialog = Some(crate::Dialog::Preferences);
-                }
                 if ui.button(tl!("Close")).clicked() {
                     app.assistant.open = false;
                 }
@@ -175,5 +180,35 @@ pub(crate) fn panel(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
             ui.small(tl!("Edits use normal Undo. Undo cannot reverse a saved file on disk."));
             pane(app, ui);
         });
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::*;
+    use egui_kittest::{Harness, kittest::Queryable as _};
+    #[test]
+    fn panel_has_one_shared_settings_control_and_opens_its_editor() {
+        let mut app = PdfCraftApp::new();
+        native::enable_without_profile(&mut app);
+        app.assistant.open = true;
+        let mut fonts = false;
+        let mut harness = Harness::builder().with_size(egui::vec2(1000.0, 700.0)).build_ui_state(
+            move |ui, app: &mut PdfCraftApp| {
+                if !fonts {
+                    crate::theme::install_fonts(ui.ctx());
+                    fonts = true;
+                    return;
+                }
+                panel(app, ui);
+            },
+            app,
+        );
+        harness.run();
+        assert_eq!(harness.query_all_by_label("Settings").count(), 1);
+        harness.get_by_label("Settings").click();
+        harness.run();
+        assert!(harness.state().assistant.widget.settings_open);
+        assert_eq!(harness.query_all_by_label("Settings").count(), 1);
     }
 }
