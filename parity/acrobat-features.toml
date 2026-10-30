@@ -9613,11 +9613,11 @@ title = "AI provider interface (local model or own endpoint), off by default"
 area = "N"
 tier = "P2"
 milestone = "M13"
-status = "planned"
+status = "partial"
 commands = []
-tools = []
+tools = ["doc_info", "doc_set_info", "text_extract", "text_edit", "page_rotate", "comment_add", "form_fill"]
 evidence = []
-notes = ""
+notes = "Private integrated assistant preview implementation uses shared native providers, in-window chat and existing validated tools. Native/provider/portable acceptance is tracked in docs/assistant-implementation.md; no production or other-platform qualification is claimed."
 
 [[feature]]
 id = "misc.ai-summary"

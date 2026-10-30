@@ -142,3 +142,17 @@ is built in memory.
 | #5178 | Read OpenType-wrapped CFF programs for embedded simple fonts. | `open_type_cff_simple_font` |
 | #5199 | Preserve gray under nonseparable Color blending in vello_cpu. | `nonseparable_gray` |
 | #5228 | Blend supported isolated DeviceCMYK groups in their ink space. | `raster::tests::isolated_cmyk_groups` |
+
+## Assistant directory lookup compatibility
+
+`dirs-sys` 0.5.0 is the original crates.io release (upstream repository
+https://github.com/dirs-dev/dirs-sys-rs), MIT OR Apache-2.0 with unchanged license files.
+The release checksum is recorded in the provenance below. Upstream README badge images
+are omitted. PdfCraft removes its
+`option-ext` dependency and replaces the sole Option membership call with standard
+`Option` equality. No MPL code is copied. Platform directory lookup and existing Craft
+configuration/Codex home locations remain unchanged. `cargo xtask deny` verifies that
+MPL `option-ext` is absent; the helper's existing parser tests cover directory selection.
+Remove this vendor when upstream removes the dependency.
+
+Upstream release SHA-256: `e01a3366d27ee9890022452ee61b2b63a67e6f13f58900b651ff5665f0bb1fab`.

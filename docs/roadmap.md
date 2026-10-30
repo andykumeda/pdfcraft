@@ -255,6 +255,7 @@ Estimates unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-29 | minor | Private assistant work recorded in its ledger; milestone estimates unchanged |
 | 2026-10-27 | minor | M10: OCR stages SHA-256-verified ONNX models after the upstream RTEN URL brownout; discovery prefers a complete ONNX pair per directory, falls back to a complete RTEN pair, and never mixes formats or directories; language/web limits and estimates unchanged. |
 | 2026-10-24 | minor | M3, #3970 follow-up: the button release given back after a window move or resize goes before the pointer leaving, so hover doesn't stick. Estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
@@ -357,3 +358,6 @@ Estimates unchanged.
 | 2026-10-12 | minor | M8: image redaction removes alternate images and unsupported masks only on affected images. Estimates unchanged. |
 | 2026-10-10 | major | Created from ROADMAP.md §Milestones, §Critical path, §Risks and §Where we're lacking. Merged the duplicated M1, M2, M3 and M14 rows, re-measured Done and Remaining, added Current focus and the ranked upcoming milestones |
 | 2026-10-18 | minor | #3227: M11: integrate upstream b0e5c6eb; retain partial target-version compatibility claims and effective-version reporting, correcting the borrowed version parser lifetime. Scope and estimates unchanged. |
+
+Private integrated assistant preview: implementation in progress; acceptance and delivery are
+tracked in [the ledger](assistant-implementation.md). No milestone completion is claimed.

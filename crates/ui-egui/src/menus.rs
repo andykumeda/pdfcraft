@@ -49,6 +49,7 @@ const ROTATE_CCW: &str = "view.rotate.ccw";
 
 /// The menu-only items: id, English label and the shortcut shown (the keys stay with the view).
 const EXTRA: &[(&str, &str, Option<Shortcut>)] = &[
+    ("ui.assistant", "Assistant", None),
     (CUT, "Cut", Some(Shortcut::cmd("X"))),
     (PASTE, "Paste", Some(Shortcut::cmd("V"))),
     (DELETE, "Delete", Some(Shortcut { command: false, shift: false, mac_ctrl: false, key: "Delete" })),
@@ -168,7 +169,7 @@ const DISPLAY: &[&str] = &[
     "view.fit_one_page",
 ];
 const THEMES: &[&str] = &["view.theme.system", "view.theme.light", "view.theme.dark"];
-const PANES: &[&str] = &["view.side_panel", "view.tools_pane"];
+const PANES: &[&str] = &["ui.assistant", "view.side_panel", "view.tools_pane"];
 const PANE_COMMANDS: &[&str] = &["comment.list", "form.fields", "ui.dock.reset"];
 const MODES: &[&str] = &["view.full_screen", "view.read_mode"];
 const PAGES: &[&str] = &[
@@ -470,6 +471,7 @@ impl PdfCraftApp {
         let text = ctx.text_edit_focused() && matches!(command.id.as_str(), "edit.undo" | "edit.redo" | "edit.copy" | CUT | PASTE | SELECT_ALL);
         let enabled = text
             || match command.id.as_str() {
+                "ui.assistant" => true,
                 NO_RECENT => false,
                 "file.open_recent" => index.is_none_or(|i| i < self.recent.len()),
                 "file.clear_recent" => !self.recent.is_empty(),
@@ -488,6 +490,7 @@ impl PdfCraftApp {
                 id => enabled_id(id),
             };
         let checked = match command.id.as_str() {
+            "ui.assistant" => Some(self.assistant.open),
             "view.layout.single" => Some(view.is_some_and(|v| v.layout == PageLayout::Single)),
             "view.layout.two_up" => Some(view.is_some_and(|v| v.layout == PageLayout::TwoUp)),
             "view.continuous" => Some(view.is_some_and(|v| v.continuous())),
@@ -524,6 +527,7 @@ impl PdfCraftApp {
             [true, false].map(|pressed| egui::Event::Key { key, physical_key: None, pressed, repeat: false, modifiers })
         };
         match command.id.as_str() {
+            "ui.assistant" => self.assistant.open = !self.assistant.open,
             "file.open_recent" if index.is_some() => {
                 if let Some(path) = index.and_then(|i| self.recent.get(i)).map(|r| r.path.clone()) {
                     self.open_recent(&path);
@@ -688,6 +692,19 @@ mod tests {
                 "{id} runs something"
             );
         }
+    }
+
+    #[test]
+    fn assistant_is_discoverable_and_checked_even_without_an_open_pdf() {
+        let (mut app, ctx) = app(&[]);
+        let command = CommandRef::new("ui.assistant");
+        assert!(app.menu_state(&ctx, &command).enabled);
+        assert_eq!(item(&linux(&app, &ctx), &command).kind, ItemKind::Check(false));
+        app.run_menu_command(&ctx, &command);
+        assert!(app.assistant.open);
+        assert_eq!(item(&linux(&app, &ctx), &command).kind, ItemKind::Check(true));
+        app.run_menu_command(&ctx, &command);
+        assert!(!app.assistant.open);
     }
 
     #[test]

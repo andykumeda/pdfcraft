@@ -71,6 +71,12 @@
 
 ---
 
+## Integrated assistant preview
+
+The private desktop assistant uses an in-window panel and shared Craft provider settings. See
+[setup, supported tools and safety boundaries](docs/assistant.md) and the
+[implementation and delivery ledger](docs/assistant-implementation.md) for current verification.
+
 ## Community
 
 PdfCraft is part of [ArtCraft](https://getartcraft.com). Come say hello, get help and follow development:

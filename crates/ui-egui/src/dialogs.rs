@@ -68,6 +68,9 @@ struct Pending {
 }
 
 pub fn show(app: &mut PdfCraftApp, ctx: &egui::Context) {
+    if app.dialog != Some(Dialog::Preferences) {
+        app.assistant.settings_open = false;
+    }
     // The page sets hover cursors from the raw pointer position (form fields, links, comments)
     // before any dialog is drawn, and nothing under a modal's backdrop takes clicks. Start from
     // the arrow; the modal's own widgets set theirs as they are drawn.
@@ -1354,7 +1357,16 @@ fn dialog_preferences(ui: &mut egui::Ui, app: &mut PdfCraftApp, req: &mut Pendin
     // cards and other full-width rows (#3557).
     ui.scope(|ui| {
         ui.spacing_mut().scroll.floating = false;
-        egui::ScrollArea::vertical().max_height(max).min_scrolled_height(max).show(ui, |ui| crate::js_ui::preferences_body(ui, app, &t));
+        egui::ScrollArea::vertical().max_height(max).min_scrolled_height(max).show(ui, |ui| {
+            if app.assistant.settings_open {
+                if ui.button(tl!("Back to Preferences")).clicked() {
+                    app.assistant.settings_open = false;
+                }
+                crate::assistant::settings(app, ui);
+            } else {
+                crate::js_ui::preferences_body(ui, app, &t);
+            }
+        });
     });
     req.close = crate::js_ui::preferences_buttons(ui);
     false

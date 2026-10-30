@@ -72,6 +72,7 @@ impl Host for crate::PdfCraftApp {
         #[cfg(target_arch = "wasm32")]
         let pending_opens: Vec<Value> = Vec::new();
         json!({
+            "assistant": {"open":self.assistant.open,"busy":self.assistant.widget.busy,"settings_busy":self.assistant.widget.settings.busy,"model":self.assistant.widget.chat_route,"status":self.assistant.widget.status,"error":self.assistant.widget.error},
             "side_panels": crate::side_panels::state(self),
             "documents": docs,
             "pending_opens": pending_opens,
@@ -150,6 +151,9 @@ impl Host for crate::PdfCraftApp {
     }
 
     fn command(&mut self, id: &str) -> Reply {
+        if let Some(result) = crate::assistant::command(self, id, &json!({})) {
+            return result;
+        }
         let spec = pdfcraft_engine::commands::command(id).ok_or_else(|| format!("unknown command {id:?} (see ui.commands)"))?;
         if !self.command_enabled(spec) {
             return Err(format!("{id} is disabled right now"));
@@ -163,11 +167,16 @@ impl Host for crate::PdfCraftApp {
             .iter()
             .map(|c| json!({ "id": c.id, "label": c.label, "menu": c.menu, "enabled": self.command_enabled(c), "shortcut": c.shortcut.map(|s| s.label(cfg!(target_os = "macos"))) }))
             .collect();
+        list.extend(crate::assistant::commands());
         list.push(json!({"id": "ui.panel", "label": "Side panel", "enabled": true, "params": "panel: tools or side; open: boolean; width: number (clamped to the panel's limits)"}));
         json!({ "commands": list })
     }
 
     fn set(&mut self, key: &str, value: &str) -> Reply {
+        if key == "assistant.send" {
+            return crate::assistant::command(self, "ui.assistant.send", &json!({"text":value}))
+                .ok_or_else(|| "assistant unavailable".to_string())?;
+        }
         self.set_option(key, value).map(|()| json!({ "set": key, "value": value }))
     }
 

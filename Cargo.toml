@@ -12,18 +12,20 @@ rust-version = "1.95"
 repository = "https://github.com/storytold/pdfcraft"
 
 [workspace.dependencies]
+craft-ai-core = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "bf932b91643c287502d539b88f08abd5796c9447" }
+craft-ai-native = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "bf932b91643c287502d539b88f08abd5796c9447" }
 # Shared frontend components; engines remain independent of egui.
-craft-ui = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545", features = ["serde"] }
+craft-ui = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "bf932b91643c287502d539b88f08abd5796c9447", features = ["serde"] }
 # Quit the macOS way (#1136): ⌘Q asks about unsaved changes, and closing quits through `terminate:`.
-craft-quit = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545" }
+craft-quit = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "bf932b91643c287502d539b88f08abd5796c9447" }
 # One menu definition for the native macOS menu bar and the in-window bar elsewhere.
-craft-menu = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545" }
-craft-keymap = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545", default-features = false }
+craft-menu = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "bf932b91643c287502d539b88f08abd5796c9447" }
+craft-keymap = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "bf932b91643c287502d539b88f08abd5796c9447", default-features = false }
 # Shared system spooler; document composition remains in pdfcraft-print.
-craft-print = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545" }
+craft-print = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "bf932b91643c287502d539b88f08abd5796c9447" }
 # Whether a path stored in a document may be opened (GoToR link targets).
-craft-docpath = { version = "0.1.0", git = "https://github.com/storytold/craft-libs", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545" }
-craft-update = { git = "https://github.com/storytold/craft-libs", version = "=0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545", features = ["egui"] }
+craft-docpath = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "bf932b91643c287502d539b88f08abd5796c9447" }
+craft-update = { git = "https://github.com/andykumeda/craft-libs", version = "=0.1.0", rev = "bf932b91643c287502d539b88f08abd5796c9447", features = ["egui"] }
 # internal
 pdfcraft-geom = { path = "crates/geom", version = "0.15.0" }
 pdfcraft-filters = { path = "crates/filters", version = "0.15.0" }
@@ -120,6 +122,8 @@ codegen-units = 1
 
 # Vendored, patched third-party crates (see vendor/README.md). Each patch is meant to go upstream.
 [patch.crates-io]
+# Keep native assistant path discovery permissive; no MPL Option extension is linked.
+dirs-sys = { path = "vendor/dirs-sys" }
 hayro-interpret = { path = "vendor/hayro-interpret" }
 hayro = { path = "vendor/hayro" }
 hayro-syntax = { path = "vendor/hayro-syntax" }

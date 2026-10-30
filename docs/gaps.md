@@ -386,7 +386,9 @@ update the numbers.
 
 ### 23. Local AI provider
 
-- **Missing:** the opt-in provider interface (local model or the user's own endpoint) and the
+- **Private preview in progress:** shared Codex/OpenAI-compatible providers and an integrated
+  assistant are being connected to existing PDF commands; see [acceptance ledger](assistant-implementation.md).
+- **Still unqualified:** production assistant acceptance and the
   features on it: summarize, ask with page citations, alternate-text and redaction suggestions.
   Acrobat's AI Assistant is a cloud service and out of scope.
 - **Estimate:** 20–40 h. **Doc:** [target-app-parity.md](target-app-parity.md).
@@ -403,6 +405,7 @@ update the numbers.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-29 | minor | Private assistant provider integration; production readiness and estimates unchanged |
 | 2026-10-25 | minor | Gaps 5 and 14 current state: native release builds embed LXGW WenKai Lite for Simplified Chinese, while the web build has no Hans face; Arabic catalogs stay logical with explicit RTL label direction and mirrored stock chrome, while native/browser RTL input, IME and complex workflows remain unqualified. Estimates unchanged. |
 | 2026-10-19 | minor | Gap 2: a Type 0 font whose `/ToUnicode` is the name `/Identity-H` or `/Identity-V` (WSCAD) reads its codes as Unicode, so such pages have text to select, find and edit (hayro-interpret patch 44, `view.render-cid-fonts`). Estimates unchanged. |
 | 2026-10-15 | minor | Gap 21: the side-by-side view had already shipped; the Compare panel filters text changes and visual differences. Estimate 10–20 h → 8–16 h |

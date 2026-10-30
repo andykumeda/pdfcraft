@@ -22,7 +22,9 @@ handwritten JS/TS, in the product or the build.
 ## Layers
 
 `cargo xtask layers` enforces the layering (`xtask/src/layers.rs`). A crate may depend only on
-crates in lower layers; nothing below L7 may depend on egui, winit, eframe or rfd; L0–L1 crates are
+crates in lower layers, with explicit same-layer service edges in the validator. The
+assistant permits `ui-egui → automation` to reuse headless tools; nothing below L7
+may depend on egui, winit, eframe or rfd; L0–L1 crates are
 standalone and publishable.
 
 | Layer | Crates today | Role |
@@ -79,6 +81,15 @@ The PDF object graph *is* the model (`crates/engine/README.md` §The editing mod
   (`export`, `render`); FDF/XFDF/XML/CSV/TXT form and comment data (`xfdf`); PKCS #12, X.509,
   PEM/DER certificates (`sign`). Full matrix: [file-format-parity.md](file-format-parity.md).
 
+## Integrated assistant preview
+
+The native UI hosts shared `craft-ui` assistant widgets and `craft-ai-native` providers,
+configuration, credential storage and history. Worker tool requests cross a bounded channel to
+the UI thread. `Automation::call_on_session` uses the live GUI Session and its Undo history,
+with per-turn document/revision/selection/file guards and post-edit read-back. No MCP server
+or control listener starts implicitly. Browser inference is unavailable. Current evidence and
+limits: [assistant ledger](assistant-implementation.md).
+
 ## Agent control
 
 Every user-facing feature is reachable headlessly (`AGENTS.md` §3):
@@ -113,6 +124,7 @@ built by `.github/workflows/release.yml` ([releasing.md](releasing.md)).
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-29 | minor | Private integrated assistant: shared native services, UI-thread live-session tools and preview isolation; acceptance tracked separately |
 | 2026-10-23 | minor | `xtask ci` prints the translation gaps (`xtask i18n-report`); a missing translation never fails it |
 | 2026-10-23 | minor | `xtask ci` runs nextest and doctests, checks the CLI without default features, and checks wasm in one call |
 | 2026-10-10 | major | Created from the code on main (crate list, `xtask/src/layers.rs`, crate READMEs, `vendor/README.md`) |

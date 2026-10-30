@@ -42,6 +42,11 @@ impl ObjectSelection {
         self.blocked_page = None;
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
+    pub(crate) fn assistant_identity(&self) -> (Option<usize>, Vec<ObjectTarget>) {
+        (self.page, self.selected.iter().map(|object| object.target).collect())
+    }
+
     pub fn count(&self) -> usize {
         self.selected.len()
     }

@@ -61,6 +61,7 @@ pub use recovery::{AUTOSAVE_SECS, RecoveryMeta, RecoveryStore};
 use theme::{ThemeKind, ThemePreference};
 
 mod app;
+mod assistant;
 mod hooks;
 mod persist;
 mod platform;
@@ -232,6 +233,7 @@ struct PendingOpen {
 }
 
 pub struct PdfCraftApp {
+    pub(crate) assistant: assistant::Assistant,
     /// Tools side and pane widths; which panes are open is `left_open` and `right`.
     pub side_panels: side_panels::SidePanels,
     pub session: Session,

@@ -355,6 +355,9 @@ fn date_language_picker_name(l: &pdfcraft_engine::dates::DateLanguage, drawable:
 /// area; [`preferences_buttons`] goes below it, outside the scroll, so OK is always in reach.
 pub(crate) fn preferences_body(ui: &mut egui::Ui, app: &mut PdfCraftApp, t: &Tokens) {
     ui.label(egui::RichText::new(tl!("Preferences")).font(theme::semibold(18.0)));
+    if ui.button(tl!("Assistant settings")).clicked() {
+        app.assistant.settings_open = true;
+    }
     ui.horizontal(|ui| {
         let label = ui.label(tl!("Interface language"));
         // A native name is only drawn when these fonts can draw it; otherwise the English name

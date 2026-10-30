@@ -104,6 +104,8 @@ pub const SIDEWAYS: &[(&str, &str)] = &[
     ("sign", "security"),
     ("ui-egui", "ui-common"),
     ("ui-egui", "platform"),
+    // The integrated assistant dispatches the existing headless tools on the GUI Session.
+    ("ui-egui", "automation"),
     ("automation", "platform"),
 ];
 
