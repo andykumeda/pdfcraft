@@ -63,7 +63,7 @@ impl Automation {
         let keys = self.listed.get(&(doc, page));
         if keys.is_none() && self.evicted.contains(&doc) {
             return Err(ToolError::InvalidArgs(format!(
-                "page {} has no paragraph listing any more: too many pages were listed and the oldest listings were dropped. List the page again with text_paragraphs",
+                "page {} has no paragraph listing any more: its cached listing was invalidated. List the page again with text_paragraphs",
                 page + 1
             )));
         }

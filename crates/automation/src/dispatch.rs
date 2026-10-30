@@ -15,6 +15,7 @@ pub enum Content {
 impl Automation {
     /// Run the tool `name` with JSON `args` (an object; `null` means no arguments).
     pub fn call(&mut self, name: &str, args: &Value) -> Result<Vec<Content>> {
+        self.prepare_session_caches();
         let empty = json!({});
         let args = if args.is_null() { &empty } else { args };
         if !args.is_object() {
@@ -807,6 +808,7 @@ impl Automation {
             "comment_delete" => self.comment_delete(&a)?,
             other => return Err(ToolError::UnknownTool(other.into())),
         };
+        self.cache_sources = self.session.docs().iter().map(|doc| (doc.id, Arc::downgrade(&doc.saved_bytes()))).collect();
         Ok(vec![Content::Json(out)])
     }
 }

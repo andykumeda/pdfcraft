@@ -35,7 +35,7 @@ mod tools;
 
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
-use std::sync::Arc;
+use std::sync::{Arc, Weak};
 
 use pdfcraft_engine::{BlockKey, CombineSource, DocId, Document, Edit, Session, TextBlock, block_overlapping, commands};
 use pdfcraft_platform::staging::{StagingName, staging_suffixes};
@@ -88,6 +88,8 @@ pub struct Automation {
     /// Documents that lost a listing to the cap. A page of one with no listing is refused rather
     /// than read as "a number is a position", which the page may no longer match.
     evicted: HashSet<DocId>,
+    /// Saved-source identities prevent reused document ids in another session from hitting caches.
+    cache_sources: HashMap<DocId, Weak<Vec<u8>>>,
 }
 
 impl Default for Automation {
@@ -106,6 +108,7 @@ impl Automation {
             texts: TextCache::default(),
             listed: HashMap::new(),
             evicted: HashSet::new(),
+            cache_sources: HashMap::new(),
         }
     }
 
@@ -147,6 +150,47 @@ impl Automation {
 
     pub fn session(&self) -> &Session {
         &self.session
+    }
+
+    /// Run an existing tool against the caller's live session, including its Undo history.
+    ///
+    /// No document is reopened or copied. The session is returned even if dispatch unwinds;
+    /// an escaped panic becomes a fixed error without exposing its potentially private payload.
+    /// Callers still own authorization, cancellation and refreshing their document views.
+    pub fn call_on_session(&mut self, session: &mut Session, name: &str, args: &Value) -> Result<Vec<Content>> {
+        self.on_session(session, |automation| automation.call(name, args))
+    }
+
+    fn on_session<T>(&mut self, session: &mut Session, run: impl FnOnce(&mut Self) -> Result<T>) -> Result<T> {
+        std::mem::swap(&mut self.session, session);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| run(self)));
+        std::mem::swap(&mut self.session, session);
+        result.unwrap_or_else(|_| {
+            self.renderers.clear();
+            self.texts = TextCache::default();
+            self.evicted.extend(self.listed.keys().map(|(doc, _)| *doc));
+            self.listed.clear();
+            Err(failed("tool execution failed unexpectedly; inspect the document before retrying"))
+        })
+    }
+
+    fn prepare_session_caches(&mut self) {
+        let sources: HashMap<_, _> = self.session.docs().iter().map(|doc| (doc.id, Arc::downgrade(&doc.saved_bytes()))).collect();
+        let same = |id: &DocId| self.cache_sources.get(id).zip(sources.get(id)).is_some_and(|(old, new)| old.ptr_eq(new));
+        self.renderers.retain(|id, _| same(id));
+        self.evicted.retain(|id| sources.contains_key(id));
+        self.listed.retain(|(id, _), _| {
+            if same(id) {
+                true
+            } else {
+                self.evicted.insert(*id);
+                false
+            }
+        });
+        for id in self.cache_sources.keys().filter(|id| !same(id)) {
+            self.texts.remove(id);
+        }
+        self.cache_sources = sources;
     }
 
     /// Save `bytes` that a caller writes on the session's behalf, such as `pdfcraft-cli run`

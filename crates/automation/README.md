@@ -11,6 +11,7 @@ Agent control for PdfCraft: a headless tool table over the engine, and an opt-in
 let mut a = Automation::new().with_root("/work")?;      // optional: confine all paths
 let doc = a.call("doc_open", &json!({ "path": "in.pdf" }))?;   // Vec<Content>
 a.write_output("page1.png", &png)?;                      // save a result yourself, under the same root rules
+a.call_on_session(&mut gui_session, "page_rotate", &args)? // same validation and the GUI's Undo history
 tools() -> Vec<ToolDef>                                  // name, title, description, input_schema, read_only, destructive, command
 mcp::McpServer::new(a).serve(stdin, stdout)?             // newline-delimited JSON-RPC 2.0
 ```
@@ -22,6 +23,11 @@ and flips. Angles that are not multiples of 90 are refused without changing the 
 its undo/redo history.
 
 `Content` is `Json(Value)` or `Png { data, width, height }`. Errors are `UnknownTool`, `InvalidArgs` (the call didn't match the schema) or `Failed` (a readable message for the agent).
+
+`call_on_session` temporarily lends the caller's session to the existing dispatcher and restores
+both sessions even if dispatch unwinds. The caller owns cancellation, target/file authorization
+and refreshing views. Saved-source identities prevent caches for a reused document ID from
+retargeting an earlier paragraph listing in another session. No listener is created.
 
 ## Conventions
 

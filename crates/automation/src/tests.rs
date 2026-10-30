@@ -1,6 +1,92 @@
 use super::*;
 use pdfcraft_platform::staging::STAGING_ATTEMPTS;
 
+fn shared_json(a: &mut Automation, session: &mut Session, tool: &str, args: Value) -> Value {
+    match a.call_on_session(session, tool, &args).unwrap().remove(0) {
+        Content::Json(value) => value,
+        other => panic!("expected structured {tool} result, got {other:?}"),
+    }
+}
+
+#[test]
+fn shared_session_tools_edit_read_back_undo_redo_save_and_reopen_the_live_document() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut automation = Automation::new().with_root(dir.path()).unwrap();
+    let mut session = Session::new();
+    let original = Arc::new(numbered_pages(2));
+    let id = session.open("synthetic.pdf", None, original.clone(), None).unwrap();
+    let args = json!({"doc":id.0});
+    assert_eq!(shared_json(&mut automation, &mut session, "text_extract", args.clone())["pages"][0]["text"], "Page 1");
+    shared_json(&mut automation, &mut session, "page_rotate", json!({"doc":id.0,"pages":[1],"degrees":90}));
+    assert_eq!(session.get(id).unwrap().info.pages[0].rotation, 90, "the GUI's own document changed");
+    assert_eq!(shared_json(&mut automation, &mut session, "doc_info", args.clone())["pages"][0]["rotation"], 90);
+    session.undo(id).unwrap();
+    assert_eq!(session.get(id).unwrap().info.pages[0].rotation, 0, "normal application Undo sees the assistant edit");
+    shared_json(&mut automation, &mut session, "edit_redo", args.clone());
+    assert_eq!(session.get(id).unwrap().info.pages[0].rotation, 90);
+    assert!(automation.call_on_session(&mut session, "page_rotate", &json!({"doc":id.0,"degrees":13})).is_err());
+    assert_eq!(session.get(id).unwrap().info.pages[0].rotation, 90, "validation failure preserves the live document");
+    shared_json(&mut automation, &mut session, "doc_save", json!({"doc":id.0,"path":"saved.pdf"}));
+    assert!(!session.get(id).unwrap().dirty);
+    let saved = std::fs::read(dir.path().join("saved.pdf")).unwrap();
+    let mut reopened = Session::new();
+    let reopened_id = reopened.open("saved.pdf", None, Arc::new(saved), None).unwrap();
+    assert_eq!(reopened.get(reopened_id).unwrap().info.pages[0].rotation, 90);
+    assert!(automation.session().docs().is_empty(), "the bridge retains no second live document");
+    assert!(automation.call_on_session(&mut session, "doc_save", &json!({"doc":id.0,"path":"../escape.pdf"})).is_err());
+    assert_eq!(session.docs().len(), 1, "a refused save still returns the session");
+}
+
+#[test]
+fn shared_session_dispatch_restores_both_sessions_after_an_escaped_panic() {
+    let mut automation = Automation::new();
+    let owned = search_document(&mut automation, 1);
+    let mut session = Session::new();
+    let id = session.open("live.pdf", None, Arc::new(numbered_pages(2)), None).unwrap();
+    session.apply(id, Edit::RotatePages { pages: vec![0], degrees: 90 }).unwrap();
+    shared_json(&mut automation, &mut session, "text_paragraphs", json!({"doc":id.0,"page":1}));
+    assert!(!automation.listed.is_empty());
+    let bytes = session.get(id).unwrap().bytes.clone();
+    let error = automation
+        .on_session(&mut session, |a| -> Result<()> {
+            assert_eq!(a.session.get(id).unwrap().info.pages.len(), 2);
+            panic!("synthetic private panic payload");
+        })
+        .unwrap_err();
+    assert!(!error.to_string().contains("private panic payload"));
+    assert!(Arc::ptr_eq(&session.get(id).unwrap().bytes, &bytes));
+    assert_eq!(session.get(id).unwrap().info.pages.len(), 2);
+    assert!(session.get(id).unwrap().dirty, "pre-existing unsaved edits survive");
+    session.undo(id).unwrap();
+    assert_eq!(session.get(id).unwrap().info.pages[0].rotation, 0, "pre-existing Undo history survives");
+    assert_eq!(automation.session().get(owned).unwrap().info.pages.len(), 1);
+    assert!(automation.listed.is_empty(), "uncertain paragraph references are discarded");
+    assert!(automation.evicted.contains(&id));
+}
+
+#[test]
+fn shared_session_caches_follow_source_identity_not_reused_document_ids() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut automation = Automation::new();
+    let mut first = Session::new();
+    let first_id = first.open("first.pdf", None, Arc::new(numbered_pages(1)), None).unwrap();
+    let mut second = Session::new();
+    let second_id = second.open("second.pdf", None, Arc::new(numbered_pages(2)), None).unwrap();
+    assert_eq!(first_id, second_id, "independent sessions reuse document ids");
+    shared_json(&mut automation, &mut first, "text_paragraphs", json!({"doc":first_id.0,"page":1}));
+    assert!(automation.listed.contains_key(&(first_id, 0)));
+    let before = automation.listed.clone();
+    first.apply(first_id, Edit::SetInfo { key: "Title".into(), value: "Synthetic title".into() }).unwrap();
+    shared_json(&mut automation, &mut first, "doc_info", json!({"doc":first_id.0}));
+    assert_eq!(automation.listed, before, "ordinary edits retain stable paragraph references");
+    shared_json(&mut automation, &mut first, "doc_save", json!({"doc":first_id.0,"path":dir.path().join("first.pdf")}));
+    shared_json(&mut automation, &mut first, "doc_info", json!({"doc":first_id.0}));
+    assert_eq!(automation.listed, before, "tool saves retain stable paragraph references");
+    shared_json(&mut automation, &mut second, "text_extract", json!({"doc":second_id.0}));
+    assert!(automation.listed.is_empty(), "another session cannot inherit paragraph references");
+    assert_eq!(shared_json(&mut automation, &mut second, "doc_info", json!({"doc":second_id.0}))["pages"].as_array().unwrap().len(), 2);
+}
+
 /// `n` pages, page i showing "Page i".
 fn numbered_pages(n: usize) -> Vec<u8> {
     let mut objs: Vec<String> = vec!["<< /Type /Catalog /Pages 2 0 R >>".into()];
