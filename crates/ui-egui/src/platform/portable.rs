@@ -1,3 +1,6 @@
+//! `PDFCRAFT_PROFILE_DIR` selects an isolated absolute profile directory for a custom build.
+//! The desktop launcher validates it before opening any settings; it overrides portable markers.
+//!
 //! Portable mode (#157): a marker file beside the executable ([`MARKERS`]) keeps the settings,
 //! log files, crash-recovery autosaves and new digital IDs in `<exe dir>/PdfCraftData`, so a
 //! portable copy (on a USB stick, say) writes nothing to `%APPDATA%` or `%LOCALAPPDATA%`. The
@@ -50,7 +53,11 @@ pub fn current() -> &'static Portable {
     static CURRENT: OnceLock<Portable> = OnceLock::new();
     CURRENT.get_or_init(|| {
         let exe = std::env::current_exe().ok();
-        let portable = resolve(exe.as_deref().and_then(Path::parent));
+        let portable = match profile_directory(std::env::var_os("PDFCRAFT_PROFILE_DIR")) {
+            Ok(Some(dir)) => Portable { dir: Some(dir), unwritable: None },
+            // The desktop entry point rejects an invalid override before using a profile.
+            _ => resolve(exe.as_deref().and_then(Path::parent)),
+        };
         if let Some(dir) = &portable.dir {
             log::info!("portable mode: settings are kept in {}", dir.display());
         }
@@ -61,7 +68,24 @@ pub fn current() -> &'static Portable {
     })
 }
 
-/// The portable data folder, when portable mode is on.
+/// Validate the explicit profile before any settings, recovery or log file is opened.
+pub fn validate_profile() -> std::io::Result<()> {
+    if let Some(dir) = profile_directory(std::env::var_os("PDFCRAFT_PROFILE_DIR"))? {
+        ensure_writable(&dir)?;
+    }
+    Ok(())
+}
+
+fn profile_directory(value: Option<std::ffi::OsString>) -> std::io::Result<Option<PathBuf>> {
+    let Some(value) = value else { return Ok(None) };
+    let path = PathBuf::from(value);
+    if !path.is_absolute() {
+        return Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, "PDFCRAFT_PROFILE_DIR must be an absolute directory"));
+    }
+    Ok(Some(path))
+}
+
+/// The explicit profile or portable data folder, when either is selected.
 pub fn data_dir() -> Option<&'static Path> {
     current().dir.as_deref()
 }
@@ -85,12 +109,36 @@ pub fn find_marker(exe_dir: &Path) -> Option<PathBuf> {
 
 /// Create `dir` and prove a file can be written in it (a folder can exist yet be read-only).
 fn ensure_writable(dir: &Path) -> std::io::Result<()> {
-    std::fs::create_dir_all(dir)?;
-    let probe = dir.join(".write-test");
-    std::fs::write(&probe, b"")?;
-    // A leftover probe is harmless; don't fail portable mode over it.
-    let _ = std::fs::remove_file(&probe);
-    Ok(())
+    let mut builder = std::fs::DirBuilder::new();
+    builder.recursive(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::DirBuilderExt;
+        builder.mode(0o700);
+    }
+    builder.create(dir)?;
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    for _ in 0..32 {
+        let id = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let probe = dir.join(format!(".write-test-{}-{id}", std::process::id()));
+        let mut options = std::fs::OpenOptions::new();
+        options.write(true).create_new(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::OpenOptionsExt;
+            options.mode(0o600);
+        }
+        match options.open(&probe) {
+            Ok(file) => {
+                drop(file);
+                let _ = std::fs::remove_file(probe);
+                return Ok(());
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+            Err(e) => return Err(e),
+        }
+    }
+    Err(std::io::Error::new(std::io::ErrorKind::AlreadyExists, "no free profile write-probe name"))
 }
 
 #[cfg(test)]
@@ -104,6 +152,21 @@ mod tests {
         let _ = std::fs::remove_dir_all(&d);
         std::fs::create_dir_all(&d).unwrap();
         d
+    }
+
+    #[test]
+    fn explicit_profile_requires_an_absolute_path() {
+        assert_eq!(profile_directory(None).unwrap(), None);
+        for invalid in ["", "relative/profile"] {
+            assert!(profile_directory(Some(invalid.into())).is_err());
+        }
+        let dir = temp("profile");
+        assert_eq!(profile_directory(Some(dir.clone().into_os_string())).unwrap(), Some(dir.clone()));
+        std::fs::write(dir.join(".write-test"), b"keep existing data").unwrap();
+        ensure_writable(&dir).unwrap();
+        assert_eq!(std::fs::read(dir.join(".write-test")).unwrap(), b"keep existing data");
+        assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 1);
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]

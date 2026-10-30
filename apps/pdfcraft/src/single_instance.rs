@@ -149,6 +149,16 @@ pub fn claim(files: &[String], may_hand_off: bool) -> Claim {
     }
 }
 
+/// Custom profiles never hand documents to the standard app or another profile.
+#[cfg_attr(not(any(test, windows, all(unix, not(target_os = "macos")))), allow(dead_code))]
+fn profile_socket_name(name: &str, profile: Option<&std::ffi::OsStr>) -> String {
+    use std::hash::{Hash, Hasher};
+    let Some(profile) = profile else { return name.to_owned() };
+    let mut hash = std::collections::hash_map::DefaultHasher::new();
+    profile.hash(&mut hash);
+    format!("profile-{:016x}-{name}", hash.finish())
+}
+
 /// The socket in `%LOCALAPPDATA%\PdfCraft` (beside the crash-recovery folder); none when
 /// `%LOCALAPPDATA%` is unset.
 #[cfg(windows)]
@@ -158,6 +168,7 @@ fn socket_path() -> Option<std::path::PathBuf> {
     // user's file paths or send it files to open. A portable copy uses it too (#889), under its
     // own name so it never hands files to an installed copy (which keeps its settings elsewhere).
     // Never the portable folder itself: it may sit where other accounts can write (`C:\Tools`).
+    let name = profile_socket_name(&name, std::env::var_os("PDFCRAFT_PROFILE_DIR").as_deref());
     let name = if pdfcraft_ui_egui::portable::data_dir().is_some() { format!("portable-{name}") } else { name };
     std::env::var_os("LOCALAPPDATA").filter(|v| !v.is_empty()).map(|d| std::path::PathBuf::from(d).join("PdfCraft").join(name))
 }
@@ -168,6 +179,7 @@ fn socket_path() -> Option<std::path::PathBuf> {
 fn socket_path() -> Option<std::path::PathBuf> {
     let var = |k: &str| std::env::var(k).ok().filter(|v| !v.is_empty());
     let name = display_socket_name(var("WAYLAND_DISPLAY").or_else(|| var("DISPLAY")).as_deref());
+    let name = profile_socket_name(&name, std::env::var_os("PDFCRAFT_PROFILE_DIR").as_deref());
     // The XDG base directory spec makes it the user's own (mode 0700), so the folder inside it is
     // out of other accounts' reach whatever the umask.
     var("XDG_RUNTIME_DIR").map(|d| std::path::PathBuf::from(d).join("pdfcraft").join(name))
@@ -351,6 +363,17 @@ fn receive(stream: &UnixStream, server: &Server) -> std::io::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn explicit_profiles_have_separate_instance_names() {
+        let base = "instance.sock";
+        assert_eq!(profile_socket_name(base, None), base);
+        let first = profile_socket_name(base, Some(std::ffi::OsStr::new("/profiles/preview")));
+        assert_ne!(first, base);
+        assert_eq!(first, profile_socket_name(base, Some(std::ffi::OsStr::new("/profiles/preview"))));
+        assert_ne!(first, profile_socket_name(base, Some(std::ffi::OsStr::new("/profiles/other"))));
+        assert!(!first.contains('/'));
+    }
 
     #[test]
     fn a_request_names_the_paths_and_round_trips() {

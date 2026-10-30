@@ -15,6 +15,7 @@ pub const RELEASES_PAGE: &str = "https://github.com/storytold/pdfcraft/releases"
 pub type UpdateSource = CheckSource;
 
 pub(crate) struct Updates {
+    disabled: bool,
     #[cfg(not(target_arch = "wasm32"))]
     updater: Updater,
     /// The Updates dialog is showing.
@@ -29,6 +30,7 @@ pub(crate) struct Updates {
 impl Default for Updates {
     fn default() -> Self {
         Self {
+            disabled: false,
             #[cfg(not(target_arch = "wasm32"))]
             updater: Updater::new(&craft_update::suite::PDFCRAFT, env!("CARGO_PKG_VERSION")),
             open: false,
@@ -41,10 +43,20 @@ impl Default for Updates {
 }
 
 impl PdfCraftApp {
+    /// Custom previews must never install a standard release over themselves.
+    pub fn disable_updates(&mut self) {
+        self.updates.disabled = true;
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            self.updates.startup_check = false;
+            self.updates.check_requested = false;
+        }
+    }
+
     /// Whether the app asks for a newer release on its first frame (off until the desktop app turns it on).
     #[cfg(not(target_arch = "wasm32"))]
     pub fn set_startup_update_check(&mut self, on: bool) {
-        self.updates.startup_check = on;
+        self.updates.startup_check = on && !self.updates.disabled;
     }
 
     /// Replaces the network with `source` (tests).
@@ -55,6 +67,10 @@ impl PdfCraftApp {
 
     /// Help ▸ Check for updates: ask for the latest release and show the outcome.
     pub fn check_for_updates(&mut self) {
+        if self.updates.disabled {
+            self.updates.open = true;
+            return;
+        }
         #[cfg(not(target_arch = "wasm32"))]
         {
             self.updates.open = true;
@@ -68,6 +84,9 @@ impl PdfCraftApp {
 
     /// Starts the checks and picks up their answers (each frame).
     pub(crate) fn poll_updates(&mut self) {
+        if self.updates.disabled {
+            return;
+        }
         #[cfg(not(target_arch = "wasm32"))]
         {
             let Some(ctx) = self.ctx.clone() else { return };
@@ -88,15 +107,17 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
     {
         // The restart helper is scheduled before the app closes, so no update starts over unsaved work.
         let clean = app.first_dirty().is_none();
-        match app.updates.updater.show_if(ctx, clean) {
-            Action::None => {}
-            Action::OpenUrl(url) => app.open_url(&url),
-            Action::Close => {
-                app.request_quit(ctx);
+        if !app.updates.disabled {
+            match app.updates.updater.show_if(ctx, clean) {
+                Action::None => {}
+                Action::OpenUrl(url) => app.open_url(&url),
+                Action::Close => {
+                    app.request_quit(ctx);
+                }
             }
         }
         // A requested check that found a release is answered by the prompt, not by this dialog.
-        if app.updates.open && !app.updates.check_requested && matches!(app.updates.updater.status(), Status::Idle) {
+        if !app.updates.disabled && app.updates.open && !app.updates.check_requested && matches!(app.updates.updater.status(), Status::Idle) {
             app.updates.open = false;
         }
     }
@@ -113,32 +134,37 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             ui.label(egui::RichText::new(tl!("Check for updates")).font(theme::semibold(16.0)));
         });
         ui.add_space(8.0);
+        if app.updates.disabled {
+            ui.label(tl!("Software updates are disabled for this preview. Install a new assistant preview package to update it."));
+        }
         #[cfg(not(target_arch = "wasm32"))]
-        match app.updates.updater.status() {
-            Status::Idle => {
-                ui.horizontal(|ui| {
-                    ui.spinner();
-                    ui.label(tl!("Checking for a newer version…"));
-                });
-            }
-            Status::Checking => {
-                ui.horizontal(|ui| {
-                    ui.spinner();
-                    ui.label(tl!("Checking for a newer version…"));
-                });
-            }
-            Status::UpToDate => {
-                ui.label(crate::i18n::fmt(tl!("PdfCraft {c} is up to date."), &[("c", current)]));
-            }
-            Status::Failed(e) => {
-                ui.label(crate::i18n::fmt(tl!("Couldn't check for updates: {e}"), &[("e", e)]));
-                ui.label(
-                    egui::RichText::new(crate::i18n::fmt(
-                        tl!("You have version {c}. All releases are listed at {page}."),
-                        &[("c", current), ("page", RELEASES_PAGE)],
-                    ))
-                    .color(t.text_muted),
-                );
+        if !app.updates.disabled {
+            match app.updates.updater.status() {
+                Status::Idle => {
+                    ui.horizontal(|ui| {
+                        ui.spinner();
+                        ui.label(tl!("Checking for a newer version…"));
+                    });
+                }
+                Status::Checking => {
+                    ui.horizontal(|ui| {
+                        ui.spinner();
+                        ui.label(tl!("Checking for a newer version…"));
+                    });
+                }
+                Status::UpToDate => {
+                    ui.label(crate::i18n::fmt(tl!("PdfCraft {c} is up to date."), &[("c", current)]));
+                }
+                Status::Failed(e) => {
+                    ui.label(crate::i18n::fmt(tl!("Couldn't check for updates: {e}"), &[("e", e)]));
+                    ui.label(
+                        egui::RichText::new(crate::i18n::fmt(
+                            tl!("You have version {c}. All releases are listed at {page}."),
+                            &[("c", current), ("page", RELEASES_PAGE)],
+                        ))
+                        .color(t.text_muted),
+                    );
+                }
             }
         }
         #[cfg(target_arch = "wasm32")]
@@ -157,5 +183,25 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
         app.updates.open = false;
         #[cfg(not(target_arch = "wasm32"))]
         app.updates.updater.dismiss_status();
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod preview_tests {
+    use super::*;
+
+    #[test]
+    fn disabled_preview_updates_never_queue_startup_or_manual_checks() {
+        let mut app = PdfCraftApp::new();
+        app.set_startup_update_check(true);
+        app.check_for_updates();
+        assert!(app.updates.startup_check && app.updates.check_requested);
+        app.disable_updates();
+        app.set_startup_update_check(true);
+        app.check_for_updates();
+        assert!(app.updates.disabled && app.updates.open);
+        assert!(!app.updates.startup_check && !app.updates.check_requested);
+        app.poll_updates();
+        assert!(matches!(app.updates.updater.status(), Status::Idle));
     }
 }
