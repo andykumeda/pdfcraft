@@ -255,6 +255,7 @@ Estimates unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-02 | patch | Built-in assistant comment deletion follow-up; see assistant ledger. Estimates unchanged. |
 | 2026-10-29 | minor | Private assistant work recorded in its ledger; milestone estimates unchanged |
 | 2026-10-27 | minor | M10: OCR stages SHA-256-verified ONNX models after the upstream RTEN URL brownout; discovery prefers a complete ONNX pair per directory, falls back to a complete RTEN pair, and never mixes formats or directories; language/web limits and estimates unchanged. |
 | 2026-10-24 | minor | M3, #3970 follow-up: the button release given back after a window move or resize goes before the pointer leaving, so hover doesn't stick. Estimates unchanged. |

@@ -143,3 +143,23 @@ This documentation-only source distribution update does not change the installed
 DMG source `dd68eaeda15c93d895111c35f705050744d75686`. No GitHub release, tag, installer upload,
 or upstream pull request is part of this authorization. Branch publication is verified by
 comparing the remote branch commit to local HEAD after pushing.
+
+## Annotation deletion follow-up — 2026-11-02
+
+State: **Verified** (source). Owner: Codex. Scope: the native assistant host tool list and
+mutation read-back; existing automation and engine deletion remain the source of truth.
+Acceptance: list a synthetic StrikeOut, delete it through the assistant, verify its
+absence through independent comment read-back, and restore it with Undo.
+The installed preview predates this fix. Real Fabric Site 1 PDF acceptance remains pending.
+GitHub issue/PR search failed because api.github.com was unreachable.
+
+Verification: the new test failed before the fix with “this PDF tool is unavailable”
+and passed after adding `comment_delete` and routing its read-back to `comment_list`.
+All five assistant-host tests pass. The full UI library suite passed outside the
+sandbox: **621 passed, 1 ignored**; its initial sandbox run failed on nine socket
+permission checks and one unavailable GPU. Scoped all-target Clippy with warnings
+denied, formatting, layering (37 crates), asset validation and WASM (31 crates) pass.
+Logs: `/private/tmp/pdfcraft-delete-{red,green,tests-unrestricted,clippy,fmt,layers,assets,wasm}.log`.
+No engine API, automation schema, dependency or asset changed. Existing locked-comment,
+permission, active-document and draft guards remain in force. Release build and local
+preview update are tracked separately from this verified source change.

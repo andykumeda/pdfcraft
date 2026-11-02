@@ -25,6 +25,7 @@ const TOOLS: &[&str] = &[
     "comment_list",
     "comment_add",
     "comment_edit",
+    "comment_delete",
     "form_fields",
     "form_fill",
     "edit_undo",
@@ -351,7 +352,7 @@ fn execute(app: &mut PdfCraftApp, guard: &mut Guard, call: &ToolCall) -> Result<
         // Read from the actual post-command document; never echo intended arguments as evidence.
         let read_name = match call.name.as_str() {
             "text_edit" => "text_paragraphs",
-            "comment_add" | "comment_edit" => "comment_list",
+            "comment_add" | "comment_edit" | "comment_delete" => "comment_list",
             "form_fill" => "form_fields",
             _ => "doc_info",
         };
@@ -416,6 +417,31 @@ mod tests {
         assert!(!undone["read_back"].to_string().contains("Synthetic changed"));
         let redone = execute(&mut app, &mut guard, &call("edit_redo", json!({}))).unwrap();
         assert!(redone["read_back"].to_string().contains("Synthetic changed"));
+    }
+    #[test]
+    fn strikeout_delete_reads_back_and_can_be_undone() {
+        let mut app = app();
+        let mut guard = Guard::new(&app, String::new(), vec![]);
+        execute(&mut app, &mut guard, &call("comment_list", json!({}))).unwrap();
+        execute(
+            &mut app,
+            &mut guard,
+            &call(
+                "comment_add",
+                json!({
+                    "page":1, "type":"strikeout", "quads":[[20,20,100,20,20,35,100,35]]
+                }),
+            ),
+        )
+        .unwrap();
+        let listed = execute(&mut app, &mut guard, &call("comment_list", json!({}))).unwrap();
+        let strike = listed["comments"].as_array().unwrap().iter().find(|c| c["type"] == "StrikeOut").unwrap();
+        let id = strike["id"].clone();
+        let deleted = execute(&mut app, &mut guard, &call("comment_delete", json!({"id":id}))).unwrap();
+        assert!(deleted["read_back"]["comments"].as_array().unwrap().iter().all(|c| c["id"] != id));
+        execute(&mut app, &mut guard, &call("edit_undo", json!({}))).unwrap();
+        let restored = execute(&mut app, &mut guard, &call("comment_list", json!({}))).unwrap();
+        assert!(restored["comments"].as_array().unwrap().iter().any(|c| c["id"] == id));
     }
     #[test]
     fn stale_foreign_cancelled_and_unsupported_actions_are_rejected() {

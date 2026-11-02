@@ -23,7 +23,7 @@ from `runtime.json`; provider failure never changes the chosen endpoint, provide
 Connection tests request model catalogs; capability probes and chat can incur provider usage.
 
 The initial tools inspect document metadata/pages, find/extract text, inspect/edit supported
-paragraphs, rotate/duplicate/delete pages, list/add/edit comments, list/fill forms, Undo/Redo,
+paragraphs, rotate/duplicate/delete pages, list/add/edit/delete comments, list/fill forms, Undo/Redo,
 and explicitly save. Existing PDFCraft validation, permissions and signature protections apply.
 This does not add PDF editing capabilities or expose the full external automation catalog.
 Attachments, arbitrary scripts, security/signing changes, printing and bulk filesystem work
@@ -61,3 +61,6 @@ DMG. An assistant service split is deferred.
 See [packaging instructions](../packaging/macos/assistant-preview.md) for commit-labelled ARM64
 DMGs, checksums, mounted/extracted verification and signing limitations. Local signature verification
 does not establish notarization or acceptance on another Mac.
+
+2026-11-02 source update: annotation deletion is available through the built-in assistant
+with independent comment read-back and Undo. The installed preview above predates this update.
