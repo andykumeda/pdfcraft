@@ -1,6 +1,6 @@
 # Integrated desktop assistant preview
 
-Status: private preview **0.15.0 (`dd68eaed`)** is installed at
+Status: private preview **0.15.0 (`b1f9d8f3`)** is installed on the Mini and MacBook at
 `/Applications/PDFCraft Assistant Preview.app`. Native panel/Settings, local Ollama
 inspection/rotation/read-back/Undo and save/reopen passed. It is ad-hoc signed and not
 notarized. See [the delivery ledger](assistant-implementation.md) for exact source, checks,
@@ -63,4 +63,4 @@ DMGs, checksums, mounted/extracted verification and signing limitations. Local s
 does not establish notarization or acceptance on another Mac.
 
 2026-11-02 source update: annotation deletion is available through the built-in assistant
-with independent comment read-back and Undo. The installed preview above predates this update.
+with independent comment read-back and Undo. The updated preview is installed on both Macs; real-document acceptance remains manual.

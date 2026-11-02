@@ -203,6 +203,8 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
+**2026-11-02 · patch:** Annotation-deletion assistant preview b1f9d8f3 installed in /Applications on Mini and MacBook; matching hashes/signatures and synthetic GUI startup verified. Real-document testing remains manual; see assistant ledger.
+
 **2026-11-02 · patch:** Built-in assistant comment deletion follow-up is tracked in [the task ledger](docs/assistant-implementation.md); milestone estimates unchanged.
 
 - **2026-10-27 (M10, OCR models):** Model staging downloads and verifies the ONNX pair after the upstream RTEN URL brownout; runtime discovery prefers complete ONNX pairs per directory, retains complete RTEN fallback and preserves directory precedence.

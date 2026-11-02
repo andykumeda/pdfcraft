@@ -1,7 +1,7 @@
 # Integrated assistant task ledger
 
-Updated 2026-10-29. **Implemented, tested, packaged and Deployed locally.**
-Current delivery: **0.15.0 (`dd68eaed`)**, `/Applications/PDFCraft Assistant Preview.app`.
+Updated 2026-11-02. **Implemented, tested, packaged and Deployed on Mini and MacBook.**
+Current delivery: **0.15.0 (`b1f9d8f3`)**, `/Applications/PDFCraft Assistant Preview.app`.
 No public release was created. The user subsequently authorized a GitHub fork and branch push; see the source distribution record below. Live Codex/hosted-provider and other-Mac acceptance remain open.
 
 Reference: WordCraft `4dd7cf7d`, craft-libs `bf932b91643c287502d539b88f08abd5796c9447`.
@@ -169,3 +169,37 @@ reached the app compile/link stage but exceeded the five-minute bound (exit 124)
 No new package or installed preview was produced. Source fix `11c720e5` was pushed
 to `fork/feat/integrated-assistant`; a completed preview rebuild/install and the
 real-document smoke check remain pending. This is not a deployed fix.
+
+## Two-Mac annotation deletion rollout — 2026-11-02
+
+Target source: `b1f9d8f38ad450a48fb82f5c671664e480bef9c8`, version 0.15.0.
+Acceptance per host: installed preview version and native hash match packaged build,
+strict code-signature validation passes, launcher starts with preview profile and
+updates disabled. Keep the standard app and user data; retain previous preview for rollback.
+
+| Device / verified host | Component | Target | Installed path | State | Evidence / remaining action |
+| --- | --- | --- | --- | --- | --- |
+| Mini / AKsMini, arm64, macOS 27.2 | Assistant Preview | b1f9d8f3 | /Applications/PDFCraft Assistant Preview.app | Deployed | Version/hash/signature verified; synthetic GUI inspection passed |
+| MacBook / AKs-MBPro.local, arm64, macOS 27.2 | Assistant Preview | b1f9d8f3 | /Applications/PDFCraft Assistant Preview.app | Deployed | SSH install; matching version/hash/signature; synthetic GUI inspection passed |
+
+Rollout completed: release build passed in 7m54s with `PDFCRAFT_BUILD_LABEL=b1f9d8f3`.
+The existing preview packager passed strict signing, ZIP extraction, mounted-DMG,
+and copied-DMG validation. Artifacts: `dist/assistant-preview/b1f9d8f3/`.
+Both installed native executables have SHA-256
+`9b6a6c69a78600d8a6fb2bc948255883be2f606fd4f4344e33e03a45a5927698`.
+Each reports `pdfcraft 0.15.0 (b1f9d8f3)` and passes strict code-signature validation.
+The installer hashed the standard app before/after and confirmed it unchanged on both hosts.
+Mini rollback: `/Applications/.PDFCraft-Preview-before-b1f9d8f3.app`.
+MacBook had no previous preview. SSH independently verified its identity and installation.
+Receipts: `/private/tmp/pdfcraft-preview-mini-install.json` on Mini and
+`/private/tmp/pdfcraft-preview-macbook-install.json` on MacBook.
+
+Installed-app startup checks on each host used a temporary profile, existing synthetic
+`form.pdf`, and the opt-in authenticated control channel on an OS-assigned loopback port.
+`pdfcraft-cli ui inspect` succeeded and showed the synthetic document on each Mac.
+Inspect receipts are `/private/tmp/pdfcraft-preview-{mini,macbook}-inspect.json` on their
+respective hosts. The temporary instances were quit normally, stopping those listeners;
+normal preview launches were then requested on both Macs. Existing user profiles,
+provider settings and credentials were not copied or edited. Local signing remains
+ad-hoc, without notarization. The user's real Fabric Site 1 deletion and provider
+conversation are the remaining manual acceptance checks.
