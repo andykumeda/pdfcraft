@@ -163,3 +163,9 @@ Logs: `/private/tmp/pdfcraft-delete-{red,green,tests-unrestricted,clippy,fmt,lay
 No engine API, automation schema, dependency or asset changed. Existing locked-comment,
 permission, active-document and draft guards remain in force. Release build and local
 preview update are tracked separately from this verified source change.
+
+Release verification: `timeout 300 cargo build --offline --release -p pdfcraft -j 2`
+reached the app compile/link stage but exceeded the five-minute bound (exit 124).
+No new package or installed preview was produced. Source fix `11c720e5` was pushed
+to `fork/feat/integrated-assistant`; a completed preview rebuild/install and the
+real-document smoke check remain pending. This is not a deployed fix.
