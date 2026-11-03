@@ -98,6 +98,18 @@ verify_fork_branding() {
   fi
 }
 
+# Signed compatibility metadata authenticates the explicitly selected assistant-enabled fork.
+# The protocol number is the current embedding wire invariant, not a release-source default.
+set_assistant_update_metadata() {
+  local plist="$1" repo="${CRAFT_UPDATE_REPOSITORY:-}"
+  if [[ ! "$repo" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$ ]]; then
+    echo "error: set CRAFT_UPDATE_REPOSITORY to the verified assistant-enabled owner/repository" >&2
+    return 1
+  fi
+  plutil -replace CraftAssistantBridgeProtocol -integer 1 "$plist"
+  plutil -replace CraftUpdateRepository -string "$repo" "$plist"
+}
+
 # Builds made with the optional craft-fonts input (CRAFT_FONTS_DIR, set for every release) embed
 # its fonts, so the package carries their licences: fonts/<family>/OFL.txt -> OFL-<family>.txt.
 copy_font_licences() {

@@ -11,6 +11,7 @@ Build the committed Apple-silicon release with `PDFCRAFT_BUILD_LABEL` set to the
 source commit's eight-character prefix. Then run:
 
 ```sh
+CRAFT_UPDATE_REPOSITORY=andykumeda/pdfcraft \
 packaging/macos/assistant-preview.sh \
   --binary /path/to/release/pdfcraft \
   --version 0.18.0 \
@@ -41,3 +42,9 @@ bundles. The preview retains its separate launcher, bundle identifier and docume
 the assistant settings, credentials and conversations remain shared. A local signing
 certificate is not a Developer ID/notarization receipt. Candidate creation does not install,
 activate or publish an app or change the configured assistant-enabled app release source.
+
+Both macOS packagers require `CRAFT_UPDATE_REPOSITORY` to name the verified assistant-enabled
+fork. Before signing they insert `CraftAssistantBridgeProtocol` as integer `1` and
+`CraftUpdateRepository` as the configured owner/repository in Info.plist. The underlying app
+updater and rollout installer require these signed fields; a receipt that merely states protocol
+compatibility cannot replace them. Missing or malformed repository configuration fails packaging.

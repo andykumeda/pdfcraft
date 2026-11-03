@@ -266,7 +266,7 @@ the same helper; the pinned optional craft-fonts OFL notices are retained. Candi
 receipts must verify these files after extraction, before claiming packaging complete.
 
 Packaging verification before the release build: shell syntax passed; all 11 source asset
-licence paths and 13 pinned craft-fonts notices were staged successfully, and all six maintained
+licence paths and 13 pinned craft-fonts notices were staged successfully, and all five maintained
 bundled font/CMap notice files matched their source bytes. The packaging guard rejected the
 prior branded release binary and accepted the new 0.18 UI test binary. These are source/package
 helper checks, not signed release-candidate delivery or native installed acceptance.
@@ -300,3 +300,16 @@ passed. Strict scoped all-target Clippy, WASM (the same 11 upstream warnings), f
 source license-check passed. No installed app, CLI path, source configuration or client config
 was changed. The final optimized app/CLI build and signed candidate verification follow this
 verified source increment; provisional `3fc5750d` artefacts are not the final guarded app.
+
+
+### Signed update compatibility metadata correction
+
+The first 8e86f96f local bundles were correctly refused by the rollout installer: their signed
+Info.plists lacked `CraftAssistantBridgeProtocol` and `CraftUpdateRepository`. No app was
+installed from those bundles. Both macOS packagers now add integer protocol `1` and the explicit
+`CRAFT_UPDATE_REPOSITORY` before signing. Missing or malformed repository input fails packaging;
+the configured repository for these candidates is `andykumeda/pdfcraft`. The shared function is
+used by the standard and preview packagers. Source/native binaries remain the verified
+8e86f96f build; this is a packaging-resource correction, with replacement signatures/archives
+and new receipts required. An unsigned receipt stating compatibility is not a substitute for
+signed Info.plist fields. Initial missing-repository negative smoke and typed field checks passed.

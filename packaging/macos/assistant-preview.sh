@@ -120,6 +120,7 @@ for key in CFBundleDisplayName CFBundleName; do
 done
 plutil -replace CFBundleIdentifier -string ai.storyteller.pdfcraft.assistant-preview "$APP/Contents/Info.plist"
 plutil -replace LSMinimumSystemVersion -string "$MIN_MACOS" "$APP/Contents/Info.plist"
+set_assistant_update_metadata "$APP/Contents/Info.plist"
 plutil -lint "$APP/Contents/Info.plist"
 printf 'APPL????' >"$APP/Contents/PkgInfo"
 
