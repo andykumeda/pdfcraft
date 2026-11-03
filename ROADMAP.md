@@ -844,3 +844,5 @@ PR #1952 retains per-widget checkbox/radio export-value editing in the split for
 - **2026-10-31 (#1577):** Reconciled the page-shadow preference with split viewer, organizer, settings and control modules, preserving upstream page-gap shadow suppression. CI validation pending.
 
 - 2026-11-03 — Custom assistant layout: shared d771dc9 adds gear settings, composer file/model menus and settings-only update controls. PDFCraft integration verification is recorded in `docs/assistant-implementation.md`; source-only, no installed update or readiness estimate change.
+
+- 2026-11-03 — Assistant0.1.1 delivery: independent helper update verified on both Macs; PDF host source pin83e6108 and scoped checks passed, signed host candidates in preparation. No readiness estimate change.

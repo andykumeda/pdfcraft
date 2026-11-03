@@ -1,7 +1,7 @@
 # Integrated desktop assistant preview
 
 Status: **PDFCraft 0.18.0 (`8e86f96f`)** standard and Assistant Preview are installed on
-Mini and MacBook with the independently installed shared assistant **0.1.0**. Both variants
+Mini and MacBook with the independently installed shared assistant **0.1.1**. Both variants
 passed isolated native helper/composer/Settings and synthetic MCP smoke on both Macs. The
 installed CLI lists **183 tools**. Local certificate signing is verified; these are not
 notarized or public releases. Clipboard, native IME/VoiceOver and live-provider acceptance
@@ -75,3 +75,7 @@ does not establish notarization or acceptance on another Mac.
 
 2026-11-02 source update: annotation deletion is available through the built-in assistant
 with independent comment read-back and Undo. The updated preview is installed on both Macs; real-document acceptance remains manual.
+
+2026-11-03 delivery checkpoint: assistant0.1.1 is installed on both Macs and passed native
+checks inside the previous unchanged hosts. The rebuilt host candidates that move their update
+controls behind the gear are being prepared; installed app replacement is not yet claimed.

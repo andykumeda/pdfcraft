@@ -1234,7 +1234,7 @@ dependencies = [
 [[package]]
 name = "craft-ai-core"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "chrono",
  "serde",
@@ -1244,7 +1244,7 @@ dependencies = [
 [[package]]
 name = "craft-ai-native"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "base64 0.22.1",
  "chrono",
@@ -1261,8 +1261,8 @@ dependencies = [
 
 [[package]]
 name = "craft-assistant"
-version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+version = "0.1.1"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "chrono",
  "craft-ai-core",
@@ -1282,7 +1282,7 @@ dependencies = [
 [[package]]
 name = "craft-assistant-bridge"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "accesskit",
  "egui",
@@ -1293,7 +1293,7 @@ dependencies = [
 [[package]]
 name = "craft-assistant-install"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "craft-atomic",
  "craft-update",
@@ -1309,7 +1309,7 @@ dependencies = [
 [[package]]
 name = "craft-atomic"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "rustix 1.1.5",
 ]
@@ -1317,17 +1317,17 @@ dependencies = [
 [[package]]
 name = "craft-docpath"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 
 [[package]]
 name = "craft-fonts-build"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 
 [[package]]
 name = "craft-i18n"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "fixed_decimal",
  "icu_decimal",
@@ -1350,7 +1350,7 @@ dependencies = [
 [[package]]
 name = "craft-keymap"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "egui",
  "serde",
@@ -1360,7 +1360,7 @@ dependencies = [
 [[package]]
 name = "craft-menu"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "craft-keymap",
  "craft-quit",
@@ -1373,7 +1373,7 @@ dependencies = [
 [[package]]
 name = "craft-print"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "craft-winprint-gdi",
  "log",
@@ -1387,7 +1387,7 @@ dependencies = [
 [[package]]
 name = "craft-quit"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "dispatch2",
  "egui",
@@ -1398,7 +1398,7 @@ dependencies = [
 [[package]]
 name = "craft-ui"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "craft-ai-core",
  "craft-fonts-build",
@@ -1420,7 +1420,7 @@ dependencies = [
 [[package]]
 name = "craft-update"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=d771dc9649086a78b0828b52aa5d7be64d9cf133#d771dc9649086a78b0828b52aa5d7be64d9cf133"
+source = "git+https://github.com/andykumeda/craft-libs?rev=83e61084dee3117d34f95600d6ec68bad8b0b9b5#83e61084dee3117d34f95600d6ec68bad8b0b9b5"
 dependencies = [
  "chrono",
  "dunce",

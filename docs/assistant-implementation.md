@@ -384,3 +384,18 @@ with unused/dead-code warnings in unchanged platform-specific render/UI code; na
 Clippy passed with warnings denied. Layering checked 37 crates. Asset validation passed
 (281 repository, 6 dependency-bundled and 22 build-time assets). No new assets or dependencies
 were added. The installed app/helper and signed-update flow were not exercised for this revision.
+
+### Two-Mac compact-layout delivery — 2026-11-03
+
+User authorized installing the verified layout on both Macs. The shared helper is versioned
+0.1.1 (protocol/settings/history1), with immutable 0.1.0 retained. Source pin83e61084 includes
+the layout, backwards-compatible update visibility and this release identity. App packaging
+will preserve local certificate trust, fork metadata, required open fonts and existing CLI
+selection. Global rollout state is in `../craft-libs/docs/two-mac-rollout.md`; app candidates
+and native acceptance are in progress, with no installed replacement claimed yet.
+
+PDFCraft host preparation passed29 assistant tests, native UI Clippy with warnings denied,
+WASM UI compilation (warnings in unchanged platform code), layers37, assets281+6+22,
+format and diff checks. Optimized signed desktop candidates are next; installed host
+replacement and native settings-only update checks remain pending. Existing CLI is retained
+because its tools/control protocol are unchanged and installed CLI smoke passed on both Macs.
