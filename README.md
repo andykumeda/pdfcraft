@@ -596,6 +596,10 @@ The Tools panel sits on the left, or on the right with Preferences ▸ Tools pan
 
 ## Independently updated assistant (custom desktop builds)
 
+The current source uses a compact chat layout with a settings gear and composer file/model menus.
+See [update boundaries](docs/custom-assistant-updates.md#what-can-update-without-rebuilding-pdfcraft)
+for which changes require a new PDFCraft binary. Installed builds are tracked separately below.
+
 The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
 
-See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. This implementation is not an installed release: native accessibility/input acceptance and signed update installation remain pending.
+See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. The compact-layout revision is source-only: installed-app acceptance and signed update installation for it remain pending.

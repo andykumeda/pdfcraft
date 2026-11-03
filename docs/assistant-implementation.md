@@ -367,3 +367,20 @@ Native smoke receipts:
 
 Service inventory entries on each Mac record owned PIDs/ports and normal cleanup without tokens.
 `~/.codex/LOCAL_SERVICES.md` is outside this Git repository and is not committed here.
+
+### Compact chat layout — 2026-11-03
+
+| Workstream | Owner | State | Acceptance / verification | Release |
+| --- | --- | --- | --- | --- |
+| Shared UI and settings/update placement | Primary | Verified | craft-libs e511754 + d771dc9: 486 UI checks and 30 helper checks passed; strict scoped lint and synthetic dark/light/narrow screenshots passed; negative control confirmed update visibility test | Source pushed; not installed |
+| PDFCraft shared revision integration | Primary | Verified | d771dc9 pin and lockfile; 29 assistant tests, strict native UI lint, WASM, layers, assets, format and diff checks passed | Source only; not deployed |
+
+No engine/tool contract, provider routing, credential or personal history change. Existing
+installed builds remain unchanged; host rebuild and a compatible helper installation are
+required for the complete new layout. Real installed-app and signed-update smoke remain pending.
+
+Final PDFCraft validation used the locked d771dc9 Git dependency. WASM compilation passed
+with unused/dead-code warnings in unchanged platform-specific render/UI code; native UI
+Clippy passed with warnings denied. Layering checked 37 crates. Asset validation passed
+(281 repository, 6 dependency-bundled and 22 build-time assets). No new assets or dependencies
+were added. The installed app/helper and signed-update flow were not exercised for this revision.

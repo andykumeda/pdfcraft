@@ -9,8 +9,16 @@ remain separate checks. See [the delivery ledger](assistant-implementation.md) f
 source, package hashes, verification and historical preview evidence.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
-and checked menu entry indicate that the native side panel is open. Settings opens the shared in-panel connection editor. The same editor is available through
+and checked menu entry indicate that the native side panel is open. The settings gear opens the shared in-panel connection editor. The same editor is available through
 **Preferences → Assistant settings**. One model handles both chat and requested PDF actions.
+
+In the current source, the Chats menu holds new, saved and delete actions. The rounded
+composer contains a `+` file menu, a model dropdown and Send/Stop. Quick model choices use the
+existing streaming/tool validation and set a PDFCraft override; settings retains suite-wide
+choices and custom model IDs. Assistant version, update checks and installation appear in
+settings. Missing-helper recovery controls remain available. These layout changes are source
+only; the installed versions described above retain their previous layout until rebuilt and
+installed with the updated shared helper.
 
 Use the shared connection/model controls for Codex or OpenAI-compatible providers, including
 Ollama. No model is chosen automatically beyond an explicitly configured suite default.

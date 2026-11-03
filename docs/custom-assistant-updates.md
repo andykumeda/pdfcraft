@@ -134,3 +134,17 @@ assistant 0.1.0. Corrected macOS packaging signs protocol/repository metadata be
 packages were refused by the installer and replaced. Both Macs passed isolated no-inference
 panel/MCP smoke and settled theme checks. Exact hashes, receipts and remaining native acceptance
 are in the delivery ledger; no public update release was created.
+
+## What can update without rebuilding PDFCraft?
+
+A compatible shared assistant release replaces the separately installed helper, which owns
+chat layout, provider clients and settings UI. PDFCraft's document engine, tool implementation
+and app-owned controls are compiled into PDFCraft and require a new app build. Users can
+install a prebuilt app update without compiling locally; that is still a new app binary.
+
+The compact-layout revision uses an optional `settings_open` status field so PDFCraft can put
+its helper update controls behind the settings gear. This placement needs a one-time host
+rebuild. Older hosts remain protocol-compatible but retain their existing update toolbar.
+No signed release or installed-app replacement was performed for this source revision.
+
+A new host connected to an older helper retains the legacy update toolbar until the helper is updated; the optional field is backwards-compatible in both directions.

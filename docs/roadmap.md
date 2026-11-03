@@ -426,3 +426,5 @@ tracked in [the ledger](assistant-implementation.md). No milestone completion is
 ## Pages sidebar keyboard refresh (2026-10-30)
 
 PR #2133 retains document-local Pages sidebar focus for Ctrl/Cmd+A and Escape after the UI module split. The selection does not navigate. The focused regression is in `crates/ui-egui/tests/it/view.rs`; current-head hosted validation is pending. Feature counts and estimates are unchanged.
+
+- 2026-11-03 — Custom assistant layout: shared d771dc9 adds gear settings, composer file/model menus and settings-only update controls. PDFCraft integration verification is recorded in `docs/assistant-implementation.md`; source-only, no installed update or readiness estimate change.
