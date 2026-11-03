@@ -222,6 +222,8 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
+- **2026-11-02 (custom assistant installed smoke):** Corrected signed metadata packages installed standard/Preview 0.18 (8e86f96f) on Mini and MacBook. Four isolated panel/helper typing/settings/resize instances and installed 183-tool MCP checks passed; settled light/dark screenshots reviewed, owned instances quit and listeners released. No inference/personal settings/credentials; clipboard/IME/VoiceOver and public release remain separate. Estimates unchanged.
+
 - **2026-11-02 (custom assistant update safety):** App updates also wait for chat/settings work, submitted input and draft-safe helper state; failed helpers do not block recovery updates through stale UI status. Shared `986cb162` API, 29 assistant + 2 app-update tests, document-only negative control, strict lint/WASM/format/source licensing passed. Final local candidate rebuild follows; estimates unchanged.
 
 - **2026-11-02 (custom assistant, 0.18):** Reconciled upstream release `3936f93a` with full MCP/shared-component integration and shared pin `3ff2754e`. Preserved both startup flags and moved Preferences settings, removed restricted fork branding, and included signed-package licence/attribution inputs. 76 targeted tests, strict scoped Clippy, WASM, formatting, layers, assets and source licensing passed; negative controls proved new regressions. Local candidate build and installed/native acceptance remain separate; estimates unchanged.

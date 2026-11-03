@@ -1,11 +1,13 @@
 # Integrated assistant task ledger
 
-Current source follow-up: full MCP catalog parity is verified in source against the published shared dependency. The installed preview
-recorded below predates this change; no new installation or public release is claimed.
+Current delivery, 2026-11-02: **0.18.0 (`8e86f96f`) standard and Assistant Preview Deployed on
+Mini and MacBook**, using shared assistant 0.1.0. Packaging recipe `7881a923` adds the required
+signed protocol/repository metadata; initial incompatible packages were refused and superseded.
+Installed signatures/hashes and isolated native/MCP smoke are verified on both Macs. No public
+release or live-provider/clipboard/native-IME/VoiceOver acceptance is claimed. See the final
+installed-verification section below. Earlier sections preserve the 0.15 embedded-preview history.
 
-Last preview delivery, 2026-11-02: **Implemented, tested, packaged and Deployed on Mini and MacBook.**
-Current delivery: **0.15.0 (`b1f9d8f3`)**, `/Applications/PDFCraft Assistant Preview.app`.
-No public release was created. The user subsequently authorized a GitHub fork and branch push; see the source distribution record below. Live Codex/hosted-provider and other-Mac acceptance remain open.
+Historical embedded-preview delivery: **0.15.0 (`b1f9d8f3`)**, separate Preview on both Macs.
 
 Reference: WordCraft `4dd7cf7d`, craft-libs `bf932b91643c287502d539b88f08abd5796c9447`.
 PDFCraft baseline `726ecf26`; referenced local `plan/` source documents were absent at baseline.
@@ -313,3 +315,55 @@ used by the standard and preview packagers. Source/native binaries remain the ve
 8e86f96f build; this is a packaging-resource correction, with replacement signatures/archives
 and new receipts required. An unsigned receipt stating compatibility is not a substitute for
 signed Info.plist fields. Initial missing-repository negative smoke and typed field checks passed.
+
+
+## Installed 0.18 verification — 2026-11-02
+
+| Workstream | State | Evidence |
+| --- | --- | --- |
+| Standard and Preview installation | Deployed | Parent rollout installed both variants on both Macs with verified backups; independent post-install strict signatures and native hashes match corrected R2 candidates |
+| Installed panel/helper smoke | Verified | Four isolated instances (two variants on each Mac) opened a synthetic PDF, rendered a signed helper child and accessible composer, typed/cleared a synthetic draft, resized, opened empty connection Settings and exited normally |
+| Theme and Retina rendering | Verified | Initial rapid-toggle screenshot captured the previous asynchronous helper frame. Separate two-second-settled dark/light captures on both Macs visually match host/helper theme; screenshots are 2200×1560 for the 1100×780 logical window |
+| Installed document MCP | Verified | Each installed CLI lists 183 tools; eight temporary-root calls create/set metadata/inspect/render/save/close/list/reopen pass. Metadata mutation, PNG result and empty closed-session state checked |
+| Isolation and cleanup | Verified | Only public component.json/sources.json copied to disposable AI roots; connections explicitly empty, no inference or personal credential/settings inspection. Existing process baselines preserved; all owned instances quit normally and released authenticated OS-assigned loopback listeners; helper uses private pipes |
+| Remaining native acceptance | In progress | No new live-provider inference, clipboard, native composition or VoiceOver session was run. This smoke does not claim the three-app assistant-only update/recovery demonstration or a public release |
+
+Installed native code/source: `8e86f96f564346bf893422dc0b3359d89bf64287`; shared source dependency
+`986cb16234cfdac1ee1337fb4cdf00945cad4e5a`; pinned font input
+`b076417b5880bd4154bd22f00695b1d28c6bea83`. Corrected packaging source
+`7881a92305d468588cb5c271baa0b0689e542a72`. Signed Info.plists contain integer
+`CraftAssistantBridgeProtocol = 1` and `CraftUpdateRepository = andykumeda/pdfcraft`.
+Settings/history schema requirements are 1. Local certificate identity is
+`D7B1B5524FFEB37AB01D3960017BDF6743E3EDFD`; no Apple Team ID/notarization is claimed.
+Its private key remained on Mini. Neither packager changes app-update source settings or client config.
+
+| Installed binary (identical on both Macs) | SHA-256 |
+| --- | --- |
+| `/Applications/PdfCraft.app/Contents/MacOS/PdfCraft` | `8e2097656384eb987ce382c7cf869f6536abe02bbaf536b994762ecb815cab3e` |
+| `/Applications/PDFCraft Assistant Preview.app/Contents/MacOS/PDFCraft-native` | `88147558af8743988035e2b7c8e0ae0bf79371190fcfb291812706b1de8445fd` |
+| `~/.local/share/pdfcraft/0.18.0/pdfcraft-cli` | `fff6d7d3bdfb797070defb8730151323c6632c98d0cb74b6421df718279fc13d` |
+
+The Preview retains bundle ID `ai.storyteller.pdfcraft.assistant-preview`, its per-user document
+profile and `--disable-updates`; both variants retain shared Craft AI settings/history architecture.
+The smoke used disposable overrides to avoid reading personal connections or histories.
+All 11 asset licence paths, five bundled licence documents and 13 pinned-font notices were
+verified in signed extracted bundles. Standard includes two SHA-256-verified ONNX OCR models.
+Restricted upstream marks are absent. No new font file or screenshot was committed.
+
+Corrected local artifacts (initial non-R2 app bundles are superseded):
+
+- Root: `/Users/andy/Dev/pdfcraft/dist/assistant-candidates/0.18.0-8e86f96f-r2/`.
+- Standard DMG: `pdfcraft-0.18.0-macos-aarch64.dmg`, SHA-256 `3e247ae1f5718625041f93e4d4ea5dab793fef6410965f288535eda3c691d702`.
+- Preview DMG: `pdfcraft-assistant-preview-0.18.0-8e86f96f-macos-aarch64.dmg`, SHA-256 `97c31410b9bd17c2dd3052e2346dc39cb8df99c95bc4d696527571e5d37f572b`.
+- Full bundle/archive/public-certificate evidence: `app-receipt.json` in that directory.
+- Matching CLI receipt/archive: `/Users/andy/Dev/pdfcraft/dist/assistant-candidates/0.18.0-8e86f96f/cli-receipt.json`; archive SHA-256 `201dea44a847210065387108ae24b45df6f87ef3b8559302a3a4d0d61a77b3d3`.
+
+Native smoke receipts:
+
+- Mini: `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/pdfcraft-installed-smoke-mcj99u91/report.json`.
+- MacBook: `/var/folders/z6/7ct4dgns2236tw0d27zdb9s40000gn/T/pdfcraft-installed-smoke-74y2v9qq/report.json`.
+- Settled-theme follow-ups: Mini `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/pdfcraft-installed-theme-38ryyoo2/`; MacBook `/var/folders/z6/7ct4dgns2236tw0d27zdb9s40000gn/T/pdfcraft-installed-theme-misa19qd/`.
+- MacBook synthetic screenshots/report copied for review only to `/private/tmp/pdfcraft-installed-smoke-macbook-evidence/`.
+
+Service inventory entries on each Mac record owned PIDs/ports and normal cleanup without tokens.
+`~/.codex/LOCAL_SERVICES.md` is outside this Git repository and is not committed here.

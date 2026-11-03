@@ -1,10 +1,12 @@
 # Integrated desktop assistant preview
 
-Status: private preview **0.15.0 (`b1f9d8f3`)** is installed on the Mini and MacBook at
-`/Applications/PDFCraft Assistant Preview.app`. Native panel/Settings, local Ollama
-inspection/rotation/read-back/Undo and save/reopen passed. It is ad-hoc signed and not
-notarized. See [the delivery ledger](assistant-implementation.md) for exact source, checks,
-DMG/checksum and remaining other-Mac/Codex acceptance. No public release was created. The user subsequently authorized pushing the source branch to the `andykumeda/pdfcraft` fork.
+Status: **PDFCraft 0.18.0 (`8e86f96f`)** standard and Assistant Preview are installed on
+Mini and MacBook with the independently installed shared assistant **0.1.0**. Both variants
+passed isolated native helper/composer/Settings and synthetic MCP smoke on both Macs. The
+installed CLI lists **183 tools**. Local certificate signing is verified; these are not
+notarized or public releases. Clipboard, native IME/VoiceOver and live-provider acceptance
+remain separate checks. See [the delivery ledger](assistant-implementation.md) for exact
+source, package hashes, verification and historical preview evidence.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
 and checked menu entry indicate that the native side panel is open. Settings opens the shared in-panel connection editor. The same editor is available through

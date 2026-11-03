@@ -126,3 +126,11 @@ settings work, drafts, pending input and in-flight tool dispatch defer restart. 
 work and close its panel before continuing an app update if it remains deferred. A missing or
 failed helper does not permanently prevent the app from updating; no active chat is automatically
 cancelled for an update. This host-side guard uses the shared runtime API without a wire change.
+
+
+Current local delivery is 0.18.0 (8e86f96f) standard and Preview on Mini and MacBook, with shared
+assistant 0.1.0. Corrected macOS packaging signs protocol/repository metadata before publication;
+`CRAFT_UPDATE_REPOSITORY=andykumeda/pdfcraft` was explicitly supplied. The initial missing-marker
+packages were refused by the installer and replaced. Both Macs passed isolated no-inference
+panel/MCP smoke and settled theme checks. Exact hashes, receipts and remaining native acceptance
+are in the delivery ledger; no public update release was created.
