@@ -212,7 +212,7 @@ conversation are the remaining manual acceptance checks.
 | Workstream | Owner | State | Acceptance and evidence |
 | --- | --- | --- | --- |
 | Live-session MCP API | PDF integration | Verified | `McpServer::handle_on_session` delegates the existing protocol dispatcher, returns the live Session after dispatch and retains its Undo; `cargo test --offline -p pdfcraft-automation -j 2 live_session_tests`: 1 passed, including exact external/GUI results, PNG, engine errors and Undo |
-| Complete assistant tool catalog | PDF integration | Verified | Removed the 18-tool allowlist, schema/document stripping, private read-back wrapper and separate file grants; the current source and CLI full catalog contain 181 matching names. `cargo test --offline -p pdfcraft-ui-egui -j 2 --lib assistant::`: 25 passed on shared Git revision `c28f430ee4e932e7cbfa9e149b92f24e0f0bc202` (approved local-loopback test permission), covering full descriptor metadata equality, exact MCP results/PNG, multi-document edits, Undo, save/open/root/dirty close, cross-turn paragraph identity, cancellation/self-stop, native settings/panel and a complete synthetic provider turn |
+| Complete assistant tool catalog | PDF integration | Verified | Removed the 18-tool allowlist, schema/document stripping, private read-back wrapper and separate file grants; the baseline source and CLI full catalog contained 181 matching names before 0.18 reconciliation. `cargo test --offline -p pdfcraft-ui-egui -j 2 --lib assistant::`: 25 passed on shared Git revision `c28f430ee4e932e7cbfa9e149b92f24e0f0bc202` (approved local-loopback test permission), covering full descriptor metadata equality, exact MCP results/PNG, multi-document edits, Undo, save/open/root/dirty close, cross-turn paragraph identity, cancellation/self-stop, native settings/panel and a complete synthetic provider turn |
 | Persistent MCP client state and UI synchronization | PDF integration | Verified | `Assistant.mcp` keeps paragraph listings and automation caches across turns. `set_assistant_automation` accepts the same configured Automation path policies as an external client. New/closed documents synchronize tabs; changed generations/saved sources refresh views; pending ordinary typing commits through the existing UI path |
 | Installed/native delivery | PDF integration | In progress | Source changes do not replace the existing preview. No newly installed app, live provider inference, native accessibility or signed release is claimed for this increment |
 
@@ -235,3 +235,38 @@ permitted; no external provider was contacted.
 Native PDF qualification update (2026-11-02): rebuilt actual c28f430 consumers/helper passed coordinate typing, Enter/send, synthetic streaming, accessibility Focus with accented draft text, 2x Retina, window resize and dark-theme propagation with retained draft. A seven-step actual private-pipe MCP turn completed discovery, doc_list, doc_info, page_rotate, page_render PNG, edit_undo and final doc_info with no tool errors; native HTTP received an image_url block. Read-back confirmed page rotation0 and Undo returned dirty=false. Repeated the seven-step turn after explicit adoption of the freshly rebuilt helper. PDF SHA256 b2e84c6d69349d8ae5adf5a2cd13328ad7aabe6e5d827be772cfe4f1bc97cbc2; helper SHA25655ea11eedada3f071307092849d6c3c9460c60b79bb9d607cc7d3f4daf26792c. No real inference, credentials or installed bundles were involved. Earlier A2-preview timeouts remain recorded and their cause is unconfirmed; they did not recur during the rebuilt-app smoke. Native clipboard, real IME, VoiceOver, sustained scrolling/performance, Word/Grid native windows and signed update qualification remain pending.
 
 Additional remote dispatch regressions passed3/3 (existing hidden-keyboard test plus new nested-begin/reload and deferred self-stop cases).
+
+
+## PDFCraft 0.18 reconciliation — 2026-11-02
+
+| Workstream | Owner | State | Acceptance and evidence |
+| --- | --- | --- | --- |
+| Upstream source reconciliation | PDF integration | Verified | Isolated branch `codex/independent-assistant-v018` merges upstream release `3936f93a` into assistant baseline `cd2eb01d`; source conflicts resolved without changing the original checkout or installed applications |
+| Assistant compatibility | PDF integration | Verified | Preserve full live-session MCP descriptors/results, persistent tool state, shared helper integration and explicit fork update sources. Retain upstream two-page startup parsing, Preferences module split, updater app identity and engine changes |
+| Regression verification | PDF integration | Verified | Final shared Git pin `3ff2754eeb1c079612247f4d288a22a20c169ac9`: assistant tests 27 passed, moved Preferences control 1 passed, GUI links/document-link tests 39 passed. The 0.18 stale-paragraph fixture uses upstream’s pure-move regrouping case because rewritten regions now remain distinct. Standalone live-session MCP regression 1 passed (318 unrelated integration cases filtered). Desktop startup tests 8 passed. Strict all-target Clippy for UI/automation/desktop, WASM (11 existing upstream warnings), formatting, layers (37 crates), assets (281 repository / 6 dependency / 22 fetched), and source license-check passed. Both new regressions failed when their fixes were temporarily removed and passed after exact restoration |
+| Delivery | PDF integration | In progress | No installed-app replacement, signed component activation or public release is part of this source reconciliation. Native live accessibility/input and three-app independent-update acceptance remain pending |
+
+The previous preview installation evidence above still describes the 0.15 preview. Source
+version 0.18 does not imply that installed applications have been updated. The custom app
+update result modal remains app-owned because the upstream generic result dialog uses its
+static release repository; the assistant-enabled build must display only its configured fork
+repository and must not silently fall back to ordinary upstream releases.
+
+
+Before producing 0.18 local candidates, source review found pre-existing restricted ArtCraft
+logos embedded in Home/About. This fork removes their `include_bytes!` helpers, eight logo
+files and matching asset entries, replaces promotional branding with permitted plain-text
+upstream provenance, and regenerates the asset index. Original copyright and dependency/font
+licences remain. The existing About link regression now asserts that restricted mark alt text
+is absent and upstream attribution remains; Home retains clearly labelled upstream links.
+
+The shared packaging helper now includes `ATTRIBUTION.md`/`.toml` and source-relative
+asset, font and vendored licence texts in signed Resources. Standard macOS bundles use
+the same helper; the pinned optional craft-fonts OFL notices are retained. Candidate
+receipts must verify these files after extraction, before claiming packaging complete.
+
+Packaging verification before the release build: shell syntax passed; all 11 source asset
+licence paths and 13 pinned craft-fonts notices were staged successfully, and all six maintained
+bundled font/CMap notice files matched their source bytes. The packaging guard rejected the
+prior branded release binary and accepted the new 0.18 UI test binary. These are source/package
+helper checks, not signed release-candidate delivery or native installed acceptance.

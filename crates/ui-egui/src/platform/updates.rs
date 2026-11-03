@@ -32,7 +32,7 @@ impl Default for Updates {
         Self {
             disabled: false,
             #[cfg(not(target_arch = "wasm32"))]
-            updater: Updater::new(&craft_update::suite::PDFCRAFT, env!("CARGO_PKG_VERSION")),
+            updater: Updater::new(&crate::UPDATE_APP, env!("CARGO_PKG_VERSION")),
             open: false,
             #[cfg(not(target_arch = "wasm32"))]
             startup_check: false,
@@ -49,7 +49,7 @@ impl PdfCraftApp {
     #[cfg(not(target_arch = "wasm32"))]
     pub fn configure_assistant_updates(&mut self, bridge_protocol: u32) {
         let root = craft_ai_native::storage::SharedStore::default_root().map_err(|error| error.to_string());
-        self.updates.updater = craft_update::custom::updater(&craft_update::suite::PDFCRAFT, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
+        self.updates.updater = craft_update::custom::updater(&crate::UPDATE_APP, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
     }
 
     /// Custom previews must never install a standard release over themselves.
@@ -71,7 +71,7 @@ impl PdfCraftApp {
     /// Replaces the network with `source` (tests).
     #[cfg(not(target_arch = "wasm32"))]
     pub fn set_update_source(&mut self, source: UpdateSource) {
-        self.updates.updater = Updater::new(&craft_update::suite::PDFCRAFT, env!("CARGO_PKG_VERSION")).with_source(source);
+        self.updates.updater = Updater::new(&crate::UPDATE_APP, env!("CARGO_PKG_VERSION")).with_source(source);
     }
 
     /// Help ▸ Check for updates: ask for the latest release and show the outcome.

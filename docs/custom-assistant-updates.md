@@ -87,7 +87,7 @@ Additional native control commands take an empty parameter object:
 These commands return a clear error when shared mode is not enabled. Checking or installing a
 component never changes the app's release source or bypasses `--disable-updates` for app updates.
 
-## Verification and remaining checks
+## Initial implementation verification (historical)
 
 The production UI library passed its scoped Cargo check against the local shared component
 implementation. Shared updater regressions passed (175 tests, four environment/live tests
@@ -95,7 +95,7 @@ ignored); the additional incompatible-DMG preservation test passed separately. S
 regressions passed for wrong targets, repeated request IDs, cancellation, backpressure and
 argument limits.
 
-New app-level command/grant regression tests are included but have not been executed. Native
+At that initial checkpoint, new app-level command/grant regression tests had not been executed. Native
 app linking, installed-app update replacement, real helper-to-document edits, VoiceOver and
 cross-app binary-unchanged update demonstrations remain unverified. The development volume
 ran below 1 GiB free, so further app builds/test linking were stopped to preserve existing
@@ -104,3 +104,18 @@ work. No published release or installed application was changed.
 Shared implementation pin: `andykumeda/craft-libs@17c5ea725866fa2e8f7f89a6cb3bec269ad8d571` (task branch `codex/independent-assistant`). All shared dependencies use that revision together. Cargo locks must resolve the published Git source, never the temporary local verification patch.
 
 The shared assistant/config/installer/updater final test run passed **228 tests, 4 ignored**. PDF production UI Clippy and Word/Grid production UI checks passed against byte-identical reviewed local source before publishing this pin. Native consumer test links were deferred for disk headroom; do not treat compilation as installed acceptance. No release or user configuration was changed.
+
+
+## Current 0.18 integration source
+
+The integration branch reconciles upstream PDFCraft release `3936f93a` (0.18) with the
+assistant source baseline `cd2eb01d`. All shared dependencies now use published fork revision
+`3ff2754eeb1c079612247f4d288a22a20c169ac9`, including upstream updater compatibility and the
+assistant runtime. The checked-in lock uses Git dependencies, without local path substitutions.
+Current verification and the source-versus-installed delivery state are recorded in
+[the 0.18 ledger](assistant-implementation.md#pdfcraft-018-reconciliation--2026-11-02).
+
+Preferences retains its new upstream module/card layout and exposes Assistant settings.
+The launch parser accepts `--disable-updates` without consuming the following PDF path or
+view flag. Assistant-enabled app checks use the configured fork source and preserve the
+upstream updater app identity; disabled preview updates remain disabled.

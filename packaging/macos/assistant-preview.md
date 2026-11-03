@@ -13,7 +13,7 @@ source commit's eight-character prefix. Then run:
 ```sh
 packaging/macos/assistant-preview.sh \
   --binary /path/to/release/pdfcraft \
-  --version 0.15.0 \
+  --version 0.18.0 \
   --build-sha FULL_40_CHARACTER_SOURCE_COMMIT \
   --output-dir /path/to/dist/assistant-preview/COMMIT
 ```
@@ -34,3 +34,10 @@ Preview updates require deliberate upstream source integration, verification and
 preview build. Save and quit normally before replacement, retain a rollback app, and
 never replace the main PDFCraft app. Packaging checks do not establish provider
 inference correctness or receiving-Mac acceptance.
+
+
+Local 0.18 candidates use the same committed native executable in the standard and preview
+bundles. The preview retains its separate launcher, bundle identifier and document profile;
+the assistant settings, credentials and conversations remain shared. A local signing
+certificate is not a Developer ID/notarization receipt. Candidate creation does not install,
+activate or publish an app or change the configured assistant-enabled app release source.

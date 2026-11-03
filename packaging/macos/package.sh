@@ -70,6 +70,8 @@ for bin in pdfcraft pdfcraft-cli; do
   lipo -info "$WORK/bin/$bin"
 done
 
+verify_fork_branding "$WORK/bin/pdfcraft"
+
 # ---- signing helpers ---------------------------------------------------------------------------
 sign() {
   # Hardened runtime + secure timestamp for a real identity; ad-hoc can't be timestamped.
@@ -118,12 +120,11 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 # Executable and icon carry the display name (CFBundleExecutable / CFBundleIconFile).
 cp "$WORK/bin/pdfcraft" "$APP/Contents/MacOS/PdfCraft"
 cp "$ROOT/assets/app-icon/pdfcraft.icns" "$APP/Contents/Resources/PdfCraft.icns"
-# Required embedded-font notices are independent of optional font inputs.
-cp "$ROOT/NOTICE" "$APP/Contents/Resources/NOTICE"
+# Required licence texts and attribution precede signing, including embedded Latin/icon fonts.
+copy_docs "$APP/Contents/Resources"
 # The standard About panel (PdfCraft menu > About PdfCraft) shows Credits.rtf under the version:
 # the website and Discord links the in-app About dialog has (#1287).
 cp "$HERE/Credits.rtf" "$APP/Contents/Resources/Credits.rtf"
-copy_font_licences "$APP/Contents/Resources"
 # OCR models: the app finds them at Contents/MacOS/../Resources/models. Before signing, so the
 # bundle's seal covers them.
 stage_models "$APP/Contents/Resources/models"

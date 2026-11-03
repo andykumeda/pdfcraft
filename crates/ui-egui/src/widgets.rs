@@ -70,7 +70,7 @@ pub fn line(text: &mut dyn egui::TextBuffer) -> egui::TextEdit<'_> {
     egui::TextEdit::singleline(text).margin(FIELD_MARGIN).min_size(vec2(0.0, FIELD_MIN_HEIGHT))
 }
 
-/// A multiline field with the same horizontal inset as [`line`].
+/// A multiline field with the same horizontal inset as [`line()`].
 pub fn block(text: &mut dyn egui::TextBuffer) -> egui::TextEdit<'_> {
     egui::TextEdit::multiline(text).margin(egui::Margin::symmetric(10, 6))
 }
@@ -252,6 +252,23 @@ pub fn radio_value<'a, V: PartialEq>(ui: &mut egui::Ui, current: &mut V, alterna
         response.mark_changed();
     }
     response
+}
+
+/// Keeps the end of a "from … to …" page range at or after its start, but not while `typing` into the
+/// end's `DragValue` ([`typing_into`]): the half-typed "1" of "12" is below `from`, and raising it
+/// then replaced what the user was typing with `from` (#5574). A dialog's OK orders it whatever has
+/// the keyboard (`typing` false), so a range left reversed never reaches the edit.
+pub fn keep_range_ordered(from: usize, to: &mut usize, typing: bool) {
+    if !typing {
+        *to = (*to).max(from);
+    }
+}
+
+/// Whether `field` is being typed into: it has the keyboard focus in egui's memory. Unlike
+/// `Response::has_focus` this stays true while the window is in the background, so switching to
+/// another app mid-number doesn't end the typing.
+pub fn typing_into(field: &Response) -> bool {
+    field.ctx.memory(|m| m.has_focus(field.id))
 }
 
 /// The box of a checkbox or the circle of a radio button. egui draws it with the widgets' visuals
@@ -583,26 +600,6 @@ pub fn progress_notice(app: &PdfCraftApp, ctx: &egui::Context) -> bool {
     ctx.data_mut(|d| d.insert_temp(egui::Id::unique(PROGRESS_HEIGHT), area.response.rect.height()));
     ctx.request_repaint_after(std::time::Duration::from_millis(33));
     cancel
-}
-
-/// The ArtCraft wordmark (Storyteller's brand, docs/brand/; not open source), sized to `height`.
-pub fn artcraft_logo(ui: &mut egui::Ui, height: f32) -> Response {
-    let dark = ui.visuals().dark_mode;
-    let (uri, bytes): (&str, &'static [u8]) = if dark {
-        ("bytes://artcraft-logo-white.svg", include_bytes!("../../../docs/brand/artcraft-logo-white.svg"))
-    } else {
-        ("bytes://artcraft-logo.svg", include_bytes!("../../../docs/brand/artcraft-logo.svg"))
-    };
-    ui.add(egui::Image::from_bytes(uri, bytes).max_height(height).alt_text("ArtCraft"))
-}
-
-/// The ArtCraft mark (brand blue, works on light and dark), `size` points square.
-pub fn artcraft_mark(ui: &mut egui::Ui, size: f32) -> Response {
-    ui.add(
-        egui::Image::from_bytes("bytes://artcraft-mark.svg", include_bytes!("../../../docs/brand/artcraft-mark.svg"))
-            .fit_to_exact_size(vec2(size, size))
-            .alt_text("ArtCraft"),
-    )
 }
 
 /// Buttons for every community link (`pdfcraft_engine::links`), Discord first and prominent.

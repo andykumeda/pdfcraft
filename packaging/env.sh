@@ -64,11 +64,38 @@ warn() {
 # Copy licence and readme files that exist into a package directory.
 copy_docs() {
   local dest="$1" f
-  for f in README.md LICENSE LICENSE-MIT LICENSE-APACHE COPYRIGHT NOTICE; do
+  for f in README.md LICENSE LICENSE-MIT LICENSE-APACHE COPYRIGHT NOTICE ATTRIBUTION.md ATTRIBUTION.toml LICENSES.toml; do
     if [[ -f "$ROOT/$f" ]]; then cp "$ROOT/$f" "$dest/"; fi
   done
+  # Carry the original licence texts as well as the per-file attribution index. Keep
+  # their source-relative paths so every embedded asset and vendored component is traceable.
+  while IFS= read -r -d '' f; do
+    local relative="${f#"$ROOT/"}"
+    mkdir -p "$dest/licenses/$(dirname "$relative")"
+    cp "$f" "$dest/licenses/$relative"
+  done < <(find "$ROOT/assets" "$ROOT/licenses" "$ROOT/vendor" -type f \
+    \( -path "$ROOT/licenses/*" -o -name 'NOTICE*' -o -name 'COPYING*' -o -name 'COPYRIGHT*' -o -name 'LICENSE*' -o -name '*LICENSE.txt' -o -name 'OFL*.txt' -o -name '*-license.txt' -o -name '*_LICENSE*' \) -print0)
   copy_font_licences "$dest"
   return
+}
+
+# A modified fork must never package a binary from before the restricted-mark cleanup.
+verify_fork_branding() {
+  local binary="$1" status
+  if [[ ! -f "$binary" || ! -r "$binary" ]]; then
+    echo "error: binary is unavailable for fork brand verification" >&2
+    return 1
+  fi
+  if LC_ALL=C grep -aEq 'bytes://artcraft-(logo|mark)' "$binary"; then
+    echo "error: binary embeds restricted upstream brand assets; rebuild the fork before packaging" >&2
+    return 1
+  else
+    status=$?
+    if [[ "$status" != 1 ]]; then
+      echo "error: could not inspect binary for restricted upstream brand assets" >&2
+      return 1
+    fi
+  fi
 }
 
 # Builds made with the optional craft-fonts input (CRAFT_FONTS_DIR, set for every release) embed

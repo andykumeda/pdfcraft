@@ -3,16 +3,15 @@ Copyright (c) 2026 ArtCraft Team and the PdfCraft contributors.
 Licensed under the MIT License or the Apache License, Version 2.0, at your option
 (LICENSE-MIT, LICENSE-APACHE).
 
-The ArtCraft name, wordmark and logos in docs/brand/ are trademarks of the ArtCraft Team. They are
-not open source and are not covered by the license above; their terms are in
-docs/brand/LICENSE-brand.txt.
+This modified build is based on PdfCraft by the ArtCraft team. Restricted upstream
+brand marks have been removed; this fork is independently maintained.
 
 Third-party material
 
 This product bundles third-party material under its own licenses, listed below. The per-file
 list (author, source, license) is in ATTRIBUTION.md.
 
-- Lucide icons (assets/icons/*.svg) — ISC License. See assets/icons/LICENSE-lucide.txt.
+- Lucide icons (assets/icons/*.svg) — ISC and MIT licences (Feather-derived icons). See assets/icons/LICENSE-lucide.txt.
   The Windows PDF file icon (assets/app-icon/pdfcraft-document.svg and .ico) adapts Lucide's
   file-text outline and combines it with contributor-original artwork. See
   assets/app-icon/LICENSE-document.txt (ISC AND (MIT OR Apache-2.0)), packaged as
@@ -80,4 +79,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - dirs-sys 0.5.0 — MIT OR Apache-2.0. Copyright (c) 2018-2019 dirs-rs contributors.
   Source: https://github.com/dirs-dev/dirs-sys-rs. PdfCraft replaces its Option extension
   with standard-library equality; no option-ext code is included. License texts are in
-  vendor/dirs-sys/ and in assistant preview Resources/licenses/dirs-sys/.
+  vendor/dirs-sys/ and in packaged Resources/licenses/vendor/dirs-sys/.

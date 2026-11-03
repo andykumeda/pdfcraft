@@ -171,12 +171,8 @@ fn paragraph_listing_identity_survives_new_assistant_turns() {
     let mut guard = Guard::new(&app, String::new(), Vec::new());
     let listed = success(&mut app, &mut guard, "text_paragraphs", json!({"doc":id.0,"page":1}));
     assert_eq!(listed["count"], 3);
-    let edited = success(
-        &mut app,
-        &mut guard,
-        "text_edit",
-        json!({"doc":id.0,"page":1,"paragraph":1,"text":"Alpha paragraph, first row.\nAlpha paragraph, second row.\nAlpha paragraph, a third row."}),
-    );
+    // Upstream 0.18 keeps rewritten regions distinct; a pure move still regroups Alpha/Bravo.
+    let edited = success(&mut app, &mut guard, "text_edit", json!({"doc":id.0,"page":1,"paragraph":1,"dy":-21.2}));
     assert_eq!(edited["stale_paragraphs"], json!([1, 2]));
     let mut next_turn = Guard::new(&app, String::new(), Vec::new());
     let refused =

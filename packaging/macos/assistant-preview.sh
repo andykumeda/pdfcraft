@@ -46,6 +46,7 @@ export PDFCRAFT_VERSION="$PREVIEW_VERSION" PDFCRAFT_BUILD_SHA="$BUILD_SHA"
 # shellcheck source=../env.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../env.sh"
 HERE="$ROOT/packaging/macos"
+verify_fork_branding "$BINARY"
 
 ACTUAL_ARCH="$(lipo -archs "$BINARY")"
 case "$ARCH:$ACTUAL_ARCH" in
@@ -158,7 +159,7 @@ Signing: $SIGNING
    handles conversation and document actions; no model or credentials are included.
 
 Install [Codex CLI](https://developers.openai.com/codex/cli) and sign in through this
-preview's isolated Craft connection on each Mac. Install [Ollama for macOS](https://ollama.com/download/mac)
+shared Craft connection settings on each Mac. Install [Ollama for macOS](https://ollama.com/download/mac)
 separately and download the desired local model there if used.
 The launcher discovers Codex on PATH, including standard Homebrew locations;
 CRAFT_CODEX_BINARY can explicitly select another executable. Settings, chats,
@@ -172,8 +173,7 @@ it. Relevant document content may reach the selected provider when requested.
 
 The preview launcher disables the standard PDFCraft updater, including manual
 Check for Updates. Preview updates arrive as new preview DMGs. Save your documents
-and quit the preview before replacing it. The separate main PDFCraft app keeps
-its normal updater. Neither installation method copies your settings or credentials.
+and quit the preview before replacing it. The separate main PDFCraft app uses its configured assistant-enabled update source. Neither installation method copies your settings or credentials.
 
 This archive contains the supplied binary, original app icon and project licences.
 Optional font licences must accompany binaries built with CRAFT_FONTS_DIR. Packaging
