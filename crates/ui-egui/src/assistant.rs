@@ -21,6 +21,8 @@ pub struct Assistant {
     native: native::Native,
     #[cfg(not(target_arch = "wasm32"))]
     remote: remote::Remote,
+    #[cfg(not(target_arch = "wasm32"))]
+    mcp: pdfcraft_automation::mcp::McpServer,
 }
 
 impl Drop for Assistant {
@@ -33,6 +35,13 @@ impl Drop for Assistant {
 }
 
 impl PdfCraftApp {
+    /// Configure the same automation roots/path policies used by an external MCP connection.
+    /// Set this before starting assistant turns; the default matches unconfined external MCP.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn set_assistant_automation(&mut self, automation: pdfcraft_automation::Automation) {
+        self.assistant.mcp = pdfcraft_automation::mcp::McpServer::new(automation);
+    }
+
     /// Attaches the independently installed assistant and its explicit app-update source.
     /// Desktop entry points call this once before startup update checks.
     #[cfg(not(target_arch = "wasm32"))]
@@ -234,6 +243,8 @@ impl Default for Assistant {
             native: native::Native::default(),
             #[cfg(not(target_arch = "wasm32"))]
             remote: remote::Remote::default(),
+            #[cfg(not(target_arch = "wasm32"))]
+            mcp: pdfcraft_automation::mcp::McpServer::new(pdfcraft_automation::Automation::new()),
         }
     }
 }

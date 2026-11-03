@@ -86,6 +86,19 @@ impl McpServer {
         &self.automation
     }
 
+    /// Handle the same MCP request against a caller's live document session and Undo history.
+    /// Root confinement, schemas, errors and content blocks are identical to [`Self::handle`].
+    /// The session is returned even if an unexpected panic escapes protocol dispatch.
+    pub fn handle_on_session(&mut self, session: &mut pdfcraft_engine::Session, msg: &Value) -> Option<Value> {
+        std::mem::swap(&mut self.automation.session, session);
+        let reply = pdfcraft_engine::guard(|| self.handle(msg));
+        std::mem::swap(&mut self.automation.session, session);
+        match reply {
+            Ok(reply) => reply,
+            Err(message) => msg.get("id").map(|id| error(id.clone(), INTERNAL_ERROR, &format!("internal error: {message}"))),
+        }
+    }
+
     /// Serve until `input` reaches end of file.
     pub fn serve(&mut self, mut input: impl BufRead, mut output: impl Write) -> std::io::Result<()> {
         let mut buf = Vec::new();
@@ -583,6 +596,33 @@ fn call_result(content: Vec<Content>) -> Value {
         result["structuredContent"] = s;
     }
     result
+}
+
+#[cfg(test)]
+mod live_session_tests {
+    use super::*;
+
+    #[test]
+    fn live_session_requests_use_the_same_mcp_dispatch_results_and_undo() {
+        let mut live = pdfcraft_engine::Session::new().with_clock(|| 1_700_000_000);
+        let mut bridge = McpServer::new(Automation::new());
+        let mut external = McpServer::new(Automation::new().with_clock(|| 1_700_000_000));
+        for (name, arguments) in [
+            ("doc_create", json!({"from":"blank","pages":2})),
+            ("doc_set_info", json!({"doc":1,"key":"Title","value":"Shared MCP result"})),
+            ("doc_info", json!({"doc":1})),
+            ("page_render", json!({"doc":1,"page":1,"dpi":12})),
+            ("doc_close", json!({"doc":1})),
+            ("edit_undo", json!({"doc":1})),
+            ("doc_info", json!({"doc":1})),
+        ] {
+            let request = json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":name,"arguments":arguments}});
+            assert_eq!(bridge.handle_on_session(&mut live, &request), external.handle(&request), "{name}");
+            assert!(bridge.automation().session().docs().is_empty(), "the GUI session must always be returned");
+        }
+        assert_eq!(live.docs().len(), 1);
+        assert_ne!(live.docs()[0].info.title.as_deref(), Some("Shared MCP result"));
+    }
 }
 
 #[cfg(test)]

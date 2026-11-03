@@ -20,6 +20,8 @@ pub(super) struct Remote {
     controller: Option<Controller>,
     turn: Option<Turn>,
     pub config: Option<RuntimeConfig>,
+    dispatching: bool,
+    stop_requested: bool,
     label: String,
     settings: Option<bool>,
     shown: bool,
@@ -112,7 +114,7 @@ pub(super) fn action(app: &mut PdfCraftApp, action: Action) -> Result<(), String
 }
 
 fn begin(app: &mut PdfCraftApp, prompt: String, files: Vec<String>) -> Result<(), String> {
-    if app.assistant.remote.turn.is_some() {
+    if app.assistant.remote.turn.is_some() || app.assistant.remote.dispatching {
         return Err("Finish or stop the current assistant turn first.".into());
     }
     if let Some(controller) = &mut app.assistant.remote.controller {
@@ -138,6 +140,9 @@ fn begin(app: &mut PdfCraftApp, prompt: String, files: Vec<String>) -> Result<()
 }
 
 fn stop(app: &mut PdfCraftApp) -> Result<(), String> {
+    if app.assistant.remote.dispatching {
+        app.assistant.remote.stop_requested = true;
+    }
     app.assistant.remote.cancel();
     app.assistant.remote.turn = None;
     app.assistant.widget.busy = false;
@@ -208,9 +213,16 @@ pub(super) fn poll(app: &mut PdfCraftApp, ctx: &egui::Context) {
         }
     }
     if let Some(mut turn) = app.assistant.remote.turn.take() {
+        app.assistant.remote.dispatching = true;
         while let Ok(pending) = turn.proxy.pending.try_recv() {
             host::dispatch(app, ctx, &mut turn.guard, pending);
+            if app.assistant.remote.stop_requested {
+                turn.proxy.cancel();
+                break;
+            }
         }
+        app.assistant.remote.dispatching = false;
+        let stopped = std::mem::take(&mut app.assistant.remote.stop_requested);
         let mut failed = None;
         loop {
             match turn.proxy.events.try_recv() {
@@ -264,7 +276,9 @@ pub(super) fn poll(app: &mut PdfCraftApp, ctx: &egui::Context) {
                 })
             })
             .map(str::to_owned);
-        if let Some(error) = failed.or(controller_error) {
+        if stopped {
+            turn.proxy.cancel();
+        } else if let Some(error) = failed.or(controller_error) {
             turn.proxy.cancel();
             app.assistant.widget.error = Some(error);
             if let Some(controller) = &mut app.assistant.remote.controller {
@@ -287,7 +301,7 @@ pub(super) fn poll(app: &mut PdfCraftApp, ctx: &egui::Context) {
             app.assistant.widget.error = Some(error.into());
         }
     }
-    if app.assistant.remote.turn.is_some() {
+    if app.assistant.remote.turn.is_some() || app.assistant.remote.dispatching {
         ctx.request_repaint_after(Duration::from_millis(50));
     }
 }
@@ -319,7 +333,7 @@ pub(super) fn service_command(app: &mut PdfCraftApp, name: &str) -> Result<serde
         return Ok(update_status(app));
     }
     let ctx = app.ctx.clone().ok_or("The assistant needs an active app window")?;
-    if name == "ui.assistant.reloadComponent" && app.assistant.remote.turn.is_some() {
+    if name == "ui.assistant.reloadComponent" && (app.assistant.remote.turn.is_some() || app.assistant.remote.dispatching) {
         return Err("Finish or stop the current assistant turn before reloading its component.".into());
     }
     let controller = app.assistant.remote.controller.as_mut().ok_or("The shared assistant is unavailable")?;
@@ -349,5 +363,33 @@ mod tests {
         assert!(app.assistant.widget.authorized_files.is_empty());
         assert!(!app.assistant.remote.controller.as_ref().unwrap().ready());
         assert!(!app.assistant.remote.owns_keyboard());
+    }
+    #[test]
+    fn nested_begin_and_reload_are_rejected_while_turn_is_taken_for_gui_dispatch() {
+        let mut app = PdfCraftApp::new();
+        app.assistant.remote.enabled = true;
+        app.assistant.remote.dispatching = true;
+        let error = begin(&mut app, "Nested request".into(), vec![]).unwrap_err();
+        assert!(error.contains("Finish or stop"), "{error}");
+        assert!(app.assistant.remote.turn.is_none());
+        assert!(app.assistant.remote.controller.is_none(), "rejected nested requests must not start a helper");
+        app.ctx = Some(egui::Context::default());
+        let error = service_command(&mut app, "ui.assistant.reloadComponent").unwrap_err();
+        assert!(error.contains("Finish or stop"), "{error}");
+        assert!(!app.assistant.remote.controller.as_ref().unwrap().ready());
+    }
+
+    #[test]
+    fn self_stop_during_gui_dispatch_sets_deferred_cancellation_without_starting_a_turn() {
+        let mut app = PdfCraftApp::new();
+        app.assistant.remote.dispatching = true;
+        app.assistant.widget.busy = true;
+        assert!(!app.assistant.remote.stop_requested);
+        stop(&mut app).unwrap();
+        // The taken turn is owned by poll; it consumes this flag to cancel instead of reinserting it.
+        assert!(app.assistant.remote.stop_requested);
+        assert!(app.assistant.remote.turn.is_none());
+        assert!(!app.assistant.widget.busy);
+        assert!(app.assistant.remote.controller.is_none());
     }
 }

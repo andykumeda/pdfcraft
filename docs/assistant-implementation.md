@@ -1,6 +1,9 @@
 # Integrated assistant task ledger
 
-Updated 2026-11-02. **Implemented, tested, packaged and Deployed on Mini and MacBook.**
+Current source follow-up: full MCP catalog parity is verified in source against the published shared dependency. The installed preview
+recorded below predates this change; no new installation or public release is claimed.
+
+Last preview delivery, 2026-11-02: **Implemented, tested, packaged and Deployed on Mini and MacBook.**
 Current delivery: **0.15.0 (`b1f9d8f3`)**, `/Applications/PDFCraft Assistant Preview.app`.
 No public release was created. The user subsequently authorized a GitHub fork and branch push; see the source distribution record below. Live Codex/hosted-provider and other-Mac acceptance remain open.
 
@@ -203,3 +206,32 @@ normal preview launches were then requested on both Macs. Existing user profiles
 provider settings and credentials were not copied or edited. Local signing remains
 ad-hoc, without notarization. The user's real Fabric Site 1 deletion and provider
 conversation are the remaining manual acceptance checks.
+
+## Full MCP catalog parity — 2026-11-02
+
+| Workstream | Owner | State | Acceptance and evidence |
+| --- | --- | --- | --- |
+| Live-session MCP API | PDF integration | Verified | `McpServer::handle_on_session` delegates the existing protocol dispatcher, returns the live Session after dispatch and retains its Undo; `cargo test --offline -p pdfcraft-automation -j 2 live_session_tests`: 1 passed, including exact external/GUI results, PNG, engine errors and Undo |
+| Complete assistant tool catalog | PDF integration | Verified | Removed the 18-tool allowlist, schema/document stripping, private read-back wrapper and separate file grants; the current source and CLI full catalog contain 181 matching names. `cargo test --offline -p pdfcraft-ui-egui -j 2 --lib assistant::`: 25 passed on shared Git revision `c28f430ee4e932e7cbfa9e149b92f24e0f0bc202` (approved local-loopback test permission), covering full descriptor metadata equality, exact MCP results/PNG, multi-document edits, Undo, save/open/root/dirty close, cross-turn paragraph identity, cancellation/self-stop, native settings/panel and a complete synthetic provider turn |
+| Persistent MCP client state and UI synchronization | PDF integration | Verified | `Assistant.mcp` keeps paragraph listings and automation caches across turns. `set_assistant_automation` accepts the same configured Automation path policies as an external client. New/closed documents synchronize tabs; changed generations/saved sources refresh views; pending ordinary typing commits through the existing UI path |
+| Installed/native delivery | PDF integration | In progress | Source changes do not replace the existing preview. No newly installed app, live provider inference, native accessibility or signed release is claimed for this increment |
+
+The side panel now forwards ordinary MCP document IDs, paths and options. Normal engine
+permissions, signatures, root confinement, atomic saves and explicit dirty-document close
+validation remain authoritative. GUI-side transport cancellation still prevents queued work
+from executing after Stop and never automatically replays uncertain operations. Tool output
+retains the MCP `content`/image/`structuredContent`/`isError` contract. Provider catalog discovery,
+context budgets and image handling are tracked with the shared assistant runtime workstream.
+
+Scoped all-target Clippy for `pdfcraft-automation` and `pdfcraft-ui-egui` with `-D warnings`
+passed against shared revision `17c5ea725866fa2e8f7f89a6cb3bec269ad8d571`. The subsequent published shared revision `c28f430ee4e932e7cbfa9e149b92f24e0f0bc202`
+adds lossless MCP metadata forwarding and provider discovery/image support. The final consumer
+suite above verifies that actual Git dependency; real provider and installed-app qualification
+remain separate gates. Final reruns on that Git dependency passed: the live-session MCP parity test (1 passed),
+all-target UI/automation Clippy with `-D warnings`, and changed-source formatting/diff checks.
+The consumer assistant suite passed all 25 tests in one run with the synthetic loopback fixture
+permitted; no external provider was contacted.
+
+Native PDF qualification update (2026-11-02): rebuilt actual c28f430 consumers/helper passed coordinate typing, Enter/send, synthetic streaming, accessibility Focus with accented draft text, 2x Retina, window resize and dark-theme propagation with retained draft. A seven-step actual private-pipe MCP turn completed discovery, doc_list, doc_info, page_rotate, page_render PNG, edit_undo and final doc_info with no tool errors; native HTTP received an image_url block. Read-back confirmed page rotation0 and Undo returned dirty=false. Repeated the seven-step turn after explicit adoption of the freshly rebuilt helper. PDF SHA256 b2e84c6d69349d8ae5adf5a2cd13328ad7aabe6e5d827be772cfe4f1bc97cbc2; helper SHA25655ea11eedada3f071307092849d6c3c9460c60b79bb9d607cc7d3f4daf26792c. No real inference, credentials or installed bundles were involved. Earlier A2-preview timeouts remain recorded and their cause is unconfirmed; they did not recur during the rebuilt-app smoke. Native clipboard, real IME, VoiceOver, sustained scrolling/performance, Word/Grid native windows and signed update qualification remain pending.
+
+Additional remote dispatch regressions passed3/3 (existing hidden-keyboard test plus new nested-begin/reload and deferred self-stop cases).

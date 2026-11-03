@@ -12,6 +12,7 @@ const EDITED: &str = "Synthetic assistant title";
 struct SyntheticProvider {
     choice: ModelChoice,
     responses: AtomicUsize,
+    doc: u64,
 }
 
 impl ChatProvider for SyntheticProvider {
@@ -27,13 +28,18 @@ impl ChatProvider for SyntheticProvider {
             assert_eq!(last.role, MessageRole::Tool, "tool results stay distinct from user instructions");
             let result: Value = serde_json::from_str(&last.content).unwrap();
             assert_ne!(result.get("isError"), Some(&json!(true)));
-            let title = if step == 2 { &result["read_back"]["title"] } else { &result["title"] };
-            assert_eq!(title.as_str(), Some(if step == 1 { ORIGINAL } else { EDITED }), "use actual document read-back");
+            if step != 2 {
+                assert_eq!(
+                    result["structuredContent"]["title"].as_str(),
+                    Some(if step == 1 { ORIGINAL } else { EDITED }),
+                    "use actual MCP document read-back"
+                );
+            }
         }
         let (name, arguments) = match step {
-            0 => ("doc_info", json!({})),
-            1 => ("doc_set_info", json!({"key":"Title","value":EDITED})),
-            2 => ("doc_info", json!({})),
+            0 => ("doc_info", json!({"doc":self.doc})),
+            1 => ("doc_set_info", json!({"doc":self.doc,"key":"Title","value":EDITED})),
+            2 => ("doc_info", json!({"doc":self.doc})),
             3 => return Ok(Message::text(MessageRole::Assistant, "The synthetic title was edited and read back.")),
             _ => panic!("the synthetic provider was called beyond its expected sequence"),
         };
@@ -69,7 +75,7 @@ fn one_selected_fake_provider_edits_the_live_document_through_the_full_tool_turn
         target: guard.target(),
         chat: choice.clone(),
         control: choice.clone(),
-        config: RuntimeConfig::default(),
+        config: RuntimeConfig { max_tools: pdfcraft_automation::tools().len(), ..RuntimeConfig::default() },
     };
     let cancel = Cancellation::new();
     let worker_cancel = cancel.clone();
@@ -77,7 +83,7 @@ fn one_selected_fake_provider_edits_the_live_document_through_the_full_tool_turn
     let wake = ctx.clone();
     let (sender, calls) = mpsc::channel();
     let worker = std::thread::spawn(move || {
-        let provider = SyntheticProvider { choice, responses: AtomicUsize::new(0) };
+        let provider = SyntheticProvider { choice, responses: AtomicUsize::new(0), doc: id.0 };
         let mut host = McpHost::new(sender, worker_cancel.clone(), wake, Duration::from_secs(2), RuntimeConfig::default().max_context_bytes);
         let mut routes = Vec::new();
         let result = run_turn(request, &provider, &mut host, &worker_cancel, |event| {

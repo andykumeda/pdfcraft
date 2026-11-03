@@ -29,6 +29,11 @@ both sessions even if dispatch unwinds. The caller owns cancellation, target/fil
 and refreshing views. Saved-source identities prevent caches for a reused document ID from
 retargeting an earlier paragraph listing in another session. No listener is created.
 
+`McpServer::handle_on_session(&mut gui_session, &request)` lends a live session to the complete
+MCP dispatcher instead. It preserves the external protocol's validation, root confinement,
+structured results, image blocks and tool errors. The integrated assistant uses this path with
+the full catalog and unchanged tool arguments; the app keeps its views and tabs synchronized.
+
 ## Conventions
 
 - Tool names are `snake_case` (`page_rotate`): MCP clients reject dots. `ToolDef::command` links a tool to the registry id it automates (`page.rotate`), and `command_list` reports the link.

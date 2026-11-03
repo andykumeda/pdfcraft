@@ -22,27 +22,28 @@ PDFCraft overrides and conversations use app identity `pdfcraft`. Runtime limits
 from `runtime.json`; provider failure never changes the chosen endpoint, provider or model.
 Connection tests request model catalogs; capability probes and chat can incur provider usage.
 
-The initial tools inspect document metadata/pages, find/extract text, inspect/edit supported
-paragraphs, rotate/duplicate/delete pages, list/add/edit/delete comments, list/fill forms, Undo/Redo,
-and explicitly save. Existing PDFCraft validation, permissions and signature protections apply.
-This does not add PDF editing capabilities or expose the full external automation catalog.
-Attachments, arbitrary scripts, security/signing changes, printing and bulk filesystem work
-are unavailable to the assistant. Unsupported text edits fail visibly.
+The source now exposes the complete external MCP tool catalog through the assistant. The same
+table supplies unchanged names, descriptions, argument schemas, titles and annotations; `pdfcraft-cli tools` lists
+the current set. Tools retain their ordinary document IDs, file paths and options. This includes
+opening/creating multiple PDFs, rendering pages, organizing, attachments, forms, OCR, security,
+signatures, export and the other tools supported by the engine. Availability still depends on
+the same engine permissions, platform support and configured resources as external MCP clients.
 
-Reads target the active PDF. Document data is untrusted tool context, not user instructions.
-General conversation does not automatically read the PDF. Request only needed pages or details;
-oversized results require a smaller request. Document information omits unrelated comments,
-field values and attachment names; dedicated tools read comments/forms when needed.
-A turn stops editing if the document, selection, relevant editor target or revision changed.
-Finish in-progress local editor drafts before assistant mutations.
+Calls use the existing MCP dispatcher against the window's live engine session. There is no
+assistant tool allowlist, argument stripping, active-document-only rule or separate file-grant
+policy. Configured automation roots retain the ordinary MCP path checks. Results keep the MCP
+`content`, PNG image blocks, `structuredContent` and `isError` fields without an assistant-specific
+read-back wrapper. Document data remains untrusted tool context, not user instructions.
 
-Mutations run against the open window's engine session and normal Undo history. Results include
-independent post-edit reads. Provider narration alone is not evidence. Uncertain outcomes stop
-the turn and are never automatically replayed. Stop invalidates queued work; completed edits
-remain. PDFCraft's existing save/history boundaries still apply. Save writes to disk and Undo
-cannot reverse that disk write. Save requires an exact path granted in the prompt or file controls;
-quote paths containing spaces. Granting a folder grants nothing. The assistant refuses overwriting
-a different existing file, forced rewrites and flattening. Saved bytes are read back from disk.
+The UI commits ordinary pending typing before mutations, refreshes changed page views and opens
+or closes tabs to match the resulting engine session. Mutations retain normal Undo history.
+Stop invalidates queued work; uncertain outcomes are never automatically replayed. Saving and
+closing use normal MCP behavior: disk writes cannot be undone; closing unsaved engine changes
+requires saving first or explicitly passing `discard_changes: true`. Read-back is available
+through the regular tools; provider narration alone is not evidence that a change succeeded.
+
+This source change is separate from the installed preview identified above. Its verification
+and delivery state are recorded in the ledger; no new installed or published build is implied.
 
 Chats persist outside PDFs and may contain document text and tool results. New/Open/Delete chat
 manage them independently. Reopening a chat does not resume interrupted edits. Changing providers

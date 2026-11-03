@@ -291,7 +291,12 @@ pdfcraft-cli edit  in.pdf --rotate 1,2:90 --delete 5 --title "Q3" --out out.pdf
 
 ## Built for agents, too
 
-Every engine feature is reachable without the GUI, through one table of JSON-Schema-described tools: open, inspect, render pages to PNG, extract and find text, rotate, delete, move and insert pages, edit bookmarks and page labels, add, reply to, restyle and delete comments (highlight a phrase just by naming it), list and fill in form fields, protect with passwords, set metadata, undo and redo, save, combine, extract and split. Three front doors share it:
+Every engine feature is reachable without the GUI, through one table of JSON-Schema-described tools: open, inspect, render pages to PNG, extract and find text, rotate, delete, move and insert pages, edit bookmarks and page labels, add, reply to, restyle and delete comments (highlight a phrase just by naming it), list and fill in form fields, protect with passwords, set metadata, undo and redo, save, combine, extract and split. These front doors share it:
+
+The optional [desktop assistant](docs/assistant.md) also uses the complete MCP tool catalog with
+the same schemas and results against the window's live documents and Undo history. It does not
+start a listener or limit tools to the active tab. Engine validation and configured automation
+roots apply just as they do to external MCP calls.
 
 - **`pdfcraft-cli run`**, for one-off calls and JSON scripts:
 

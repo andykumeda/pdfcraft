@@ -729,43 +729,6 @@ impl DocView {
         }
     }
 
-    /// Only target identities enter this fingerprint; draft text remains private to the view.
-    #[cfg(not(target_arch = "wasm32"))]
-    pub(crate) fn assistant_selection(&self) -> String {
-        format!(
-            "{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}",
-            self.current,
-            self.selection,
-            self.selected,
-            self.comments.selected,
-            self.content.selected,
-            self.image_selection.as_ref().map(|image| (image.page, image.index)),
-            self.picked_image.as_ref().map(|image| (image.page, image.index)),
-            self.line_editor.as_ref().map(|editor| (editor.page, editor.block, editor.selection.clone())),
-            self.forms.focus.as_ref().map(|focus| (&focus.name, focus.widget)),
-            (&self.prepare.selected, &self.prepare.also),
-            self.objects.assistant_identity(),
-        )
-    }
-
-    /// Refuse assistant mutations while local edits still live outside the engine's Undo history.
-    #[cfg(not(target_arch = "wasm32"))]
-    pub(crate) fn assistant_has_draft(&self, doc: &pdfcraft_engine::Document) -> bool {
-        self.line_editor.is_some()
-            || self.applied_editor.is_some()
-            || self.content.draft.is_some()
-            || self.pending_edit.is_some()
-            || self.pending_redaction.is_some()
-            || self.block_drag.is_some()
-            || self.forms.committed.is_some()
-            || self.forms.focus.as_ref().is_some_and(|focus| crate::forms_ui::draft_edit(focus, &doc.form).is_some())
-            || self.comments.composer.is_some()
-            || self.comments.editing.is_some()
-            || self.comments.gesture.is_some()
-            || !self.comments.reply.trim().is_empty()
-            || !self.comments.add_box.trim().is_empty()
-    }
-
     /// The document's content or page list changed (an edit, undo or redo): drop caches and
     /// adopt the new page geometry, keeping the reader's place where possible.
     pub fn document_changed(&mut self, info: &DocInfo) {
@@ -3337,54 +3300,3 @@ enum FieldMenu {
 
 #[cfg(test)]
 mod tests;
-
-#[cfg(all(test, not(target_arch = "wasm32")))]
-mod assistant_guard_tests {
-
-    #[test]
-    fn assistant_targets_track_page_and_object_selection_without_including_draft_text() {
-        let mut app = crate::PdfCraftApp::new();
-        app.open_bytes("Synthetic.pdf", None, include_bytes!("../tests/data/form.pdf").to_vec()).unwrap();
-        let view = app.views.first_mut().unwrap();
-        let original = view.assistant_selection();
-        view.current = view.current.saturating_add(1);
-        assert_ne!(original, view.assistant_selection());
-        let page = view.assistant_selection();
-        view.content.selected = Some((0, 1));
-        assert_ne!(page, view.assistant_selection());
-        view.comments.reply = "private synthetic draft".into();
-        assert!(!view.assistant_selection().contains("private synthetic draft"));
-    }
-
-    #[test]
-    fn assistant_refuses_unsaved_drafts_but_allows_an_unchanged_focused_form() {
-        let mut app = crate::PdfCraftApp::new();
-        app.open_bytes("Synthetic.pdf", None, include_bytes!("../tests/data/form.pdf").to_vec()).unwrap();
-        let id = app.active_ids().unwrap().1;
-        let doc = app.session.get(id).unwrap();
-        let field = doc.form.iter().find(|field| field.kind == pdfcraft_engine::FormFieldKind::Text).unwrap();
-        let view = app.views.first_mut().unwrap();
-        view.forms.focus = Some(crate::forms_ui::Focus {
-            name: field.name.clone(),
-            widget: 0,
-            text: crate::forms_ui::draft_text(field),
-            picked: field.value.clone(),
-            request_focus: false,
-            select_all: false,
-            press: None,
-            calendar: None,
-            calendar_rect: None,
-            calendar_text: None,
-            had_focus: false,
-        });
-        assert!(!view.assistant_has_draft(doc));
-        view.forms.focus.as_mut().unwrap().text.push_str(" unsaved");
-        assert!(view.assistant_has_draft(doc));
-        view.forms.focus = None;
-        view.comments.reply = "unsaved reply".into();
-        assert!(view.assistant_has_draft(doc));
-        view.comments.reply.clear();
-        view.pending_edit = Some(pdfcraft_engine::Edit::SetInfo { key: "Title".into(), value: "Queued".into() });
-        assert!(view.assistant_has_draft(doc));
-    }
-}
