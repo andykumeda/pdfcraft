@@ -41,6 +41,10 @@ struct Turn {
 }
 
 impl Remote {
+    pub(super) fn can_restart_for_update(&self, widget_busy: bool, settings_busy: bool) -> bool {
+        self.turn.is_none() && !self.dispatching && self.controller.as_ref().map_or(!widget_busy && !settings_busy, Controller::restart_safe)
+    }
+
     pub(super) fn cancel(&self) {
         if let Some(turn) = &self.turn {
             turn.proxy.cancel();
@@ -391,5 +395,21 @@ mod tests {
         assert!(app.assistant.remote.turn.is_none());
         assert!(!app.assistant.widget.busy);
         assert!(app.assistant.remote.controller.is_none());
+    }
+    #[test]
+    fn app_updates_wait_for_taken_shared_turns_but_not_a_failed_helper() {
+        let mut app = PdfCraftApp::new();
+        app.assistant.remote.enabled = true;
+        assert!(app.assistant.can_restart_for_update());
+        app.assistant.widget.settings.busy = true;
+        assert!(!app.assistant.can_restart_for_update());
+        app.assistant.remote.controller = Some(Controller::new("pdfcraft", BTreeMap::new()));
+        app.assistant.remote.controller.as_mut().unwrap().status.settings_busy = true;
+        app.assistant.widget.busy = true;
+        assert!(app.assistant.can_restart_for_update(), "stale failed-helper UI status must not block app recovery updates");
+        app.assistant.remote.dispatching = true;
+        assert!(!app.assistant.can_restart_for_update(), "the turn is temporarily taken during GUI dispatch");
+        app.assistant.remote.dispatching = false;
+        assert!(app.assistant.can_restart_for_update());
     }
 }

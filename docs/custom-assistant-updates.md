@@ -110,7 +110,7 @@ The shared assistant/config/installer/updater final test run passed **228 tests,
 
 The integration branch reconciles upstream PDFCraft release `3936f93a` (0.18) with the
 assistant source baseline `cd2eb01d`. All shared dependencies now use published fork revision
-`3ff2754eeb1c079612247f4d288a22a20c169ac9`, including upstream updater compatibility and the
+`986cb16234cfdac1ee1337fb4cdf00945cad4e5a`, including upstream updater compatibility and the
 assistant runtime. The checked-in lock uses Git dependencies, without local path substitutions.
 Current verification and the source-versus-installed delivery state are recorded in
 [the 0.18 ledger](assistant-implementation.md#pdfcraft-018-reconciliation--2026-11-02).
@@ -119,3 +119,10 @@ Preferences retains its new upstream module/card layout and exposes Assistant se
 The launch parser accepts `--disable-updates` without consuming the following PDF path or
 view flag. Assistant-enabled app checks use the configured fork source and preserve the
 upstream updater app identity; disabled preview updates remain disabled.
+
+
+App updates also wait for assistant restart safety, not only clean documents. Active turns,
+settings work, drafts, pending input and in-flight tool dispatch defer restart. Finish assistant
+work and close its panel before continuing an app update if it remains deferred. A missing or
+failed helper does not permanently prevent the app from updating; no active chat is automatically
+cancelled for an update. This host-side guard uses the shared runtime API without a wire change.

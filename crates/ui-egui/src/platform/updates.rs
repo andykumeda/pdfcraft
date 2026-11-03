@@ -110,14 +110,19 @@ impl PdfCraftApp {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+fn can_restart_for_update(app: &PdfCraftApp) -> bool {
+    app.first_dirty().is_none() && app.assistant.can_restart_for_update()
+}
+
 /// The startup prompt, and the Updates dialog that answers Help ▸ Check for updates.
 pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
     #[cfg(not(target_arch = "wasm32"))]
     {
-        // The restart helper is scheduled before the app closes, so no update starts over unsaved work.
-        let clean = app.first_dirty().is_none();
+        // The helper is scheduled before close: protect documents, active chats and pending input.
+        let can_restart = can_restart_for_update(app);
         if !app.updates.disabled {
-            match app.updates.updater.show_if(ctx, clean) {
+            match app.updates.updater.show_if(ctx, can_restart) {
                 Action::None => {}
                 Action::OpenUrl(url) => app.open_url(&url),
                 Action::Close => {
@@ -149,6 +154,10 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
         }
         if app.updates.disabled {
             ui.label(tl!("Software updates are disabled for this preview. Install a new assistant preview package to update it."));
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        if !app.updates.disabled && !app.assistant.can_restart_for_update() {
+            ui.label(tl!("Finish or stop the assistant and close its panel before restarting PdfCraft. Send or clear any draft and finish settings changes first."));
         }
         #[cfg(not(target_arch = "wasm32"))]
         if !app.updates.disabled {
@@ -218,5 +227,19 @@ mod preview_tests {
         assert!(!app.updates.startup_check && !app.updates.check_requested);
         app.poll_updates();
         assert!(matches!(app.updates.updater.status(), Status::Idle));
+    }
+    #[test]
+    fn app_update_restart_waits_for_chat_and_settings_work() {
+        let mut app = PdfCraftApp::new();
+        assert!(can_restart_for_update(&app));
+        app.assistant.widget.busy = true;
+        assert!(!can_restart_for_update(&app));
+        app.assistant.widget.busy = false;
+        app.assistant.widget.settings.busy = true;
+        assert!(!can_restart_for_update(&app));
+        app.assistant.widget.settings.busy = false;
+        assert!(can_restart_for_update(&app));
+        app.enable_shared_assistant();
+        assert!(can_restart_for_update(&app), "an unstarted helper does not block app updates");
     }
 }

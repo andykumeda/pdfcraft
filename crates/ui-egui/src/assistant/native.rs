@@ -46,6 +46,10 @@ struct Turn {
 }
 
 impl Native {
+    pub(super) fn has_active_work(&self) -> bool {
+        self.turn.is_some() || self.dispatch_cancel.is_some() || self.job.is_some()
+    }
+
     fn codex_for_turn(&mut self, root: &std::path::Path) -> CodexProvider {
         if let Some((cached_root, template)) = &self.codex_template
             && cached_root == root
@@ -1244,5 +1248,18 @@ mod tests {
         app.assistant.native.dispatch_cancel = Some(cancel.clone());
         action(&mut app, Action::Stop).unwrap();
         assert!(cancel.is_cancelled());
+    }
+    #[test]
+    fn app_updates_wait_for_legacy_dispatch_and_settings_jobs() {
+        let mut native = Native::default();
+        assert!(!native.has_active_work());
+        native.dispatch_cancel = Some(Cancellation::default());
+        assert!(native.has_active_work());
+        native.dispatch_cancel = None;
+        let (_sender, receiver) = mpsc::channel();
+        native.job = Some(receiver);
+        assert!(native.has_active_work());
+        native.job = None;
+        assert!(!native.has_active_work());
     }
 }

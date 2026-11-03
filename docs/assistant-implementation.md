@@ -270,3 +270,33 @@ licence paths and 13 pinned craft-fonts notices were staged successfully, and al
 bundled font/CMap notice files matched their source bytes. The packaging guard rejected the
 prior branded release binary and accepted the new 0.18 UI test binary. These are source/package
 helper checks, not signed release-candidate delivery or native installed acceptance.
+
+
+## App update restart safety — 2026-11-02
+
+| Workstream | Owner | State | Acceptance and evidence |
+| --- | --- | --- | --- |
+| Underlying app restart guard | PDF integration | Verified | Document-clean state is combined with the assistant’s authoritative host turn/dispatch state and shared `Controller::restart_safe()`, including queued input and unsaved assistant drafts/settings. Legacy provider/settings jobs are also protected |
+| Missing-helper recovery | PDF integration | Verified | A failed or missing helper with no live transport does not block app recovery updates through stale settings-busy UI state; current helper/host work still blocks restart |
+| Shared contract | Shared/Word integration | Verified | Shared revision `986cb16234cfdac1ee1337fb4cdf00945cad4e5a`; no wire change. Shared owner reported 23 helper library tests plus strict lint/formatting passing |
+| Candidate build | PDF integration | In progress | Committed baseline `3fc5750d` optimized ARM64 app/CLI build completed with required pinned fonts; final app candidate must be rebuilt after this guard is verified and committed |
+
+If the helper has unacknowledged rendered/input frames, app restart is conservatively deferred.
+Finish or stop chats, send or clear any draft, finish settings changes and close the assistant
+panel to let the remaining frames drain. The app update status dialog explains this; the host
+never silently closes the panel, discards a draft, cancels a turn or replays a document operation.
+
+The provisional CLI from source `3fc5750d` is separately signed with the explicitly selected local
+certificate (not notarized); its extracted archive signature and binary hash match. A real
+stdio MCP session listed **183 tools** and passed seven synthetic create/metadata/read/render/
+save/close/open calls under a temporary root. It changes no installed CLI path or client config.
+Receipt: `/Users/andy/Dev/pdfcraft/dist/assistant-candidates/0.18.0-3fc5750d/cli-receipt.json`.
+The final guarded build supersedes this provisional candidate before app rollout.
+
+Verification for the restart guard on shared Git revision `986cb16234cfdac1ee1337fb4cdf00945cad4e5a`:
+29 assistant tests and 2 app-updater tests passed. The app-update regression failed with the
+previous document-only condition; after exact restoration all 3 focused safety regressions
+passed. Strict scoped all-target Clippy, WASM (the same 11 upstream warnings), formatting and
+source license-check passed. No installed app, CLI path, source configuration or client config
+was changed. The final optimized app/CLI build and signed candidate verification follow this
+verified source increment; provisional `3fc5750d` artefacts are not the final guarded app.

@@ -25,6 +25,17 @@ pub struct Assistant {
     mcp: pdfcraft_automation::mcp::McpServer,
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+impl Assistant {
+    pub(crate) fn can_restart_for_update(&self) -> bool {
+        if self.remote.enabled {
+            self.remote.can_restart_for_update(self.widget.busy, self.widget.settings.busy)
+        } else {
+            !self.widget.busy && !self.widget.settings.busy && !self.native.has_active_work()
+        }
+    }
+}
+
 impl Drop for Assistant {
     fn drop(&mut self) {
         #[cfg(not(target_arch = "wasm32"))]

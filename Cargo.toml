@@ -12,21 +12,21 @@ rust-version = "1.95"
 repository = "https://github.com/storytold/pdfcraft"
 
 [workspace.dependencies]
-craft-assistant = { git = "https://github.com/andykumeda/craft-libs", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9", version = "0.1.0" }
-craft-ai-core = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9" }
-craft-ai-native = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9" }
+craft-assistant = { git = "https://github.com/andykumeda/craft-libs", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a", version = "0.1.0" }
+craft-ai-core = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a" }
+craft-ai-native = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a" }
 # Shared frontend components; engines remain independent of egui.
-craft-ui = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9", features = ["serde"] }
+craft-ui = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a", features = ["serde"] }
 # Quit the macOS way (#1136): ⌘Q asks about unsaved changes, and closing quits through `terminate:`.
-craft-quit = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9" }
+craft-quit = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a" }
 # One menu definition for the native macOS menu bar and the in-window bar elsewhere.
-craft-menu = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9" }
-craft-keymap = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9", default-features = false }
+craft-menu = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a" }
+craft-keymap = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a", default-features = false }
 # Shared system spooler; document composition remains in pdfcraft-print.
-craft-print = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9" }
+craft-print = { git = "https://github.com/andykumeda/craft-libs", version = "0.1.0", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a" }
 # Whether a path stored in a document may be opened (GoToR link targets).
-craft-docpath = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9" }
-craft-update = { git = "https://github.com/andykumeda/craft-libs", version = "=0.1.0", rev = "3ff2754eeb1c079612247f4d288a22a20c169ac9", features = ["egui"] }
+craft-docpath = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a" }
+craft-update = { git = "https://github.com/andykumeda/craft-libs", version = "=0.1.0", rev = "986cb16234cfdac1ee1337fb4cdf00945cad4e5a", features = ["egui"] }
 # internal
 pdfcraft-geom = { path = "crates/geom", version = "0.18.0" }
 pdfcraft-filters = { path = "crates/filters", version = "0.18.0" }
