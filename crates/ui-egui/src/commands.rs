@@ -785,6 +785,9 @@ impl PdfCraftApp {
 
     /// Run the registered keyboard shortcuts (more specific combinations first).
     pub(crate) fn registry_shortcuts(&mut self, ctx: &egui::Context) {
+        if crate::assistant::owns_keyboard(self) {
+            return;
+        }
         use egui::{Key, KeyboardShortcut, Modifiers};
         // Buttons also own keyboard focus for Tab/Enter activation, but they must not
         // suppress document shortcuts. Text editors retain their own undo/redo handling.

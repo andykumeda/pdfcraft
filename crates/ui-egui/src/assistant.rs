@@ -9,6 +9,8 @@ use crate::PdfCraftApp;
 mod host;
 #[cfg(not(target_arch = "wasm32"))]
 mod native;
+#[cfg(not(target_arch = "wasm32"))]
+mod remote;
 
 pub struct Assistant {
     pub open: bool,
@@ -17,12 +19,41 @@ pub struct Assistant {
     pub enabled: bool,
     #[cfg(not(target_arch = "wasm32"))]
     native: native::Native,
+    #[cfg(not(target_arch = "wasm32"))]
+    remote: remote::Remote,
 }
 
 impl Drop for Assistant {
     fn drop(&mut self) {
         #[cfg(not(target_arch = "wasm32"))]
         self.native.cancel();
+        #[cfg(not(target_arch = "wasm32"))]
+        self.remote.cancel();
+    }
+}
+
+impl PdfCraftApp {
+    /// Attaches the independently installed assistant and its explicit app-update source.
+    /// Desktop entry points call this once before startup update checks.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn enable_shared_assistant(&mut self) {
+        self.assistant.native.cancel();
+        self.assistant.remote.enabled = true;
+        self.assistant.enabled = true;
+        self.assistant.widget.available = true;
+        self.configure_assistant_updates(craft_assistant::config::compatibility().protocol);
+    }
+}
+
+pub(crate) fn owns_keyboard(app: &PdfCraftApp) -> bool {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        app.assistant.remote.enabled && app.assistant.remote.owns_keyboard()
+    }
+    #[cfg(target_arch = "wasm32")]
+    {
+        let _ = app;
+        false
     }
 }
 
@@ -33,12 +64,25 @@ pub fn commands() -> Vec<Value> {
         json!({"id":"ui.assistant.newChat","label":"New assistant chat","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
         json!({"id":"ui.assistant.stop","label":"Stop assistant","location":"Agents","params":"{}","enabled":true}),
         json!({"id":"ui.assistant.status","label":"Assistant status","location":"Agents","params":"{}","enabled":true}),
+        json!({"id":"ui.assistant.updateCheck","label":"Check shared assistant updates","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.updateInstall","label":"Install offered shared assistant update","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.updateStatus","label":"Shared assistant update status","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.reloadComponent","label":"Reload shared assistant component","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
     ]
 }
 
 pub(crate) fn command(app: &mut PdfCraftApp, id: &str, params: &Value) -> Option<Result<Value, String>> {
     if !id.starts_with("ui.assistant") {
         return None;
+    }
+    if matches!(id, "ui.assistant.updateCheck" | "ui.assistant.updateInstall" | "ui.assistant.updateStatus" | "ui.assistant.reloadComponent") {
+        if !params.as_object().is_some_and(serde_json::Map::is_empty) {
+            return Some(Err("This assistant service command takes an empty parameter object.".into()));
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        return Some(remote::service_command(app, id));
+        #[cfg(target_arch = "wasm32")]
+        return Some(Err("The shared assistant is available in the desktop app.".into()));
     }
     let result = match id {
         "ui.assistant" => {
@@ -73,6 +117,11 @@ pub(crate) fn command(app: &mut PdfCraftApp, id: &str, params: &Value) -> Option
 }
 
 pub fn pane(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        remote::show(app, ui, false);
+        return;
+    }
     ensure_loaded(app);
     if !app.assistant.widget.busy {
         app.assistant.widget.target_label =
@@ -88,6 +137,11 @@ pub fn pane(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
 }
 
 pub fn settings(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        remote::show(app, ui, true);
+        return;
+    }
     ensure_loaded(app);
     if !app.assistant.enabled {
         ui.label(tl!("The assistant is available in the desktop app."));
@@ -131,12 +185,21 @@ fn apply_actions(app: &mut PdfCraftApp, actions: Vec<Action>) {
 
 fn ensure_loaded(app: &mut PdfCraftApp) {
     #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        remote::ensure_loaded(app);
+        return;
+    }
+    #[cfg(not(target_arch = "wasm32"))]
     native::ensure_loaded(app);
     #[cfg(target_arch = "wasm32")]
     let _ = app;
 }
 
 fn action(app: &mut PdfCraftApp, action: Action) -> Result<(), String> {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        return remote::action(app, action);
+    }
     #[cfg(not(target_arch = "wasm32"))]
     {
         native::action(app, action)
@@ -149,6 +212,11 @@ fn action(app: &mut PdfCraftApp, action: Action) -> Result<(), String> {
 }
 
 pub(crate) fn poll(app: &mut PdfCraftApp, ctx: &egui::Context) {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        remote::poll(app, ctx);
+        return;
+    }
     #[cfg(not(target_arch = "wasm32"))]
     native::poll(app, ctx);
     #[cfg(target_arch = "wasm32")]
@@ -164,6 +232,8 @@ impl Default for Assistant {
             enabled: cfg!(not(target_arch = "wasm32")),
             #[cfg(not(target_arch = "wasm32"))]
             native: native::Native::default(),
+            #[cfg(not(target_arch = "wasm32"))]
+            remote: remote::Remote::default(),
         }
     }
 }
@@ -210,5 +280,22 @@ mod tests {
         harness.run();
         assert!(harness.state().assistant.widget.settings_open);
         assert_eq!(harness.query_all_by_label("Settings").count(), 1);
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod shared_component_commands {
+    use super::*;
+    #[test]
+    fn update_controls_require_activation_and_report_status_without_starting_a_helper() {
+        let mut app = PdfCraftApp::new();
+        for id in ["ui.assistant.updateCheck", "ui.assistant.updateInstall", "ui.assistant.reloadComponent"] {
+            assert!(command(&mut app, id, &json!({})).unwrap().is_err());
+        }
+        app.enable_shared_assistant();
+        assert!(app.assistant.remote.enabled);
+        assert!(command(&mut app, "ui.assistant.updateStatus", &json!({})).unwrap().is_ok());
+        assert!(command(&mut app, "ui.assistant.updateStatus", &json!({"source":"untrusted"})).unwrap().is_err());
+        assert!(command(&mut app, "ui.assistant.updateCheck", &json!({})).unwrap().unwrap_err().contains("active app window"));
     }
 }

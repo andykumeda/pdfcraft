@@ -602,3 +602,9 @@ Forks and modified versions must remove them.
 </p>
 
 The Tools panel sits on the left, or on the right with Preferences ▸ Tools panel side. The rail stays at the right edge and opens one side panel beside it. Drag a panel's inner edge to resize it; widths are remembered. F4 shows or hides the side panel and Shift+F4 the Tools panel (also in the View menu); View ▸ Reset side panels restores the default arrangement.
+
+## Independently updated assistant (custom desktop builds)
+
+The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
+
+See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. This implementation is not an installed release: native accessibility/input acceptance and signed update installation remain pending.

@@ -2,6 +2,9 @@ use super::*;
 
 impl PdfCraftApp {
     pub(super) fn shortcuts(&mut self, ctx: &egui::Context) {
+        if crate::assistant::owns_keyboard(self) {
+            return;
+        }
         use egui::Key;
         let pasted = self.paste_key_released(ctx);
         // "Save changes?" is modal: its keys are its own (⌘D is Don't save there, not Document

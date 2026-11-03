@@ -10230,3 +10230,15 @@ commands = []
 tools = []
 evidence = []
 notes = ""
+
+[[feature]]
+id = "misc.shared-assistant-updates"
+title = "Independently installed shared assistant interface and runtime"
+area = "N"
+tier = "P2"
+milestone = "M13"
+status = "partial"
+commands = []
+tools = []
+evidence = []
+notes = "Custom desktop entry point selects a private-pipe shared helper, preserving the existing guarded PDF tool host. UI control exposes assistant updateCheck/updateInstall/updateStatus/reloadComponent. Shared synthetic tests and consumer compilation passed; new consumer test links, native input/VoiceOver, signed installed updates and a three-app unchanged-binary demonstration remain pending. Not claimed shipped. See docs/custom-assistant-updates.md. Existing compiled-in assistant remains available to library consumers and its tests."

@@ -31,7 +31,7 @@ pub(super) struct Native {
 }
 
 pub(super) fn effective_config(app: &PdfCraftApp) -> Option<&RuntimeConfig> {
-    app.assistant.native.effective_config.as_ref()
+    if app.assistant.remote.enabled { app.assistant.remote.config.as_ref() } else { app.assistant.native.effective_config.as_ref() }
 }
 
 struct Turn {

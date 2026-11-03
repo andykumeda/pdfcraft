@@ -757,3 +757,5 @@ Newest first: the date, what moved, and the new overall estimate.
 - **2026-10-18 (renderer, hayro patches 19/35):** A mesh shading (types 4–7) is sampled over its own triangles instead of the whole path: a BricsCAD plan with 310 one-triangle `sh` fills took 2 s per 1024 px tile at every zoom (and hit the 20 s watchdog on a busy machine); now about 70 ms, so zooming into dense topology drawings stays fluid. Estimates unchanged.
 
 - **2026-10-22 (PR #3227 integration):** M11: integrate upstream `80b7d215`; retain partial target-version compatibility and upstream content-boundary and image-size regression coverage. Scope and estimates unchanged.
+
+- 2026-11-02 — A2: desktop adapter for an independently installed embedded assistant; shared global model/auth, app-owned guarded tools, explicit update/reload automation and customized source checks. Shared tests: 228 passed / 4 ignored. Consumer UI compilation passed; native linked/installed acceptance remains pending. See `docs/custom-assistant-updates.md`.

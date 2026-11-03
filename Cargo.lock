@@ -240,7 +240,7 @@ dependencies = [
  "objc2-foundation 0.3.2",
  "parking_lot",
  "percent-encoding",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
  "wl-clipboard-rs",
  "x11rb",
 ]
@@ -1234,7 +1234,7 @@ dependencies = [
 [[package]]
 name = "craft-ai-core"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "chrono",
  "serde",
@@ -1244,7 +1244,7 @@ dependencies = [
 [[package]]
 name = "craft-ai-native"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "chrono",
  "craft-ai-core",
@@ -1259,9 +1259,56 @@ dependencies = [
 ]
 
 [[package]]
+name = "craft-assistant"
+version = "0.1.0"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
+dependencies = [
+ "chrono",
+ "craft-ai-core",
+ "craft-ai-native",
+ "craft-assistant-bridge",
+ "craft-assistant-install",
+ "craft-fonts-build",
+ "craft-ui",
+ "craft-update",
+ "egui",
+ "semver",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "craft-assistant-bridge"
+version = "0.1.0"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
+dependencies = [
+ "accesskit",
+ "egui",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "craft-assistant-install"
+version = "0.1.0"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
+dependencies = [
+ "craft-atomic",
+ "craft-update",
+ "flate2",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "tar",
+ "tempfile",
+]
+
+[[package]]
 name = "craft-atomic"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "rustix 1.1.5",
 ]
@@ -1269,17 +1316,17 @@ dependencies = [
 [[package]]
 name = "craft-docpath"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 
 [[package]]
 name = "craft-fonts-build"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 
 [[package]]
 name = "craft-i18n"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "fixed_decimal",
  "icu_decimal",
@@ -1302,7 +1349,7 @@ dependencies = [
 [[package]]
 name = "craft-keymap"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "egui",
  "serde",
@@ -1312,7 +1359,7 @@ dependencies = [
 [[package]]
 name = "craft-menu"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "craft-keymap",
  "craft-quit",
@@ -1325,7 +1372,7 @@ dependencies = [
 [[package]]
 name = "craft-print"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "craft-winprint-gdi",
  "miniz_oxide 0.9.1",
@@ -1338,7 +1385,7 @@ dependencies = [
 [[package]]
 name = "craft-quit"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "dispatch2",
  "egui",
@@ -1349,7 +1396,7 @@ dependencies = [
 [[package]]
 name = "craft-ui"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "craft-ai-core",
  "craft-fonts-build",
@@ -1371,7 +1418,7 @@ dependencies = [
 [[package]]
 name = "craft-update"
 version = "0.1.0"
-source = "git+https://github.com/andykumeda/craft-libs?rev=bf932b91643c287502d539b88f08abd5796c9447#bf932b91643c287502d539b88f08abd5796c9447"
+source = "git+https://github.com/andykumeda/craft-libs?rev=17c5ea725866fa2e8f7f89a6cb3bec269ad8d571#17c5ea725866fa2e8f7f89a6cb3bec269ad8d571"
 dependencies = [
  "chrono",
  "dunce",
@@ -1690,7 +1737,7 @@ version = "0.5.0"
 dependencies = [
  "libc",
  "redox_users",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2155,7 +2202,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4375,7 +4422,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4906,6 +4953,7 @@ dependencies = [
  "chrono",
  "craft-ai-core",
  "craft-ai-native",
+ "craft-assistant",
  "craft-keymap",
  "craft-menu",
  "craft-quit",
@@ -5532,7 +5580,7 @@ dependencies = [
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6090,7 +6138,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.4.15",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -6103,7 +6151,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6173,7 +6221,7 @@ dependencies = [
  "security-framework 3.7.0",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -7095,7 +7143,7 @@ dependencies = [
  "getrandom 0.4.3",
  "once_cell",
  "rustix 1.1.5",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -8220,7 +8268,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

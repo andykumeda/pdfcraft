@@ -43,6 +43,15 @@ impl Default for Updates {
 }
 
 impl PdfCraftApp {
+    /// Uses only explicitly configured assistant-enabled releases; never falls back upstream.
+    /// Call when attaching the independently installed assistant bridge. An explicit update
+    /// opt-out remains in force.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn configure_assistant_updates(&mut self, bridge_protocol: u32) {
+        let root = craft_ai_native::storage::SharedStore::default_root().map_err(|error| error.to_string());
+        self.updates.updater = craft_update::custom::updater(&craft_update::suite::PDFCRAFT, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
+    }
+
     /// Custom previews must never install a standard release over themselves.
     pub fn disable_updates(&mut self) {
         self.updates.disabled = true;
@@ -134,6 +143,10 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             ui.label(egui::RichText::new(tl!("Check for updates")).font(theme::semibold(16.0)));
         });
         ui.add_space(8.0);
+        #[cfg(not(target_arch = "wasm32"))]
+        if let Some(repo) = app.updates.updater.repository() {
+            ui.label(crate::i18n::fmt(tl!("Update source: {repo}"), &[("repo", repo)]));
+        }
         if app.updates.disabled {
             ui.label(tl!("Software updates are disabled for this preview. Install a new assistant preview package to update it."));
         }
@@ -157,10 +170,11 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                 }
                 Status::Failed(e) => {
                     ui.label(crate::i18n::fmt(tl!("Couldn't check for updates: {e}"), &[("e", e)]));
+                    let releases_page = app.updates.updater.repository().map(|repo| format!("https://github.com/{repo}/releases"));
                     ui.label(
                         egui::RichText::new(crate::i18n::fmt(
                             tl!("You have version {c}. All releases are listed at {page}."),
-                            &[("c", current), ("page", RELEASES_PAGE)],
+                            &[("c", current), ("page", releases_page.as_deref().unwrap_or(tl!("No compatible update source configured")))],
                         ))
                         .color(t.text_muted),
                     );
@@ -197,6 +211,7 @@ mod preview_tests {
         app.check_for_updates();
         assert!(app.updates.startup_check && app.updates.check_requested);
         app.disable_updates();
+        app.configure_assistant_updates(1);
         app.set_startup_update_check(true);
         app.check_for_updates();
         assert!(app.updates.disabled && app.updates.open);
