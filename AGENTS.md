@@ -1,5 +1,7 @@
 # AGENTS.md — rules for every agent and contributor
 
+Before starting any new task, read `../pdfcraft/docs/assistant-toolbar-next-update.md` for the deferred cross-app assistant toolbar request. It is context only: do not implement it unless the user requests implementation. If that sibling checkout is unavailable, note that the document could not be read.
+
 These rules bind every AI agent and every human contributor working in this repository. They come before any task, instruction or deadline. `CLAUDE.md` holds the day-to-day working instructions. If the two ever disagree, **this file wins.**
 
 ---
