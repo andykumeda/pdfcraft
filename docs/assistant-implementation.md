@@ -435,3 +435,13 @@ WASM reports 11 warnings in unchanged platform code. Headless real-shell screens
 provider inference, app installation, or public release was performed for this layout change.
 Local check logs/screenshots: `/tmp/pdfcraft-toolbar-*`. UI tests used a command-line-only
 package opt-level 0 override; build defaults and dependencies were unchanged.
+
+### MacBook helper-only repair — 2026-11-04
+
+Shared helper 0.1.3/source `aeb7d47` was signed and installed on the MacBook to stop idle model
+picker flicker and discover Codex bundled with ChatGPT in GUI sessions. Installed signature,
+three host handshakes and synthetic standard PdfCraft native acceptance passed, including 32
+idle samples with the model control enabled. Existing apps/configuration were unchanged;
+helper 0.1.2 remains for rollback. Close/reopen Assistant to adopt it in an existing window.
+Live authentication/inference remains untested. See the [shared rollout ledger](https://github.com/andykumeda/craft-libs/blob/codex/independent-assistant/docs/two-mac-rollout.md)
+for per-device receipts. The toolbar change above remains source-only, not installed.

@@ -38,7 +38,7 @@ No app installation, public release, live inference or native VoiceOver acceptan
 
 | Workstream | Owner | State | Acceptance / release |
 | --- | --- | --- | --- |
-| Shared model selector flicker | Shared helper agent | In progress | Idle settings polling keeps model control enabled; actual shared settings changes still refresh |
-| MacBook Codex executable discovery | Shared helper agent + primary delivery | In progress | GUI-launched helper finds installed Codex, explicit overrides remain exact; signed helper installation verified separately |
+| Shared model selector flicker | Shared helper agent | Deployed | MacBook helper 0.1.3; 32 installed idle-control samples remained enabled; shared settings and history refresh regressions passed |
+| MacBook Codex executable discovery | Shared helper agent + primary delivery | Deployed | Helper0.1.3 signed installation and installed bundled-Codex discovery/version smoke passed; live authentication/inference untested |
 
 These two fixes are tracked in the shared `craft-libs` assistant and rollout ledgers.
