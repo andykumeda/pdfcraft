@@ -58,6 +58,8 @@
 
 ## Integrated assistant preview
 
+The mode-bar sparkle icon opens Assistant; the button retains its accessible Assistant name and tooltip.
+
 The private desktop assistant uses an in-window panel and shared Craft provider settings. See
 [setup, supported tools and safety boundaries](docs/assistant.md) and the
 [implementation and delivery ledger](docs/assistant-implementation.md) for current verification.

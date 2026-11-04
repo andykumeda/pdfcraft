@@ -415,3 +415,23 @@ Native receipts: Mini `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/pdfcraft
 Signed native SHA-256: standard `8fde954589c52890d77d9d8491f551a5a9b58688fd140dd4ace6c82297883730`; Preview native `d8fa1f809cab3debdf2895a99aa3d873860bb906702040d97ef0f75abc63de25`. Exact package and installation receipts are under `/private/tmp/craft-compact-rollout-20261103/`. Previous apps are retained under `~/Applications/Craft Rollout Backups/2026-11-03-compact/`. Settings/chats/credentials and existing CLI selection were preserved.
 
 Helper0.1.2 source3dda16ac changes navigation only and requires no additional host rebuild. The separately installed helper update was verified on both Macs. Local certificate trust remains explicit; no notarization or public release is claimed. Live provider authentication/inference, native IME, clipboard and VoiceOver remain manual checks.
+
+### Assistant toolbar refinement — 2026-11-04
+
+Owner: Primary. State: **Verified** (source). Scope: replace the mode-bar text control with the
+existing attributed Lucide `sparkles` icon through the shared square icon-button helper.
+Acceptance: an accessible Assistant name and tooltip, selected appearance, and unchanged
+pointer/keyboard toggling at 800 and 1440 points in light and dark themes. No engine,
+automation API, provider, settings, or document changes are required. Installation/release
+remain separate from this source update.
+
+Verification: UI library tests **731 passed, 1 ignored**; the focused toolbar regression
+passed all four width/theme cases, including pointer and keyboard activation. Before the
+change the same regression failed on the old 76.25-point text control versus 32 points.
+Scoped all-target Clippy with `-D warnings`, formatting, layers (37 crates), assets
+(281 repository + 6 dependency + 22 build-time), and scoped WASM compilation passed.
+WASM reports 11 warnings in unchanged platform code. Headless real-shell screenshots at
+800×600 light and 1440×900 dark were rendered and inspected. No native VoiceOver check,
+provider inference, app installation, or public release was performed for this layout change.
+Local check logs/screenshots: `/tmp/pdfcraft-toolbar-*`. UI tests used a command-line-only
+package opt-level 0 override; build defaults and dependencies were unchanged.

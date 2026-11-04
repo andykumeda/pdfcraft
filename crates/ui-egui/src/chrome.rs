@@ -501,7 +501,7 @@ pub fn mode_bar(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                 }
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     ui.spacing_mut().item_spacing.x = 4.0;
-                    if ui.selectable_label(app.assistant.open, tl!("Assistant")).clicked() {
+                    if icons::button(ui, "sparkles", 32.0, app.assistant.open, tl!("Assistant")).clicked() {
                         app.assistant.open = !app.assistant.open;
                     }
                     let has_doc = app.active.is_some();
@@ -908,5 +908,48 @@ mod tab_widths {
         assert_eq!(MAC_CONTENT_LEFT - lights_end, margin);
         // `egui::Margin` is in `i8`.
         assert!(MAC_CONTENT_LEFT <= f32::from(i8::MAX));
+    }
+}
+
+#[cfg(test)]
+mod assistant_toolbar_tests {
+    use super::*;
+    use egui_kittest::{Harness, kittest::Queryable as _};
+
+    #[test]
+    fn assistant_icon_is_accessible_and_toggles_in_both_themes() {
+        for kind in [theme::ThemeKind::Light, theme::ThemeKind::Dark] {
+            for width in [800.0, 1440.0] {
+                let mut installed_fonts = false;
+                let mut harness = Harness::builder().with_size(vec2(width, 600.0)).build_ui_state(
+                    move |ui, app: &mut PdfCraftApp| {
+                        if !installed_fonts {
+                            theme::install_fonts(ui.ctx());
+                            installed_fonts = true;
+                            return;
+                        }
+                        theme::apply(ui.ctx(), kind);
+                        mode_bar(app, ui);
+                    },
+                    PdfCraftApp::new(),
+                );
+                harness.run_steps(3);
+                let button = harness.get_by_role_and_label(egui::Role::Button, "Assistant");
+                assert_eq!(button.rect().width(), 32.0);
+                assert!(button.rect().left() >= 0.0 && button.rect().right() <= width);
+                button.click();
+                harness.run_steps(3);
+                assert!(harness.state().assistant.open);
+                harness.get_by_role_and_label(egui::Role::Button, "Assistant").click();
+                harness.run_steps(3);
+                assert!(!harness.state().assistant.open);
+                harness.get_by_role_and_label(egui::Role::Button, "Assistant").focus();
+                harness.run_steps(2);
+                harness.key_press(egui::Key::Space);
+                harness.run_steps(3);
+                assert!(harness.state().assistant.open);
+                assert!(harness.state().views.is_empty());
+            }
+        }
     }
 }
