@@ -128,8 +128,8 @@ failed helper does not permanently prevent the app from updating; no active chat
 cancelled for an update. This host-side guard uses the shared runtime API without a wire change.
 
 
-Current local delivery is 0.18.0 (8e86f96f) standard and Preview on Mini and MacBook, with shared
-assistant 0.1.0. Corrected macOS packaging signs protocol/repository metadata before publication;
+Current local delivery is 0.18.0 (71cc43cc) standard and Preview on Mini and MacBook, with shared
+assistant 0.1.2. Corrected macOS packaging signs protocol/repository metadata before publication;
 `CRAFT_UPDATE_REPOSITORY=andykumeda/pdfcraft` was explicitly supplied. The initial missing-marker
 packages were refused by the installer and replaced. Both Macs passed isolated no-inference
 panel/MCP smoke and settled theme checks. Exact hashes, receipts and remaining native acceptance
@@ -145,6 +145,6 @@ install a prebuilt app update without compiling locally; that is still a new app
 The compact-layout revision uses an optional `settings_open` status field so PDFCraft can put
 its helper update controls behind the settings gear. This placement needs a one-time host
 rebuild. Older hosts remain protocol-compatible but retain their existing update toolbar.
-No signed release or installed-app replacement was performed for this source revision.
+The one-time compatible host replacement is installed on both Macs. Version, Check for updates and its result copy are visible together inside Settings. Native checks passed in both installed variants on each Mac. No public release was published.
 
 A new host connected to an older helper retains the legacy update toolbar until the helper is updated; the optional field is backwards-compatible in both directions.

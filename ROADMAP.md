@@ -846,3 +846,5 @@ PR #1952 retains per-widget checkbox/radio export-value editing in the split for
 - 2026-11-03 — Custom assistant layout: shared d771dc9 adds gear settings, composer file/model menus and settings-only update controls. PDFCraft integration verification is recorded in `docs/assistant-implementation.md`; source-only, no installed update or readiness estimate change.
 
 - 2026-11-03 — Assistant0.1.1 delivery: independent helper update verified on both Macs; PDF host source pin83e6108 and scoped checks passed, signed host candidates in preparation. No readiness estimate change.
+
+- 2026-11-03 — Compact assistant installed: PDFCraft71cc43cc standard and Preview plus helper0.1.2 on Mini and MacBook. Settings-only update button/version/status, New chat/Chat history, file/model menus and synthetic native/MCP checks passed on both. Prior bundles retained; no public release or readiness estimate change.

@@ -602,4 +602,4 @@ for which changes require a new PDFCraft binary. Installed builds are tracked se
 
 The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
 
-See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. The compact-layout revision is source-only: installed-app acceptance and signed update installation for it remain pending.
+See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. The compact layout is installed in standard and Preview on both Macs; the gear contains the update button, version and status, and helper0.1.2 provides explicit New chat and Chat history controls.

@@ -399,3 +399,19 @@ WASM UI compilation (warnings in unchanged platform code), layers37, assets281+6
 format and diff checks. Optimized signed desktop candidates are next; installed host
 replacement and native settings-only update checks remain pending. Existing CLI is retained
 because its tools/control protocol are unchanged and installed CLI smoke passed on both Macs.
+
+### Installed compact-layout acceptance — 2026-11-03
+
+This checkpoint supersedes the earlier source-only and candidate-preparation status above.
+
+| Workstream | Owner | State | Evidence / release |
+| --- | --- | --- | --- |
+| Compatible host and helper integration | Primary | Deployed | PDFCraft71cc43cc pins shared83e61084; locally signed standard and Preview atomically installed on both Macs, verified metadata/signatures/hashes; helper0.1.2 installed separately |
+| Native acceptance, both variants on both Macs | Primary | Verified | New chat, Chat history, Add files, Choose model and gear accessible; menus, draft typing/clear, resize/theme, actual update-check result and hiding all update copy after closing Settings passed |
+| Synthetic document automation | Primary | Verified | Existing installed CLI retained;183 tools listed and8 create/metadata/render/save/close/reopen calls passed independently on each Mac |
+
+Native receipts: Mini `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/pdfcraft-installed-smoke-suucytsw/report.json`; MacBook `/var/folders/z6/7ct4dgns2236tw0d27zdb9s40000gn/T/pdfcraft-installed-smoke-2fpep4p7/report.json`. Every test-owned instance quit normally and released its loopback listener. Public component/source settings were copied into empty disposable profiles; no provider request or personal history was used.
+
+Signed native SHA-256: standard `8fde954589c52890d77d9d8491f551a5a9b58688fd140dd4ace6c82297883730`; Preview native `d8fa1f809cab3debdf2895a99aa3d873860bb906702040d97ef0f75abc63de25`. Exact package and installation receipts are under `/private/tmp/craft-compact-rollout-20261103/`. Previous apps are retained under `~/Applications/Craft Rollout Backups/2026-11-03-compact/`. Settings/chats/credentials and existing CLI selection were preserved.
+
+Helper0.1.2 source3dda16ac changes navigation only and requires no additional host rebuild. The separately installed helper update was verified on both Macs. Local certificate trust remains explicit; no notarization or public release is claimed. Live provider authentication/inference, native IME, clipboard and VoiceOver remain manual checks.
