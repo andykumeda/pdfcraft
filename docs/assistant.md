@@ -1,7 +1,7 @@
 # Integrated desktop assistant
 
 Status: **One normal PdfCraft0.18.2 app deployed on both Macs**, 2026-11-05, native source
-5181ac82 and shared helper0.1.7. Assistant Preview apps/installers are retired; document profiles,
+dacec56f and shared helper0.1.7. Assistant Preview apps/installers are retired; document profiles,
 recovery data, settings and chats are preserved. Use the managed ArtCraft Launcher for underlying
 app updates: it preserves the assistant and shows the official base version. See the
 [current rollout](single-app-assistant-rollout.md). No public release/notarization is implied.
@@ -80,3 +80,7 @@ with independent comment read-back and Undo. The updated preview is installed on
 2026-11-03 delivery checkpoint: assistant0.1.1 is installed on both Macs and passed native
 checks inside the previous unchanged hosts. The rebuilt host candidates that move their update
 controls behind the gear are being prepared; installed app replacement is not yet claimed.
+
+## Longer assistant tasks
+
+The owner configuration on both Macs allows **50 model-response rounds per request**, shared across PDFCraft, WordCraft, GridCraft and DeckCraft. It overrides the default of 12 using `~/Library/Application Support/Craft/ai/runtime.json`. New requests read the setting automatically; existing interrupted requests require reviewing completed edits before continuing. Other context and timeout limits still apply. [Configuration, verification and rollback](assistant-round-limit.md).

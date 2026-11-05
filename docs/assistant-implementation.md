@@ -1,5 +1,7 @@
 # Integrated assistant task ledger
 
+2026-11-05 runtime configuration: **50 rounds per request on both Macs**, shared by all four assistant-integrated apps; eight installed-helper config-loading checks passed without inference. [Operational ledger](assistant-round-limit.md). No binary rebuild or provider/credential change.
+
 Current delivery, 2026-11-05: PDF title-bar sparkle beside Display theme is **Deployed on both Macs**, native `dacec56f`/helper0.1.7. Scoped source gates and independent signed installed-path UI/data-preservation checks pass; [top-toolbar delivery ledger](assistant-top-toolbar.md). The consolidation baseline below is historical; All four toolbar deliveries are complete in the cross-app ledger.
 
 Current delivery, 2026-11-05: **One normal assistant-enabled PdfCraft0.18.2/source5181ac82 on both Macs**, helper0.1.7 and managed ArtCraft Launcher0.14.1. Active Preview copies are removed. Full source gates, signed package/resource parity and independent final actual-model/Undo/Redo/save/reopen/render checks pass; see [the single-app ledger](single-app-assistant-rollout.md). All earlier split-installation/version statements below are historical.
