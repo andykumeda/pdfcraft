@@ -1,6 +1,6 @@
 # PdfCraft roadmap: milestones and what's next
 
-> **2026-11-05 assistant toolbar:** Moving the single Assistant toggle beside Display theme in the title bar; [task ledger](assistant-top-toolbar.md). Scoped source gates, four real-shell renders and independent signed installed-path checks passed on both Macs; readiness estimates unchanged.
+> **2026-11-05 assistant toolbar:** The single Assistant sparkle now sits beside Display theme in the title bar; [task ledger](assistant-top-toolbar.md). Scoped source gates, four real-shell renders and independent signed installed-path checks passed on both Macs; readiness estimates unchanged.
 
 > **2026-11-05 assistant consolidation:** Single normal assistant-enabled app and protected ArtCraft Launcher update path are deployed on both Macs; `docs/single-app-assistant-rollout.md` owns deployment evidence. This supersedes the split Preview delivery policy below. Readiness estimates unchanged.
 

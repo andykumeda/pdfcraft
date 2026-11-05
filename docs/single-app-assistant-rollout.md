@@ -1,6 +1,6 @@
 # Single installed app with integrated assistant
 
-Current toolbar delivery, 2026-11-05: PDF/Grid/Deck top-toolbar toggles are installed and independently verified on both Macs; Word toolbar build remains in progress. [Current source, placement and delivery ledger](assistant-top-toolbar.md) supersedes the toolbar/native source positions in the historical consolidation evidence below. The one-normal-app policy is unchanged.
+Current toolbar delivery, 2026-11-05: All four top-toolbar toggles are installed and independently verified on both Macs. [Current source, placement and delivery ledger](assistant-top-toolbar.md) supersedes the toolbar/native source positions in the historical consolidation evidence below. The one-normal-app policy is unchanged.
 
 Status: **Deployed and verified on both Macs**. Updated 2026-11-05 (America/Los_Angeles).
 

@@ -1,6 +1,6 @@
 # Deferred assistant toolbar changes — 2026-11-04
 
-Current toolbar delivery, 2026-11-05: PDF/Grid/Deck top-toolbar toggles are installed and independently verified on both Macs; Word toolbar build remains in progress. [Current source, placement and delivery ledger](assistant-top-toolbar.md) supersedes the toolbar/native source positions in the historical consolidation evidence below. The one-normal-app policy is unchanged.
+Current toolbar delivery, 2026-11-05: All four top-toolbar toggles are installed and independently verified on both Macs. [Current source, placement and delivery ledger](assistant-top-toolbar.md) supersedes the toolbar/native source positions in the historical consolidation evidence below. The one-normal-app policy is unchanged.
 
 Status: **Deployed as single normal assistant-integrated apps on both Macs** (2026-11-05). The owner requires one normal assistant-integrated app per product on both Macs and no active Assistant Preview copies. ArtCraft Launcher updates must preserve the assistant and report the underlying official release. See [the current consolidation ledger](single-app-assistant-rollout.md). Do not reinstall the historical split normal/Preview arrangement. The toolbar implementation and prior Preview delivery below are historical evidence.
 

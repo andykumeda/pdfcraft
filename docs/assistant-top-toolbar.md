@@ -1,12 +1,12 @@
 # Assistant top-toolbar placement — 2026-11-05
 
-Status: **In progress**. Owner requests the Assistant icon alongside the title-bar theme control in PDFCraft/GridCraft, beside Discord in WordCraft, and investigation of the unavailable DeckCraft assistant on MacBook. One normal integrated application per product remains required; no Preview installations.
+Status: **Deployed and independently verified on both Macs**. Owner requests the Assistant icon alongside the title-bar theme control in PDFCraft/GridCraft, beside Discord in WordCraft, and investigation of the unavailable DeckCraft assistant on MacBook. One normal integrated application per product remains required; no Preview installations.
 
 | Workstream | Owner | Acceptance and verification | State | Delivery |
 | --- | --- | --- | --- | --- |
 | PDF toolbar | Primary | One accessible sparkle toggle beside theme; click/keyboard; narrow/wide light/dark; scoped Rust gates and real UI | Deployed | Nativedacec56f; standard archive and independent installed smoke pass both Macs |
 | Grid toolbar | Grid agent | One icon beside theme; toggle/accessibility/layout regressions and scoped gates | Deployed | Nativef43086bc; docs51939848; independent normal-path checks both Macs pass |
-| Word toolbar | Word agent | One icon beside Discord; toggle/accessibility/layout regressions and scoped gates | In progress | Pending |
+| Word toolbar | Word agent | One icon beside Discord; toggle/accessibility/layout regressions and scoped gates | Deployed | Native847526d8; full CI, four source renders and independent installed-path checks pass both Macs |
 | Deck MacBook | Deck agent | Verify installed/running app and helper; restore observable assistant without losing work | Deployed | Source86a35ba2; signed standard app, actual top-toolbar/Home toggle and helper0.1.7 checked independently on both Macs |
 
 Each product owns its source/tests and detailed evidence. Builds and installation are separate checkpoints. Preserve profiles, recovery, shared AI configuration, credentials and documents; never terminate a user-owned session to install.
@@ -19,14 +19,14 @@ PDF local `plan/STATUS.md`, `plan/architecture.md`, `plan/execution-plan.md` and
 - Existing Assistant command, selected state, accessible name, tooltip and panel behavior are retained. No new asset, dependency, provider configuration or document path.
 - Regression observed failing against old placement (`32 != 28`), then passed at 600/1440 points in light/dark with mouse and keyboard toggling. Logs: `/private/tmp/pdf-toolbar-{red,green}.log`.
 - Scoped final checks passed: `cargo fmt --check`; `cargo clippy -p pdfcraft-ui-egui -j 2 --all-targets -- -D warnings`; `cargo test -p pdfcraft-ui-egui -j 2` (2,236 passed, five ignored); `cargo xtask layers`; `cargo xtask assets`; `cargo check -p pdfcraft-ui-egui --target wasm32-unknown-unknown -j 2` (existing WASM warnings). Logs: `/private/tmp/pdf-toolbar-checks.log` and `/private/tmp/pdf-toolbar-check-{0..5}.log`.
-- Actual shell light 600-point and dark 1440-point renders reviewed: `/private/tmp/pdf-toolbar-{light,dark}.png`; sparkle is adjacent to theme and visible. Native installed checks, packaging and delivery remain pending.
+- Actual shell light 600-point and dark 1440-point renders reviewed: `/private/tmp/pdf-toolbar-{light,dark}.png`; sparkle is adjacent to theme and visible. At that source checkpoint native delivery was pending; the verified delivery below supersedes it.
 
 ## Cross-app installation checkpoint
 
 - Grid source `f43086bc7fce24d273549653956382106b7a3922` passed all ten CI gates and four source renders. Corrected signed package includes all 13 font licences; an initial package missing licence payloads was rejected and removed. Candidate native checks passed. Installed through the normal managed launcher on both Macs, exact native SHA `fe4f83914ed46259d99cd242381d8dc94487c19fa251d8036f378c724909ec48`; installed smoke passed independently on both Macs (pointer toggle, helper0.1.7, light/dark, synthetic/protected-data preservation, exit/listener cleanup); Grid docs commit51939848. Per-host verified rollback ZIPs/receipts: `~/Library/Application Support/Craft/retired-apps/2026-11-05-top-toolbar.noindex/`.
 - Deck source `86a35ba2` passed all eight CI gates. Actual installed-path checks independently pass on both Macs: top toggle open/close, Home with no presentation, helper0.1.7, 600/1440 light/dark screenshots/render, normal exit and released listeners. Exact native SHA `f63f1d94ba3acf141d2a7eca79a4a6b30182f4a0ddc2b614d24eab9ba958f92e`; all 35 functional resources match previous bundles. Protected profiles/shared AI data unchanged; no inference. Rollback ZIPs per host: `~/Library/Application Support/Craft/retired-apps/2026-11-05-deck-toolbar.noindex/`.
-- Word source `847526d8838553ad2c15e8d3ab7db9795d3e7f48` passed all nine CI gates (5,202 native tests; nine ignored), four 600/1440 light/dark renders, and the red/green placement/keyboard regression. Optimized build and signed native delivery pending.
-- PDF first optimized build exposed a stale cached build-script path in contributor-credit generation. Its package is not eligible. Touching the unchanged build script forced a correct build-script compilation; generated contributor tables are populated (26,226 bytes). Corrected optimized build/package is in progress. Source/test code is unchanged.
+- Word source `847526d8838553ad2c15e8d3ab7db9795d3e7f48` passed all nine CI gates (5,202 native tests; nine ignored), four 600/1440 light/dark renders, and the red/green placement/keyboard regression. Optimized standard package, signatures and independent installed native delivery now pass both Macs (see final checkpoint).
+- PDF first optimized build exposed a stale cached build-script path in contributor-credit generation. Its package is not eligible. Touching the unchanged build script forced a correct build-script compilation; generated contributor tables are populated (26,226 bytes). Corrected optimized build/package completed; native two-Mac delivery is verified below. Source/test code is unchanged.
 
 ## PDF two-Mac delivery
 
@@ -38,3 +38,20 @@ Independent installed-path smoke passed on Mini and MacBook: exactly one named t
 - MacBook: `/var/folders/z6/7ct4dgns2236tw0d27zdb9s40000gn/T/pdfcraft-top-toolbar-nxz0xg8s/`; copied evidence `/private/tmp/pdf-toolbar-book-installed/` on Mini.
 
 No fresh model inference, physical VoiceOver/IME/clipboard or private-document fidelity check was performed. No public release/notarization. Deck source is committed locally because its existing upstream remote is unwritable; PDF/Grid source and documentation use existing writable fork branches.
+
+## Final acceptance — 2026-11-05
+
+Word normal app source847526d8 is installed through the managed launcher on both Macs. Independent installed UI checks pass: sparkle beside Discord, actual mouse toggle both themes, helper0.1.7 rendered, synthetic readback/saved bytes and normal/retired-Preview/shared AI snapshots unchanged, normal quit/listener/control-key cleanup. Mini report: `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/wordcraft-top-toolbar-vksjnm0f/report.json`; MacBook report: `/var/folders/z6/7ct4dgns2236tw0d27zdb9s40000gn/T/wordcraft-top-toolbar-l4gyt71u/report.json`; reviewed Book copies `/private/tmp/wordcraft-title-toolbar-evidence/book-installed/`. Package: `../wordcraft/dist/assistant-standard/847526d8/`.
+
+Both final inventories pass exact normal identity/version/base-tag/source/protocol/certificate, resource checks and helper0.1.7. Native hashes match independently across Mini and MacBook. Exactly one normal app per product remains in active application folders on each Mac, with zero active Previews. Evidence: `/private/tmp/craft-toolbar-final-{mini,book}.json`.
+
+| Product | Native source | Exact signed native SHA-256, both Macs |
+| --- | --- | --- |
+| pdfcraft | `dacec56f353721181de2716142b952dff16536dd` | `fd5853ad6be1057665b777cc572c762ec4a1e959cce92f4ab2fbdb3d60792820` |
+| wordcraft | `847526d8838553ad2c15e8d3ab7db9795d3e7f48` | `ebd7751d715f6f6fcba306ad900811fd94c03184ff33377a7b60b247d6597f85` |
+| gridcraft | `f43086bc7fce24d273549653956382106b7a3922` | `fe4f83914ed46259d99cd242381d8dc94487c19fa251d8036f378c724909ec48` |
+| deckcraft | `86a35ba2f9ab22a7000ca44c5ce363edc914092d` | `f63f1d94ba3acf141d2a7eca79a4a6b30182f4a0ddc2b614d24eab9ba958f92e` |
+
+Builds remain local certificate-signed, without notarization/public release. Profiles, recovery, conversations, credentials and provider selection are retained; no fresh inference was used. Existing physical VoiceOver/IME/clipboard and private-document limitations remain untested, as does the earlier unrelated Deck theme-redraw limitation. Rollback archives and previous cache ZIPs/fingerprints are retained. The final source/doc commits remain on the established assistant branches; Deck commits are local because live GitHub `viewerPermission` returned `READ` for its sole existing upstream remote. No new fork was created.
+
+The protected ArtCraft Launcher route is unchanged. Qualified cache fingerprints are refreshed after documentation-only closeout, without rebuilding or changing signed native code. No implementation, installation or required verification remains for this request.
