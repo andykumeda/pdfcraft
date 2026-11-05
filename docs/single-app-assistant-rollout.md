@@ -201,3 +201,8 @@ those existing upstream remotes do not grant push permission. Physical keyboard/
 clipboard and private-document fidelity were not retested. The unrelated Deck theme-switch
 redraw issue remains documented above; it reproduces without an assistant process and does not
 change saved data. No required installation or verification work remains for this request.
+
+Final shortcut cleanup: the one stale Book recent-Dock Preview tile was removed through the
+per-user preferences API after an owner-only rollback plist was saved in the retirement folder.
+Independent re-export reports no obsolete Craft recent tile; all other Dock preference keys
+compared equal. No persistent Dock pin was changed on either host.
