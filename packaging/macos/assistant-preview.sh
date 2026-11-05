@@ -49,6 +49,15 @@ export PDFCRAFT_VERSION="$PREVIEW_VERSION" PDFCRAFT_BUILD_SHA="$BUILD_SHA"
 . "$(dirname "${BASH_SOURCE[0]}")/../env.sh"
 HERE="$ROOT/packaging/macos"
 verify_fork_branding "$BINARY"
+if [[ "$STANDARD" = 1 ]]; then
+  [[ "${CRAFT_UPSTREAM_TAG:-}" = "v$VERSION" && "${CRAFT_UPSTREAM_SHA:-}" =~ ^[0-9a-f]{40}$ ]] || {
+    echo "error: standard integration requires the matching CRAFT_UPSTREAM_TAG and full CRAFT_UPSTREAM_SHA" >&2; exit 2;
+  }
+  if [[ "$(git -C "$ROOT" rev-parse "$CRAFT_UPSTREAM_TAG^{commit}")" != "$CRAFT_UPSTREAM_SHA" ]] ||
+    ! git -C "$ROOT" merge-base --is-ancestor "$CRAFT_UPSTREAM_SHA" "$BUILD_SHA"; then
+    echo "error: underlying release is not included in the supplied source commit" >&2; exit 2;
+  fi
+fi
 
 ACTUAL_ARCH="$(lipo -archs "$BINARY")"
 case "$ARCH:$ACTUAL_ARCH" in
@@ -101,6 +110,7 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BINARY" "$APP/Contents/MacOS/PDFCraft-native"
 cp "$ROOT/assets/app-icon/pdfcraft.icns" "$APP/Contents/Resources/PdfCraft.icns"
 copy_docs "$APP/Contents/Resources"
+if [[ "$STANDARD" = 1 ]]; then stage_models "$APP/Contents/Resources/models"; fi
 mkdir -p "$APP/Contents/Resources/licenses/dirs-sys"
 cp "$ROOT/vendor/dirs-sys/LICENSE-MIT" "$ROOT/vendor/dirs-sys/LICENSE-APACHE" "$APP/Contents/Resources/licenses/dirs-sys/"
 
@@ -143,9 +153,6 @@ plutil -replace CFBundleIdentifier -string "$BUNDLE_ID" "$APP/Contents/Info.plis
 plutil -replace LSMinimumSystemVersion -string "$MIN_MACOS" "$APP/Contents/Info.plist"
 set_assistant_update_metadata "$APP/Contents/Info.plist"
 if [[ "$STANDARD" = 1 ]]; then
-  [[ "${CRAFT_UPSTREAM_TAG:-}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][A-Za-z0-9.-]+)?$ && "${CRAFT_UPSTREAM_SHA:-}" =~ ^[0-9a-f]{40}$ ]] || {
-    echo "error: standard integration requires CRAFT_UPSTREAM_TAG and full CRAFT_UPSTREAM_SHA" >&2; exit 2;
-  }
   plutil -replace CraftUnderlyingTag -string "$CRAFT_UPSTREAM_TAG" "$APP/Contents/Info.plist"
   plutil -replace CraftUnderlyingCommit -string "$CRAFT_UPSTREAM_SHA" "$APP/Contents/Info.plist"
 fi
