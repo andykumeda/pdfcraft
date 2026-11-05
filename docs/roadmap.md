@@ -1,5 +1,7 @@
 # PdfCraft roadmap: milestones and what's next
 
+> **2026-11-05 assistant toolbar:** Moving the single Assistant toggle beside Display theme in the title bar; [task ledger](assistant-top-toolbar.md). Scoped source gates and real-shell light/dark captures passed; signed installation pending; readiness estimates unchanged.
+
 > **2026-11-05 assistant consolidation:** Single normal assistant-enabled app and protected ArtCraft Launcher update path are deployed on both Macs; `docs/single-app-assistant-rollout.md` owns deployment evidence. This supersedes the split Preview delivery policy below. Readiness estimates unchanged.
 
 > **2026-11-04 custom update:** Official0.18.2 reconciliation preserves the assistant/sparkle toolbar; full CI and actual Terra edit/Undo/save/reopen qualification passed; separate previews installed on both Macs, with receipts in the rollout ledger. Readiness estimates unchanged.

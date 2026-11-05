@@ -6,7 +6,7 @@ recovery data, settings and chats are preserved. Use the managed ArtCraft Launch
 app updates: it preserves the assistant and shows the official base version. See the
 [current rollout](single-app-assistant-rollout.md). No public release/notarization is implied.
 
-Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
+Open the **Assistant** sparkle icon beside the title-bar theme button, or **View → Assistant**. The selected toolbar button
 and checked menu entry indicate that the native side panel is open. The settings gear opens the shared in-panel connection editor. The same editor is available through
 **Preferences → Assistant settings**. One model handles both chat and requested PDF actions.
 

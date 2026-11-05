@@ -1,5 +1,7 @@
 # Integrated assistant task ledger
 
+Current work, 2026-11-05: [top-toolbar placement and DeckCraft Home availability](assistant-top-toolbar.md). PDF sparkle moves beside Display theme; source verification and signed delivery are tracked separately there.
+
 Current delivery, 2026-11-05: **One normal assistant-enabled PdfCraft0.18.2/source5181ac82 on both Macs**, helper0.1.7 and managed ArtCraft Launcher0.14.1. Active Preview copies are removed. Full source gates, signed package/resource parity and independent final actual-model/Undo/Redo/save/reopen/render checks pass; see [the single-app ledger](single-app-assistant-rollout.md). All earlier split-installation/version statements below are historical.
 
 Current update, 2026-11-04: [0.18.2 two-Mac preview rollout](assistant-v0182-rollout.md) is deployed and model-qualified on both Macs. Earlier installed/version statements below are historical; shared helper0.1.6 is deployed independently.

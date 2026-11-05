@@ -1,5 +1,7 @@
 # PdfCraft roadmap
 
+> **2026-11-05 assistant toolbar:** Moving the single Assistant toggle beside Display theme in the title bar; [task ledger](docs/assistant-top-toolbar.md). Scoped source gates and real-shell light/dark captures passed; signed installation pending; readiness estimates unchanged.
+
 > **Last reviewed:** 2026-11-03 | **Last updated:** 2026-11-03 | **Change:** patch (M5 #5850 review: indirect typewriter intent and composer edits preserve outer whitespace; movement regression commits by outside click; estimates unchanged)
 
 > **Last reviewed:** 2026-11-03 | **Last updated:** 2026-11-03 | **Change:** patch (M5 #5850: Enter adds Fill & Sign line breaks; outside clicks commit, Escape cancels, and saved multiline appearances retain their text and height; estimates unchanged)

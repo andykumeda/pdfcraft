@@ -69,10 +69,10 @@ pub fn tab_strip(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                     app.active = None;
                     app.combine_tab.focused = false;
                 }
-                // Reserve the three icon buttons, Discord and their gaps outside the scrolling tabs.
+                // Reserve the four icon buttons, Discord and their gaps outside the scrolling tabs.
                 let controls_width = ui.fonts_mut(|f| f.layout_no_wrap("Discord".into(), theme::medium(13.0), t.text).size().x)
-                    + 3.0 * button
-                    + 54.0
+                    + 4.0 * button
+                    + 58.0
                     + window_controls::width(&controls.right);
                 // Open stays in sight after the tabs: its icon, text and padding, and the gaps around it.
                 let open_width = ui.fonts_mut(|f| f.layout_no_wrap(tl!("Open").into(), theme::medium(13.0), t.text).size().x) + 38.0 + 12.0;
@@ -306,6 +306,9 @@ pub fn tab_strip(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                         });
                     }
                     egui::Popup::context_menu(&response).id(response.id.with("theme_menu")).show(|ui| appearance_menu(app, ui));
+                    if icons::button(ui, "sparkles", button, app.assistant.open, tl!("Assistant")).clicked() {
+                        app.assistant.open = !app.assistant.open;
+                    }
                     if icons::button(ui, "circle-help", button, false, tl!("Keyboard shortcuts")).clicked() {
                         app.dialog = Some(Dialog::Shortcuts);
                     }
@@ -501,9 +504,6 @@ pub fn mode_bar(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                 }
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     ui.spacing_mut().item_spacing.x = 4.0;
-                    if icons::button(ui, "sparkles", 32.0, app.assistant.open, tl!("Assistant")).clicked() {
-                        app.assistant.open = !app.assistant.open;
-                    }
                     let has_doc = app.active.is_some();
                     ui.add_enabled_ui(has_doc, |ui| {
                         let tip = crate::commands::command_tip(ui.ctx(), tl!("Print ({key})"), "print.dialog");
@@ -919,7 +919,7 @@ mod assistant_toolbar_tests {
     #[test]
     fn assistant_icon_is_accessible_and_toggles_in_both_themes() {
         for kind in [theme::ThemeKind::Light, theme::ThemeKind::Dark] {
-            for width in [800.0, 1440.0] {
+            for width in [600.0, 1440.0] {
                 let mut installed_fonts = false;
                 let mut harness = Harness::builder().with_size(vec2(width, 600.0)).build_ui_state(
                     move |ui, app: &mut PdfCraftApp| {
@@ -929,13 +929,18 @@ mod assistant_toolbar_tests {
                             return;
                         }
                         theme::apply(ui.ctx(), kind);
+                        tab_strip(app, ui);
                         mode_bar(app, ui);
                     },
                     PdfCraftApp::new(),
                 );
                 harness.run_steps(3);
                 let button = harness.get_by_role_and_label(egui::Role::Button, "Assistant");
-                assert_eq!(button.rect().width(), 32.0);
+                let theme_button = harness.get_by_label("Display theme: Use system setting").rect();
+                assert_eq!(button.rect().width(), STRIP_BUTTON);
+                assert_eq!(button.rect().center().y, theme_button.center().y);
+                assert!(button.rect().right() <= theme_button.left());
+                assert!(theme_button.left() - button.rect().right() <= 4.0);
                 assert!(button.rect().left() >= 0.0 && button.rect().right() <= width);
                 button.click();
                 harness.run_steps(3);
