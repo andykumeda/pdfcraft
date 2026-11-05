@@ -1,6 +1,6 @@
 # Integrated assistant task ledger
 
-Current work, 2026-11-05: [top-toolbar placement and DeckCraft Home availability](assistant-top-toolbar.md). PDF sparkle moves beside Display theme; source verification and signed delivery are tracked separately there.
+Current delivery, 2026-11-05: PDF title-bar sparkle beside Display theme is **Deployed on both Macs**, native `dacec56f`/helper0.1.7. Scoped source gates and independent signed installed-path UI/data-preservation checks pass; [top-toolbar delivery ledger](assistant-top-toolbar.md). The consolidation baseline below is historical; Word toolbar delivery remains in progress in the cross-app ledger.
 
 Current delivery, 2026-11-05: **One normal assistant-enabled PdfCraft0.18.2/source5181ac82 on both Macs**, helper0.1.7 and managed ArtCraft Launcher0.14.1. Active Preview copies are removed. Full source gates, signed package/resource parity and independent final actual-model/Undo/Redo/save/reopen/render checks pass; see [the single-app ledger](single-app-assistant-rollout.md). All earlier split-installation/version statements below are historical.
 
