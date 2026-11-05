@@ -1,30 +1,31 @@
 # Integrated desktop assistant preview
 
-Status: **PDFCraft 0.18.0 (`8e86f96f`)** standard and Assistant Preview are installed on
-Mini and MacBook with the independently installed shared assistant **0.1.1**. Both variants
-passed isolated native helper/composer/Settings and synthetic MCP smoke on both Macs. The
-installed CLI lists **183 tools**. Local certificate signing is verified; these are not
-notarized or public releases. Clipboard, native IME/VoiceOver and live-provider acceptance
-remain separate checks. See [the delivery ledger](assistant-implementation.md) for exact
-source, package hashes, verification and historical preview evidence.
+Status: **0.18.2 preview update in progress**, 2026-11-04. Standard official 0.18.2 is
+installed on both Macs. The separate custom preview retains the in-window assistant;
+its source, live-model and deployment checks are tracked in [the current rollout](assistant-v0182-rollout.md).
+The independently installed shared helper is 0.1.6. Historical installations are recorded in
+[the implementation ledger](assistant-implementation.md). No public custom release is implied.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
 and checked menu entry indicate that the native side panel is open. The settings gear opens the shared in-panel connection editor. The same editor is available through
 **Preferences → Assistant settings**. One model handles both chat and requested PDF actions.
 
-In the current source, the Chats menu holds new, saved and delete actions. The rounded
-composer contains a `+` file menu, a model dropdown and Send/Stop. Quick model choices use the
-existing streaming/tool validation and set a PDFCraft override; settings retains suite-wide
-choices and custom model IDs. Assistant version, update checks and installation appear in
-settings. Missing-helper recovery controls remain available. These layout changes are source
-only; the installed versions described above retain their previous layout until rebuilt and
-installed with the updated shared helper.
+New chat and Chat history sit above the conversation. The rounded composer contains a `+`
+file menu, a model dropdown and Send/Stop. Quick choices set a PdfCraft override; settings retains
+suite-wide choices and custom model IDs. Helper version/update controls appear only in settings.
+Tool activity/result rows are hidden; model replies and approval requests remain visible.
 
 Use the shared connection/model controls for Codex or OpenAI-compatible providers, including
 Ollama. No model is chosen automatically beyond an explicitly configured suite default.
 Advanced options start collapsed. The effective endpoint/model and validated context limits
-are visible; credentials stay in the platform credential store. Codex uses the separate
-Craft-managed sign-in, never the coding assistant's credentials/history/settings.
+are visible; API credentials stay in the platform credential store. Helper0.1.6 uses the normal
+Codex account/profile (`CODEX_HOME` when explicitly set), its enabled skills, plugins, MCP servers,
+native tools and permission policy. Approvals, questions and elicitation require explicit input
+in the pane. Craft chats remain app-owned; Codex CLI/desktop history is not merged. External native
+tool changes are outside PdfCraft Undo. Legacy isolated Craft Codex data is retained but not selected.
+The effective native workspace is shown in settings; it is retained under the shared AI root's
+`workspaces/pdfcraft`, or selected by validated `CRAFT_CODEX_WORKSPACE`. Finder's launch directory
+is not used as its default.
 
 Shared configuration uses `CRAFT_AI_CONFIG_DIR`, otherwise the platform's `Craft/ai` folder
 (`~/Library/Application Support/Craft/ai` on macOS). Connections and suite defaults are shared;
@@ -52,8 +53,8 @@ closing use normal MCP behavior: disk writes cannot be undone; closing unsaved e
 requires saving first or explicitly passing `discard_changes: true`. Read-back is available
 through the regular tools; provider narration alone is not evidence that a change succeeded.
 
-This source change is separate from the installed preview identified above. Its verification
-and delivery state are recorded in the ledger; no new installed or published build is implied.
+The current rollout records source qualification and per-device installation separately. No
+unperformed live-provider, VoiceOver/IME/clipboard or public-release check is implied.
 
 Chats persist outside PDFs and may contain document text and tool results. New/Open/Delete chat
 manage them independently. Reopening a chat does not resume interrupted edits. Changing providers

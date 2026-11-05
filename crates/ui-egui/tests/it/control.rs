@@ -478,6 +478,9 @@ fn theme_commands_and_options_report_preference_and_effective_colours() {
 
 #[test]
 fn lithuanian_password_dialog_translates_dynamic_labels_and_validation() {
+    if crate::support::skip_without_catalogs("lithuanian_password_dialog_translates_dynamic_labels_and_validation") {
+        return;
+    }
     let (mut h, c) = harness();
     ok(&mut h, &c, "ui.set", json!({ "key": "language", "value": "lt" }));
     ok(&mut h, &c, "ui.set", json!({ "key": "dialog", "value": "protect" }));
@@ -496,6 +499,9 @@ fn lithuanian_password_dialog_translates_dynamic_labels_and_validation() {
 
 #[test]
 fn lithuanian_inspector_title_updates_through_the_control_channel() {
+    if crate::support::skip_without_catalogs("lithuanian_inspector_title_updates_through_the_control_channel") {
+        return;
+    }
     let (mut h, c) = harness();
     ok(&mut h, &c, "ui.set", json!({ "key": "panel", "value": "comments" }));
     h.run_steps(2);
@@ -515,6 +521,9 @@ fn lithuanian_inspector_title_updates_through_the_control_channel() {
 /// command ids agents drive stay exactly the same.
 #[test]
 fn language_switch_preserves_document_and_command_ids() {
+    if crate::support::skip_without_catalogs("language_switch_preserves_document_and_command_ids") {
+        return;
+    }
     use pdfcraft_ui_egui::i18n;
     let (mut h, c) = harness();
     let doc = h.state().views[0].id;
@@ -916,6 +925,25 @@ fn middle_button_pans_while_held_outside_linux() {
     assert!(!h.state().session.get(h.state().views[0].id).unwrap().dirty);
 }
 
+/// With Invert middle-button drag on, a held middle drag moves the view the way the pointer goes.
+#[cfg(not(target_os = "linux"))]
+#[test]
+fn inverted_middle_drag_moves_the_view_the_way_the_pointer_goes() {
+    let (mut h, c) = harness();
+    h.state_mut().set_option("zoom", "400").unwrap();
+    ok(&mut h, &c, "ui.set", json!({ "key": "invert_middle_drag", "value": "true" }));
+    h.run_steps(3);
+    h.state_mut().views[0].go_to_page(1);
+    h.run_steps(2);
+    let p = h.state().views[0].viewport_rect().center();
+    let top = h.state().views[0].page_screen_rect(1).unwrap().top();
+    ok(&mut h, &c, "ui.drag", json!({ "from": [p.x, p.y], "to": [p.x, p.y - 60.0], "steps": 12, "button": "middle" }));
+    h.run_steps(2);
+    let moved = h.state().views[0].page_screen_rect(1).unwrap().top();
+    assert!((moved - (top + 60.0)).abs() < 1.0, "dragging up scrolls up, so the page moves down: {top} -> {moved}");
+    assert!(!h.state().session.get(h.state().views[0].id).unwrap().dirty);
+}
+
 #[test]
 fn state_and_view_options() {
     let (mut h, c) = harness();
@@ -934,6 +962,9 @@ fn state_and_view_options() {
 
 #[test]
 fn japanese_controls_and_search_keep_command_ids() {
+    if crate::support::skip_without_catalogs("japanese_controls_and_search_keep_command_ids") {
+        return;
+    }
     if crate::support::skip_without_glyphs("japanese_controls_and_search_keep_command_ids", "ja", "") {
         return;
     }
@@ -966,6 +997,9 @@ fn japanese_controls_and_search_keep_command_ids() {
 
 #[test]
 fn german_preferences_and_search_keep_command_ids() {
+    if crate::support::skip_without_catalogs("german_preferences_and_search_keep_command_ids") {
+        return;
+    }
     let (mut h, c) = harness();
     ok(&mut h, &c, "ui.set", json!({ "key": "language", "value": "de" }));
     ok(&mut h, &c, "ui.click", json!({ "label": "Konvertieren" }));
@@ -998,6 +1032,9 @@ fn german_preferences_and_search_keep_command_ids() {
 
 #[test]
 fn ukrainian_preferences_and_search_keep_command_ids() {
+    if crate::support::skip_without_catalogs("ukrainian_preferences_and_search_keep_command_ids") {
+        return;
+    }
     let (mut h, c) = harness();
     ok(&mut h, &c, "ui.set", json!({ "key": "language", "value": "uk" }));
     ok(&mut h, &c, "ui.command", json!({ "id": "app.preferences" }));
@@ -1031,21 +1068,24 @@ fn ukrainian_preferences_and_search_keep_command_ids() {
 
 #[test]
 fn preferences_menu_and_shortcut_allow_switching_interface_languages() {
+    if crate::support::skip_without_catalogs("preferences_menu_and_shortcut_allow_switching_interface_languages") {
+        return;
+    }
     if crate::support::skip_without_glyphs("preferences_menu_and_shortcut_allow_switching_interface_languages", "ja", "") {
         return;
     }
     let (mut h, c) = harness();
     ok(&mut h, &c, "ui.set", json!({ "key": "language", "value": "ja" }));
-    // The menu bar's Edit menu holds Preferences. Titles and rows carry their mnemonic
-    // ("編集(E)", "環境設定(P)…"), so match by the start of the label.
+    // The native platform layout moves Preferences to the app menu on macOS.
+    // Match translated titles/rows by their prefix, excluding platform mnemonics.
     let menu_row = |text: &'static str| {
         move |n: &egui_kittest::kittest::AccessKitNode<'_>| {
             n.role() == egui::accesskit::Role::MenuItem && n.label().is_some_and(|l| l.starts_with(text))
         }
     };
-    h.get_by(menu_row("編集")).click();
+    h.get_by(menu_row(if cfg!(target_os = "macos") { "PdfCraft" } else { "編集" })).click();
     h.run_steps(2);
-    h.get_by(menu_row("環境設定")).click();
+    h.get_by(menu_row(if cfg!(target_os = "macos") { "設定" } else { "環境設定" })).click();
     h.run_steps(2);
     for (current, next, code) in [("日本語", "English", "en"), ("English", "Українська", "uk"), ("Українська", "日本語", "ja")]
     {
@@ -1075,6 +1115,9 @@ fn preferences_menu_and_shortcut_allow_switching_interface_languages() {
 
 #[test]
 fn japanese_dialogs_errors_and_custom_action_names() {
+    if crate::support::skip_without_catalogs("japanese_dialogs_errors_and_custom_action_names") {
+        return;
+    }
     if crate::support::skip_without_glyphs("japanese_dialogs_errors_and_custom_action_names", "ja", "") {
         return;
     }
@@ -1118,6 +1161,9 @@ fn japanese_dialogs_errors_and_custom_action_names() {
 
 #[test]
 fn simplified_chinese_about_tabs_and_credit_controls() {
+    if crate::support::skip_without_catalogs("simplified_chinese_about_tabs_and_credit_controls") {
+        return;
+    }
     if crate::support::skip_without_glyphs("simplified_chinese_about_tabs_and_credit_controls", "zh-hans", "") {
         return;
     }
@@ -1150,6 +1196,9 @@ fn simplified_chinese_about_tabs_and_credit_controls() {
 
 #[test]
 fn simplified_chinese_signature_prompts_and_errors_keep_document_state() {
+    if crate::support::skip_without_catalogs("simplified_chinese_signature_prompts_and_errors_keep_document_state") {
+        return;
+    }
     if crate::support::skip_without_glyphs("simplified_chinese_signature_prompts_and_errors_keep_document_state", "zh-hans", "") {
         return;
     }

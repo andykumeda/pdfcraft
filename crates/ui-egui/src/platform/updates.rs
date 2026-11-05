@@ -3,6 +3,8 @@
 
 #[cfg(not(target_arch = "wasm32"))]
 use craft_update::updater::{Action, CheckSource, Status, Updater};
+#[cfg(not(target_arch = "wasm32"))]
+use craft_update::{CheckResultDialog, CheckResultResponse};
 use egui::{Align, Layout};
 
 use crate::{PdfCraftApp, theme, widgets};
@@ -133,6 +135,21 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
         // A requested check that found a release is answered by the prompt, not by this dialog.
         if !app.updates.disabled && app.updates.open && !app.updates.check_requested && matches!(app.updates.updater.status(), Status::Idle) {
             app.updates.open = false;
+        }
+        // The shared dialog links the suite repository; custom sources keep their own routed UI.
+        if !app.updates.disabled && app.updates.updater.repository() == Some(crate::UPDATE_APP.repo) {
+            if app.updates.open {
+                let dialog = CheckResultDialog::new(&crate::UPDATE_APP, env!("CARGO_PKG_VERSION"));
+                match dialog.show(ctx, app.updates.updater.status()) {
+                    CheckResultResponse::None => {}
+                    CheckResultResponse::Close => {
+                        app.updates.open = false;
+                        app.updates.updater.dismiss_status();
+                    }
+                    CheckResultResponse::CheckAgain => app.updates.check_requested = true,
+                }
+            }
+            return;
         }
     }
     if !app.updates.open {

@@ -1,5 +1,7 @@
 # Integrated assistant task ledger
 
+Current update, 2026-11-04: [0.18.2 two-Mac preview rollout](assistant-v0182-rollout.md) is in progress. Earlier installed/version statements below are historical; shared helper0.1.6 is deployed independently.
+
 Current delivery, 2026-11-02: **0.18.0 (`8e86f96f`) standard and Assistant Preview Deployed on
 Mini and MacBook**, using shared assistant 0.1.0. Packaging recipe `7881a923` adds the required
 signed protocol/repository metadata; initial incompatible packages were refused and superseded.
