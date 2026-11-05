@@ -226,9 +226,9 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
-- **2026-11-04 (custom preview update):** Reconcile official0.18.2 with the independent assistant and sparkle toolbar; keep reduced-motion/new translation behavior, helper1.6 normal-profile instructions, and separate preview isolation. Verification and two-device delivery remain in progress in [the rollout ledger](docs/assistant-v0182-rollout.md). No readiness estimate or public release change.
+- **2026-11-04 (custom preview update):** Reconcile official0.18.2 with the independent assistant and sparkle toolbar; keep reduced-motion/new translation behavior, helper1.6 normal-profile instructions, and separate preview isolation. Full CI, signed-package checks, and actual Terra edit/Undo/save/reopen qualification pass; separate previews are installed on both Macs. See [the rollout ledger](docs/assistant-v0182-rollout.md). No readiness estimate or public release change.
 
-- **2026-11-04 (M3, assistant toolbar):** The existing Lucide sparkle icon replaces the text-only Assistant control, preserving its accessible name, tooltip, and click/keyboard toggle. UI tests (731 passed, 1 ignored), scoped lint/WASM and assets/layers passed; real-shell light/dark screenshots inspected. Source only; no install or release.
+- **2026-11-04 (M3, assistant toolbar):** The existing Lucide sparkle icon replaces the text-only Assistant control, preserving its accessible name, tooltip, and click/keyboard toggle. UI tests (731 passed, 1 ignored), scoped lint/WASM and assets/layers passed; real-shell light/dark screenshots inspected. Toolbar now delivered in the separate0.18.2 Preview on both Macs; no public release.
 
 - **2026-11-02 (custom assistant installed smoke):** Corrected signed metadata packages installed standard/Preview 0.18 (8e86f96f) on Mini and MacBook. Four isolated panel/helper typing/settings/resize instances and installed 183-tool MCP checks passed; settled light/dark screenshots reviewed, owned instances quit and listeners released. No inference/personal settings/credentials; clipboard/IME/VoiceOver and public release remain separate. Estimates unchanged.
 

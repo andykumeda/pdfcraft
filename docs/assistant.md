@@ -1,6 +1,6 @@
 # Integrated desktop assistant preview
 
-Status: **0.18.2 preview update in progress**, 2026-11-04. Standard official 0.18.2 is
+Status: **0.18.2 preview deployed on both Macs**, 2026-11-04. Standard official 0.18.2 is
 installed on both Macs. The separate custom preview retains the in-window assistant;
 its source, live-model and deployment checks are tracked in [the current rollout](assistant-v0182-rollout.md).
 The independently installed shared helper is 0.1.6. Historical installations are recorded in

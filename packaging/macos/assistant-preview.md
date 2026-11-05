@@ -14,7 +14,7 @@ source commit's eight-character prefix. Then run:
 CRAFT_UPDATE_REPOSITORY=andykumeda/pdfcraft \
 packaging/macos/assistant-preview.sh \
   --binary /path/to/release/pdfcraft \
-  --version 0.18.0 \
+  --version 0.18.2 \
   --build-sha FULL_40_CHARACTER_SOURCE_COMMIT \
   --output-dir /path/to/dist/assistant-preview/COMMIT
 ```

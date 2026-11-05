@@ -1,8 +1,8 @@
 # PdfCraft roadmap: milestones and what's next
 
-> **2026-11-04 custom update:** Official0.18.2 reconciliation preserves the assistant/sparkle toolbar; native qualification and installation are tracked separately in the rollout ledger. Readiness estimates unchanged.
+> **2026-11-04 custom update:** Official0.18.2 reconciliation preserves the assistant/sparkle toolbar; full CI and actual Terra edit/Undo/save/reopen qualification passed; separate previews installed on both Macs, with receipts in the rollout ledger. Readiness estimates unchanged.
 
-> **2026-11-04 M3 update:** Assistant uses the existing sparkle icon with an accessible name, tooltip and unchanged toggle. Scoped UI verification passed; source only, no readiness estimate change.
+> **2026-11-04 M3 update:** Assistant uses the existing sparkle icon with an accessible name, tooltip and unchanged toggle. Scoped UI verification passed; delivered in separate0.18.2 previews on both Macs, no readiness estimate change.
 
 > **Last reviewed:** 2026-11-03 | **Last updated:** 2026-11-03 | **Change:** patch (M5 #5850 review: indirect typewriter intent and composer edits preserve outer whitespace; movement regression commits by outside click; estimates unchanged)
 
