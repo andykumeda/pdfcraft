@@ -1,6 +1,6 @@
 # Single installed app with integrated assistant
 
-Status: In progress. Updated 2026-11-05 (America/Los_Angeles).
+Status: **Deployed and verified on both Macs**. Updated 2026-11-05 (America/Los_Angeles).
 
 Owner request: one normal PDFCraft, WordCraft, GridCraft and DeckCraft on both Macs; remove
 active Assistant Preview copies. ArtCraft Launcher updates must retain the panel and track the
@@ -11,12 +11,12 @@ credentials and conversations. Rollback bundles are retained outside active appl
 | Workstream | Owner | Acceptance | State | Evidence |
 | --- | --- | --- | --- | --- |
 | Launcher | Launcher agent | Explicit trusted update command; official release freshness; compatible signed standard bundles only; no upstream-only fallback or self-update loss | Deployed | Source1917013 installed/verified both Macs; 437 tests, strict lint/WASM/packaging; nativea323d26b |
-| PDF packaging | Primary | Standard identity/profile, signed source/protocol and underlying release metadata; preserve bundled OCR | Verified | Native5181ac82; fresh full10-gate CI/release passed; fixed standard package includes exact five OCR files; native d0dfb732 |
-| Word/Grid packaging | Word/Grid agent | Same standard integration and profile preservation | Verified | Word372e2a46/22ecf9ed; Gridf5785668; respective full9/10 CI gates pass; Grid optimized artifact building |
-| Deck packaging | Deck agent | Same, disable unsafe upstream self-update | Verified | Deckaef5d585/9a351298; full8 CI gates; actual-model candidate acceptance both Macs |
+| PDF packaging | Primary | Standard identity/profile, signed source/protocol and underlying release metadata; preserve bundled OCR | Deployed | Native5181ac82; fresh full10-gate CI/release passed; fixed standard package includes exact five OCR files; native d0dfb732 |
+| Word/Grid packaging | Word/Grid agent | Same standard integration and profile preservation | Deployed | Word372e2a46/22ecf9ed; Gridf5785668; respective full9/10 CI gates pass; Grid optimized artifact building |
+| Deck packaging | Deck agent | Same, disable unsafe upstream self-update | Deployed | Deckaef5d585/9a351298; full8 CI gates; actual-model candidate acceptance both Macs |
 | Composer border | Shared helper agent | Clearly outlined bottom message box in light/dark idle/focus; no sidebar divider change; helper-only compatible update | Deployed | Helper0.1.7 sourcef2295dd installed both; 481 UI +30 helper tests; sourcepush verified; installed Word/Grid/Deck light/dark renders pass |
-| Mini installation | Primary | All four normal paths and launcher, native synthetic assistant checks, Preview registrations removed | Not started | No installs yet |
-| MacBook installation | Primary | Independent same checks and config, no source build required on MacBook | Not started | SSH host verified AKs-MBPro.local/arm64 |
+| Mini installation | Primary | All four normal paths and launcher, native synthetic assistant checks, Preview registrations removed | Deployed | Final signed inventory, actual model edits + no-model UI/resource/protected-data checks pass |
+| MacBook installation | Primary | Independent same checks and config, no source build required on MacBook | Deployed | Same artifact signatures/native hashes; independent actual-model/UI checks and final inventory pass |
 
 Future official binaries cannot acquire a custom panel by renaming. The configured local builder
 must merge the exact official tag with the assistant source, verify/build/package/sign, then the
@@ -133,3 +133,71 @@ Older in-scope rollback .app bundles were also converted to exact verified ZIPs 
 so they cannot reappear as launchable old versions. The first pass stopped on LaunchServices
 application-not-found -10814; that already-unregistered case is now handled, preserving verified
 archives. No out-of-scope app or user document/recovery directory was removed.
+
+## Final two-Mac acceptance — 2026-11-05
+
+Exactly one active normal app per product remains on each Mac:
+
+| App | Underlying official release | Native source | Exact signed native SHA-256 |
+| --- | --- | --- | --- |
+| PdfCraft | 0.18.2 /7faa4f35 | 5181ac824a76fdb6cb211e45caf3f11a4482625e | d0dfb732cd4e6fb16b7345f1f104f5c12aeb7ce38ad0e4b096b14597aade6a7d |
+| WordCraft | 0.15.2 /edfea681 | fccdfe385a07e70f51ab71f9544e0be08f7a0484 | 3b6d253ef92373dae725ae500e24fe4cc0415be9bfbbad2c28e4b98fc56a8328 |
+| GridCraft | 0.16.1 /e581bc95 | f5785668041bc35c22a0fe9265d5e4759b35074a | bf0c5910f56ceb41f839d089675c309d0192aa99c864d60215bea9efe89cf08d |
+| DeckCraft | 0.15.1 /9bac60ff | dfa02f392524c9b23c1d8cc04616efdb24d7adbf | 5bfdd37235d9da677b43895aa198703334281be9f2688fa184ffb85f2fde7f03 |
+
+Both independent inventories pass exact standard identity, version, underlying-tag/commit,
+protocol/source metadata, certificate/native hash, wrapper profile/update behavior, helper0.1.7,
+managed launcher1917013 and OCR-model hashes. They report **zero active Preview apps**:
+`/private/tmp/craft-single-app-final-{mini,book}.json`. All current official tags, including
+launcher0.14.1, were rechecked through official GitHub release metadata at final acceptance.
+
+Normal PDF actual configured Codex/Terra/helper0.1.7 acceptance passed in40.0s Mini and21.2s Book:
+exact synthetic note removal, no save before requested, one Undo/Redo, explicit save/reopen/render,
+normal exit and released listener. PNGs were reviewed. Reports/PNGs:
+`/private/tmp/craft-single-app-evidence/pdf-normal-{mini,book}/`.
+One initial Mini provider conversation returned an interrupted error. The disposable fixture was
+inspected independently and still had its original one note (no edit); the same configured
+provider/model passed on a fresh fixture afterward. No fallback provider or production document
+was used. Both normal/Preview profile/recovery/shared AI hash snapshots stayed identical across
+all final PDF runs. All final private control files were removed after verified process exit.
+
+The installed launcher performed PDF replacement on each host, sequentially against the shared
+Mini cache. The corrected five-file OCR payload is exact on both. Its normal wrapper now shows
+launcher-managed update guidance. All four active Preview apps, in-scope legacy MCP shortcuts
+and Preview installer downloads are retired. Older in-scope rollback application bundles were
+converted to verified ZIPs, with unrelated backup apps retained. Archives and per-host install/
+retirement/legacy receipts remain under
+`~/Library/Application Support/Craft/retired-apps/2026-11-05-single-app.noindex/`.
+No document profile, recovery file, credential, connection, existing chat or existing MCP
+registration was copied between hosts, merged, overwritten or removed.
+
+### Updating from now on
+
+1. Save/quit the application. In **ArtCraft Launcher**, check for updates and inspect its details:
+   the displayed official base version and **Updates preserve Assistant** source identify this route.
+2. Update Mini first. The configured adapter reconciles the exact official tag with the custom
+   source in an isolated checkout, runs gates, builds/packages/signs, then the launcher verifies
+   the staged copy before replacing the normal app. The first build can take substantial time;
+   subsequent builds reuse the cache.
+3. Update MacBook while Mini is reachable; it obtains the signed compatible artifact over the
+   existing SSH connection and validates it independently. Both apps otherwise use their own
+   local document/profile/helper installations; no Preview app is needed.
+4. Conflicts, unavailable signing/build host or validation failures preserve the installed version
+   and report an actionable failure. They never install an assistant-free upstream package.
+   Ordinary launcher self-replacement is protected too; a new launcher version needs this
+   integration retained when rebuilt. Do not bypass that guard with the historical stock installer.
+
+Owner-controlled policy: `~/Library/Application Support/ArtCraft Launcher/assistant-updates.json`.
+Adapter/configuration: `~/Library/Application Support/Craft/integrated-updates/`.
+Build source/input/cache locations are explicit in those configurations; the remote connection
+budget is configured, not hardcoded. Final adapter source includes4ea27c7/d2317c6 and the standard
+PDF assembler includesdbdd3600. Signed native source remains1917013/5181ac82 respectively.
+Qualified cache fingerprints are refreshed after documentation-only closeout without changing
+signed native code or app data.
+
+No public release, new fork, notarization or upstream-main push occurred. Existing writable
+fork branches contain the source/docs commits; launcher and Deck commits remain local because
+those existing upstream remotes do not grant push permission. Physical keyboard/IME, VoiceOver,
+clipboard and private-document fidelity were not retested. The unrelated Deck theme-switch
+redraw issue remains documented above; it reproduces without an assistant process and does not
+change saved data. No required installation or verification work remains for this request.

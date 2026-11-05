@@ -1,6 +1,14 @@
 # Customized assistant-enabled app updates
 
-Status: implementation added 2026-11-02; no compatible release published or live update claimed.
+> Current owner policy (2026-11-05): one normal assistant-integrated app on each Mac, updated through the customized ArtCraft Launcher and its configured local source builder. See [the consolidation ledger](single-app-assistant-rollout.md). The release-feed implementation below is retained history; do not restore separate Preview apps or select ordinary upstream binaries.
+
+Status: **Normal PdfCraft0.18.2/source5181ac82 and protected launcher updates deployed on both Macs**, 2026-11-05. Actual installed launcher replacements, independent model edits/Undo/Redo/save/reopen/render and helper0.1.7 light/dark composer checks pass. Existing document profiles/recovery/shared AI settings/chats remain intact. App self-updates are disabled in the normal launcher wrapper; use the managed ArtCraft Launcher. Preview copies are retired.
+
+The managed launcher policy is `~/Library/Application Support/ArtCraft Launcher/assistant-updates.json`; its owner-controlled source builder is configured under `~/Library/Application Support/Craft/integrated-updates/`. Update Mini first, then MacBook; Book reuses Mini's signed artifact. Missing builder, conflicts or failed signature/protocol/base-tag checks preserve the installed app.
+
+## Historical compatible-release-feed implementation
+
+The following 2026-11-02 feed API is retained for library compatibility. No compatible public feed release or notarization was published; it is not the current two-Mac update route.
 
 The independently installed assistant and the PDFCraft app have separate update lifecycles.
 Attaching the shared assistant calls `configure_assistant_updates(bridge_protocol)` before update

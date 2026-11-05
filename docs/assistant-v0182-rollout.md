@@ -1,4 +1,6 @@
-# PdfCraft 0.18.2 Assistant Preview rollout
+# PdfCraft 0.18.2 Assistant Preview rollout (historical)
+
+Superseded 2026-11-05 by [one normal assistant-enabled app on each Mac](single-app-assistant-rollout.md), native5181ac82/helper0.1.7 with protected ArtCraft Launcher updates. Both active Preview copies are removed. The following preserves the prior delivery evidence only.
 
 Status: Deployed on Mini and MacBook. Updated: 2026-11-04.
 

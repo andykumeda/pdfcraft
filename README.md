@@ -56,7 +56,7 @@
 
 ---
 
-## Integrated assistant preview
+## Integrated assistant
 
 The mode-bar sparkle icon opens Assistant; the button retains its accessible Assistant name and tooltip.
 
@@ -602,6 +602,6 @@ The current source uses a compact chat layout with a settings gear and composer 
 See [update boundaries](docs/custom-assistant-updates.md#what-can-update-without-rebuilding-pdfcraft)
 for which changes require a new PDFCraft binary. Installed builds are tracked separately below.
 
-The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
+The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft, GridCraft and DeckCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all four apps without rebuilding their binaries.
 
-See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. The compact layout is installed in standard and Preview on both Macs; the gear contains the update button, version and status, and helper0.1.2 provides explicit New chat and Chat history controls.
+See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. One normal assistant-enabled app per product is installed on both Macs; Assistant Preview copies are retired. Use the managed ArtCraft Launcher to update the underlying application while preserving its panel. Helper0.1.7 keeps helper updates under the gear and provides a visible light/dark message-box outline. See the [single-app rollout and verification](docs/single-app-assistant-rollout.md).

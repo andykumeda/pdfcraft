@@ -1,10 +1,10 @@
-# Integrated desktop assistant preview
+# Integrated desktop assistant
 
-Status: **0.18.2 preview deployed on both Macs**, 2026-11-04. Standard official 0.18.2 is
-installed on both Macs. The separate custom preview retains the in-window assistant;
-its source, live-model and deployment checks are tracked in [the current rollout](assistant-v0182-rollout.md).
-The independently installed shared helper is 0.1.6. Historical installations are recorded in
-[the implementation ledger](assistant-implementation.md). No public custom release is implied.
+Status: **One normal PdfCraft0.18.2 app deployed on both Macs**, 2026-11-05, native source
+5181ac82 and shared helper0.1.7. Assistant Preview apps/installers are retired; document profiles,
+recovery data, settings and chats are preserved. Use the managed ArtCraft Launcher for underlying
+app updates: it preserves the assistant and shows the official base version. See the
+[current rollout](single-app-assistant-rollout.md). No public release/notarization is implied.
 
 Open **Assistant** in the toolbar or **View → Assistant**. The selected toolbar button
 and checked menu entry indicate that the native side panel is open. The settings gear opens the shared in-panel connection editor. The same editor is available through
@@ -12,13 +12,13 @@ and checked menu entry indicate that the native side panel is open. The settings
 
 New chat and Chat history sit above the conversation. The rounded composer contains a `+`
 file menu, a model dropdown and Send/Stop. Quick choices set a PdfCraft override; settings retains
-suite-wide choices and custom model IDs. Helper version/update controls appear only in settings.
+suite-wide choices and custom model IDs. Helper version/update controls appear only in settings. The bottom message box has a visible neutral outline in both themes and a distinct focused outline.
 Tool activity/result rows are hidden; model replies and approval requests remain visible.
 
 Use the shared connection/model controls for Codex or OpenAI-compatible providers, including
 Ollama. No model is chosen automatically beyond an explicitly configured suite default.
 Advanced options start collapsed. The effective endpoint/model and validated context limits
-are visible; API credentials stay in the platform credential store. Helper0.1.6 uses the normal
+are visible; API credentials stay in the platform credential store. Helper0.1.7 uses the normal
 Codex account/profile (`CODEX_HOME` when explicitly set), its enabled skills, plugins, MCP servers,
 native tools and permission policy. Approvals, questions and elicitation require explicit input
 in the pane. Craft chats remain app-owned; Codex CLI/desktop history is not merged. External native
