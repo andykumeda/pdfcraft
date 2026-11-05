@@ -170,7 +170,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
             ui.label(crate::i18n::fmt(tl!("Update source: {repo}"), &[("repo", repo)]));
         }
         if app.updates.disabled {
-            ui.label(tl!("Software updates are disabled for this preview. Install a new assistant preview package to update it."));
+            ui.label(tl!("App updates are managed by ArtCraft Launcher."));
         }
         #[cfg(not(target_arch = "wasm32"))]
         if !app.updates.disabled && !app.assistant.can_restart_for_update() {

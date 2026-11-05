@@ -1,5 +1,7 @@
 # PdfCraft roadmap: milestones and what's next
 
+> **2026-11-05 assistant consolidation:** Single normal assistant-enabled app and protected ArtCraft Launcher update path are in progress; `docs/single-app-assistant-rollout.md` owns deployment evidence. This supersedes the split Preview delivery policy below. Readiness estimates unchanged.
+
 > **2026-11-04 custom update:** Official0.18.2 reconciliation preserves the assistant/sparkle toolbar; full CI and actual Terra edit/Undo/save/reopen qualification passed; separate previews installed on both Macs, with receipts in the rollout ledger. Readiness estimates unchanged.
 
 > **2026-11-04 M3 update:** Assistant uses the existing sparkle icon with an accessible name, tooltip and unchanged toggle. Scoped UI verification passed; delivered in separate0.18.2 previews on both Macs, no readiness estimate change.

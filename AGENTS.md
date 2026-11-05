@@ -141,3 +141,12 @@ Follow `CLAUDE.md`. It covers quality gates, layering, commit rules and how to r
 - Workflows in `.github/workflows/` call the shared workflows in [`storytold/craft-common-actions`](https://github.com/storytold/craft-common-actions) at `@main`, with their inputs and secrets. No other jobs: if no shared workflow does what's needed, it doesn't go here.
 - Don't add or change CI in a feature or fix PR. If the existing workflows can't build or test a change, link an existing craft-common-actions issue or PR, or open a new issue, or a PR only for a small fix that is safe for every app and does not increase CI time.
 - Some workflow files here still run their own jobs. Don't add to them. Moving a job into craft-common-actions is its own task, never part of another PR, and the job stays here until a shared workflow runs it.
+
+## Owner installation policy — 2026-11-05
+
+Keep exactly one active normal application per product on both Macs, with the custom assistant
+panel integrated. Do not restore separate Assistant Preview installations or replace these apps
+with ordinary upstream binaries. ArtCraft Launcher must use its configured integrated build
+route, preserve assistant compatibility and show the official underlying release freshness.
+Conflicts or failed validation leave the existing app installed. See
+`docs/single-app-assistant-rollout.md` for current source, device and verification evidence.

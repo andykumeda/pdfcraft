@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Package an already-built assistant preview; never builds, installs or publishes it.
 # Usage: assistant-preview.sh --binary PATH --version VERSION --build-sha COMMIT
-#        [--arch aarch64|x86_64|universal] [--output-dir DIR]
+#        [--arch aarch64|x86_64|universal] [--output-dir DIR] [--standard]
 # Outputs a ZIP and drag-to-Applications DMG, each with a checksum.
 # MACOS_SIGN_IDENTITY defaults to ad-hoc (-). This script does not notarize.
 set -euo pipefail
@@ -10,8 +10,10 @@ BINARY=""
 PREVIEW_VERSION=""
 BUILD_SHA=""
 ARCH=aarch64
+STANDARD=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --standard) STANDARD=1; shift ;;
     --binary|--version|--build-sha|--arch|--output-dir)
       [[ $# -ge 2 ]] || { echo "error: $1 needs a value" >&2; exit 2; }
       case "$1" in
@@ -67,7 +69,14 @@ MIN_MACOS="$(xcrun vtool -show-build "$BINARY" | awk '
   echo "error: could not determine the binary's minimum macOS version" >&2; exit 2;
 }
 
+APP_NAME="PDFCraft Assistant Preview"
+BUNDLE_ID=ai.storyteller.pdfcraft.assistant-preview
 NAME="pdfcraft-assistant-preview-$VERSION-${BUILD_SHA:0:8}-macos-$ARCH"
+if [[ "$STANDARD" = 1 ]]; then
+  APP_NAME=PdfCraft
+  BUNDLE_ID=ai.storyteller.pdfcraft
+  NAME="pdfcraft-$VERSION-macos-$ARCH"
+fi
 ZIP="$DIST/$NAME.zip"
 CHECKSUM="$ZIP.sha256"
 README="$DIST/$NAME-INSTALL.md"
@@ -87,7 +96,7 @@ cleanup() {
 }
 trap cleanup EXIT
 PACKAGE="$WORK/$NAME"
-APP="$PACKAGE/PDFCraft Assistant Preview.app"
+APP="$PACKAGE/$APP_NAME.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BINARY" "$APP/Contents/MacOS/PDFCraft-native"
 cp "$ROOT/assets/app-icon/pdfcraft.icns" "$APP/Contents/Resources/PdfCraft.icns"
@@ -95,6 +104,17 @@ copy_docs "$APP/Contents/Resources"
 mkdir -p "$APP/Contents/Resources/licenses/dirs-sys"
 cp "$ROOT/vendor/dirs-sys/LICENSE-MIT" "$ROOT/vendor/dirs-sys/LICENSE-APACHE" "$APP/Contents/Resources/licenses/dirs-sys/"
 
+if [[ "$STANDARD" = 1 ]]; then
+  cat >"$APP/Contents/MacOS/PDFCraft" <<'LAUNCHER'
+#!/bin/sh
+set -eu
+PATH="${PATH:-/usr/bin:/bin:/usr/sbin:/sbin}:/opt/homebrew/bin:/usr/local/bin${HOME:+:$HOME/.local/bin}"
+export PATH
+BIN_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+# ArtCraft Launcher owns compatible app updates; never install an upstream-only binary here.
+exec "$BIN_DIR/PDFCraft-native" --disable-updates "$@"
+LAUNCHER
+else
 cat >"$APP/Contents/MacOS/PDFCraft" <<'LAUNCHER'
 #!/bin/sh
 set -eu
@@ -109,6 +129,7 @@ export PATH
 PREVIEW_BIN_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 exec "$PREVIEW_BIN_DIR/PDFCraft-native" --disable-updates "$@"
 LAUNCHER
+fi
 chmod 755 "$APP/Contents/MacOS/PDFCraft" "$APP/Contents/MacOS/PDFCraft-native"
 
 SHORT_VERSION="${VERSION%%[-+]*}"
@@ -116,11 +137,18 @@ sed -e "s/@VERSION@/$VERSION/g" -e "s/@SHORT_VERSION@/$SHORT_VERSION/g" \
   -e "s/@BUILD_SHA@/$BUILD_SHA/g" "$HERE/Info.plist.in" >"$APP/Contents/Info.plist"
 plutil -replace CFBundleExecutable -string PDFCraft "$APP/Contents/Info.plist"
 for key in CFBundleDisplayName CFBundleName; do
-  plutil -replace "$key" -string 'PDFCraft Assistant Preview' "$APP/Contents/Info.plist"
+  plutil -replace "$key" -string "$APP_NAME" "$APP/Contents/Info.plist"
 done
-plutil -replace CFBundleIdentifier -string ai.storyteller.pdfcraft.assistant-preview "$APP/Contents/Info.plist"
+plutil -replace CFBundleIdentifier -string "$BUNDLE_ID" "$APP/Contents/Info.plist"
 plutil -replace LSMinimumSystemVersion -string "$MIN_MACOS" "$APP/Contents/Info.plist"
 set_assistant_update_metadata "$APP/Contents/Info.plist"
+if [[ "$STANDARD" = 1 ]]; then
+  [[ "${CRAFT_UPSTREAM_TAG:-}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][A-Za-z0-9.-]+)?$ && "${CRAFT_UPSTREAM_SHA:-}" =~ ^[0-9a-f]{40}$ ]] || {
+    echo "error: standard integration requires CRAFT_UPSTREAM_TAG and full CRAFT_UPSTREAM_SHA" >&2; exit 2;
+  }
+  plutil -replace CraftUnderlyingTag -string "$CRAFT_UPSTREAM_TAG" "$APP/Contents/Info.plist"
+  plutil -replace CraftUnderlyingCommit -string "$CRAFT_UPSTREAM_SHA" "$APP/Contents/Info.plist"
+fi
 plutil -lint "$APP/Contents/Info.plist"
 printf 'APPL????' >"$APP/Contents/PkgInfo"
 
@@ -140,6 +168,18 @@ sign "$APP/Contents/MacOS/PDFCraft-native"
 sign "$APP"
 codesign --verify --strict --deep --verbose=2 "$APP"
 
+if [[ "$STANDARD" = 1 ]]; then
+cat >"$PACKAGE/INSTALL.md" <<INSTALL
+# PdfCraft $VERSION with integrated assistant
+
+Source: $BUILD_SHA. $MACHINE. $SIGNING
+Install PdfCraft.app at /Applications/PdfCraft.app after saving and quitting the existing app.
+Use ArtCraft Launcher with the configured integrated-app update command; ordinary upstream
+binaries omit the assistant. The app self-updater is disabled; the launcher owns app updates.
+The standard document profile is used; Preview profiles are retained separately, never merged.
+Shared assistant settings and chats remain in the existing Craft AI store.
+INSTALL
+else
 cat >"$PACKAGE/INSTALL.md" <<INSTALL
 # PDFCraft Assistant Preview $VERSION
 
@@ -182,27 +222,28 @@ This archive contains the supplied binary, original app icon and project licence
 Optional font licences must accompany binaries built with CRAFT_FONTS_DIR. Packaging
 and signature checks do not establish inference correctness or destination-Mac compatibility.
 INSTALL
+fi
 
 ditto -c -k --keepParent "$PACKAGE" "$WORK/$NAME.zip"
 # Verify the delivered bytes after extraction, not just the staging bundle.
 ditto -x -k "$WORK/$NAME.zip" "$WORK/check"
-codesign --verify --strict --deep --verbose=2 "$WORK/check/$NAME/PDFCraft Assistant Preview.app"
+codesign --verify --strict --deep --verbose=2 "$WORK/check/$NAME/$APP_NAME.app"
 # Use the same srcfolder method as package.sh; do not change the signed app's metadata.
 DMG_STAGE="$WORK/dmg"
 DMG_BUILD="$WORK/$NAME.dmg"
 mkdir -p "$DMG_STAGE"
-ditto "$APP" "$DMG_STAGE/PDFCraft Assistant Preview.app"
+ditto "$APP" "$DMG_STAGE/$APP_NAME.app"
 ln -s /Applications "$DMG_STAGE/Applications"
 cp "$PACKAGE/INSTALL.md" "$DMG_STAGE/INSTALL.md"
-hdiutil create -srcfolder "$DMG_STAGE" -volname "PDFCraft Assistant Preview" \
+hdiutil create -srcfolder "$DMG_STAGE" -volname "$APP_NAME" \
   -fs HFS+ -format UDZO -imagekey zlib-level=9 "$DMG_BUILD"
 DMG_MOUNT="$WORK/dmg-check"
 mkdir -p "$DMG_MOUNT"
 hdiutil attach -readonly -nobrowse -noautoopen -mountpoint "$DMG_MOUNT" "$DMG_BUILD" >/dev/null
-codesign --verify --strict --deep --verbose=2 "$DMG_MOUNT/PDFCraft Assistant Preview.app"
-ditto "$DMG_MOUNT/PDFCraft Assistant Preview.app" "$WORK/dmg-copy/PDFCraft Assistant Preview.app"
-codesign --verify --strict --deep --verbose=2 "$WORK/dmg-copy/PDFCraft Assistant Preview.app"
-for verified in "$WORK/check/$NAME/PDFCraft Assistant Preview.app" "$DMG_MOUNT/PDFCraft Assistant Preview.app" "$WORK/dmg-copy/PDFCraft Assistant Preview.app"; do
+codesign --verify --strict --deep --verbose=2 "$DMG_MOUNT/$APP_NAME.app"
+ditto "$DMG_MOUNT/$APP_NAME.app" "$WORK/dmg-copy/$APP_NAME.app"
+codesign --verify --strict --deep --verbose=2 "$WORK/dmg-copy/$APP_NAME.app"
+for verified in "$WORK/check/$NAME/$APP_NAME.app" "$DMG_MOUNT/$APP_NAME.app" "$WORK/dmg-copy/$APP_NAME.app"; do
   [[ "$(sha256 "$verified/Contents/MacOS/PDFCraft-native")" = "$(sha256 "$APP/Contents/MacOS/PDFCraft-native")" ]] || {
     echo "error: extracted native binary differs" >&2; exit 1;
   }
