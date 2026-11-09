@@ -29,3 +29,7 @@ verification if updated.
 After builds and verification are complete, remove the task-owned temporary build caches,
 checkouts and staging files, including the dedicated external-drive build folder. Retain committed
 source and recovery backups required for installed apps.
+
+To restore system-disk headroom during the work, the redundant internal GridCraft and VectorCraft
+build caches were cleaned after their copies were made on the external drive. Source checkouts and
+external caches remain for continuing verification.
