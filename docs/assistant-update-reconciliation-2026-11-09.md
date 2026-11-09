@@ -1,7 +1,9 @@
 # Assistant-integrated updates — 2026-11-09
 
-**Resumed at the owner's request.** Run large builds one at a time to reduce CPU use. Preserve
-source candidates and caches until verification completes, then perform the requested cleanup.
+**Paused again at the owner's request.** The resumed task-owned build and test processes were
+stopped, and a process inventory showed no Cargo, rustc or xtask processes. Preserve source
+candidates and caches until the owner requests resumption and verification completes, then
+perform the requested cleanup. Do not restart builds without that request.
 
 The official releases diverged from the older releases on which the installed assistant builds
 were based. The protected launcher rejected the resulting automatic merges. Reconciliation must
@@ -54,3 +56,7 @@ external caches remain for continuing verification.
   existing `andykumeda/craft-libs` fork with explicit owner approval. The user asked for cleanup
   after builds complete, so the external task build folder, staged source and verified rollback
   archives remain in place.
+- After resumption, the Grid CI rerun passed i18n reporting, formatting and workspace Clippy; it
+  was stopped during workspace UI tests. Word's restarted build was stopped during Clippy.
+  A later Deck source review found that helper-origin generic commands can reach assistant
+  controls; that unverified recursion route needs a fix and test before release.
