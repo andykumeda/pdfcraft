@@ -8,7 +8,7 @@ protected route.
 
 | Workstream | State | Acceptance and current evidence |
 | --- | --- | --- |
-| Shared libraries | In progress | The isolation-preserving 83e-based candidate passed scoped check, formatting, strict Clippy and 318 updater tests (four ignored). Full workspace gates and publication remain. |
+| Shared libraries | In progress | The isolation-preserving 83e-based candidate passed scoped check, formatting, strict Clippy and 318 updater tests (four ignored). Workspace Clippy was stopped at approximately 31 GiB free; a dedicated external-drive build cache is being prepared so the full gates can resume. Publication remains. |
 | GridCraft 0.18.0 | In progress | The isolated UI compiles against the unpublished shared candidate; 37 assistant tests, three updater tests and a light/dark title-toolbar test passed. Full CI, release build and installation remain unverified. |
 | WordCraft 0.17.0 | In progress | The focused assistant suite passed 36 tests (two ignored); screenshot binding and title-bar tests passed, and the document-switch negative control failed as expected. Ambiguous multi-window turns and queued input are conservatively restricted. Full gates and installation remain unverified. |
 | PdfCraft 0.20.0 | In progress | Isolated UI check, 30 assistant tests, three updater tests, split-pane targeting and four shared-session automation tests passed. An OCR cache regression failed before its fix and passed afterward. Full gates, OCR packaging and installation remain unverified. |
@@ -16,8 +16,16 @@ protected route.
 | ArtCraft Launcher 0.17.0 | In progress | Isolated source commit `4b51723` passed native and UI suites, scoped strict Clippy, formatting, WASM and synthetic adapter checks. Signed packaging and installed checks remain. |
 | VectorCraft assistant | In progress | An isolated prototype includes a guarded panel, helper bridge and packaging drafts. Two initial view-target tests passed with a negative control; later close/reopen, draft, helper, packaging and integration changes remain untested. Temporary local dependency paths remain. |
 
-Isolated candidates are under `/private/tmp/` and are not release artifacts. No app or launcher
+Isolated candidates are under `/private/tmp/` and are not release artifacts. The VectorCraft
+prototype additionally needs a tested non-reused view identity and end-to-end assistant, draft,
+chooser, update and packaging checks. The launcher installer draft has passed eight synthetic
+tests with signature/archive operations stubbed; its final process check still has a launch race,
+so the launcher must remain closed throughout a real replacement. No app or launcher
 replacement is claimed by this ledger. The launcher source adapter must see both the reviewed
 assistant source and the exact official tag in the resulting history; an unreviewed patch or
 ordinary upstream binary is not an eligible replacement. Both Macs need separate installed-path
 verification if updated.
+
+After builds and verification are complete, remove the task-owned temporary build caches,
+checkouts and staging files, including the dedicated external-drive build folder. Retain committed
+source and recovery backups required for installed apps.
