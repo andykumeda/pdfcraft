@@ -1,5 +1,9 @@
 # Assistant-integrated updates — 2026-11-09
 
+**Paused at the owner's request to reduce CPU use.** All task-owned Cargo, rustc and xtask
+processes were stopped; source candidates, test logs and build caches are retained for resumption.
+Do not run builds or remove the remaining task files until the owner resumes the work.
+
 The official releases diverged from the older releases on which the installed assistant builds
 were based. The protected launcher rejected the resulting automatic merges. Reconciliation must
 retain the official release, assistant, safe update route and user documents. The existing
@@ -34,3 +38,20 @@ source and recovery backups required for installed apps.
 To restore system-disk headroom during the work, the redundant internal GridCraft and VectorCraft
 build caches were cleaned after their copies were made on the external drive. Source checkouts and
 external caches remain for continuing verification.
+
+## Pause checkpoint
+
+- GridCraft post-fix CI passed the translation report, formatting and workspace Clippy; tests
+  were still compiling when stopped. The corrected socket test passed ten consecutive runs.
+- WordCraft's two full CI attempts passed formatting and Clippy but failed on startup-argument
+  timeouts; 20 direct reruns passed and the cause remains unresolved. The targeted investigation
+  was compiling when stopped. The focused assistant suite and GUI/CLI checks passed.
+- PdfCraft CI passed formatting, all-target Clippy and the CLI no-default-features check; its
+  workspace tests were still compiling when stopped. Resume details are in the temporary
+  `pdfcraft-ci-paused-20261109.txt` until cleanup.
+- VectorCraft's prototype passed focused tests and scoped Clippy but still needs full gates,
+  pinned published shared inputs, matching CLI, packaging and live acceptance.
+- Shared commit `b3474c019d28054396931e8e295cec1b44e60009` remains local only. Automatic
+  approval review rejected its push to the existing `andykumeda/craft-libs` fork; do not use
+  another route to bypass that rejection. The user asked for cleanup after builds complete, so
+  the external task build folder, staged source and verified rollback archives remain in place.
