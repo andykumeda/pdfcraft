@@ -8,7 +8,7 @@ protected route.
 
 | Workstream | State | Acceptance and current evidence |
 | --- | --- | --- |
-| Shared libraries | In progress | The isolation-preserving 83e-based candidate passed scoped check, formatting, strict Clippy and 318 updater tests (four ignored). Workspace Clippy was stopped at approximately 31 GiB free; a dedicated external-drive build cache is being prepared so the full gates can resume. Publication remains. |
+| Shared libraries | In progress | The isolation-preserving 83e-based candidate passed formatting, workspace all-target Clippy and 318 updater tests (four ignored). Workspace tests are running using the dedicated external-drive cache; publication remains. |
 | GridCraft 0.18.0 | In progress | The isolated UI compiles against the unpublished shared candidate; 37 assistant tests, three updater tests and a light/dark title-toolbar test passed. Full CI, release build and installation remain unverified. |
 | WordCraft 0.17.0 | In progress | The focused assistant suite passed 36 tests (two ignored); screenshot binding and title-bar tests passed, and the document-switch negative control failed as expected. Ambiguous multi-window turns and queued input are conservatively restricted. Full gates and installation remain unverified. |
 | PdfCraft 0.20.0 | In progress | Isolated UI check, 30 assistant tests, three updater tests, split-pane targeting and four shared-session automation tests passed. An OCR cache regression failed before its fix and passed afterward. Full gates, OCR packaging and installation remain unverified. |
