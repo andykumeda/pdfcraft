@@ -8,13 +8,13 @@ protected route.
 
 | Workstream | State | Acceptance and current evidence |
 | --- | --- | --- |
-| Shared libraries | In progress | Combine the new updater and assistant APIs. An isolated candidate passed `cargo check`, scoped strict Clippy and formatting; 318 updater tests passed, four ignored, and 19 font-build tests passed. Full workspace gates and publication remain. |
-| GridCraft 0.18.0 | In progress | Integrate the assistant with the official release; isolated candidate compilation is underway. Build, assistant behavior and installation remain unverified. |
+| Shared libraries | In progress | A first candidate passed scoped checks and 318 updater tests (four ignored), but lacked the apps' existing isolation API. A second candidate retains it; full gates and publication remain. |
+| GridCraft 0.18.0 | In progress | The isolated UI candidate compiles against the second, unpublished shared candidate. Assistant behavior, release build and installation remain unverified. |
 | WordCraft 0.17.0 | In progress | Integrate the assistant with the official release, including safe document and window targeting. Isolated candidate tests are compiling; installation remains unverified. |
 | PdfCraft 0.20.0 | In progress | Reconcile the assistant and official release, including automation, update protection and OCR packaging. An isolated patch has unresolved conflicts; build and installation remain unverified. |
-| DeckCraft 0.17.0 | Not started | Reconcile and verify the assistant-enabled release before protected installation. |
-| ArtCraft Launcher 0.17.0 | In progress | Preserve protected app updates and the launcher self-update guard. Isolated native and UI suites and scoped strict Clippy passed; WASM, signed packaging and installed checks remain. |
-| VectorCraft assistant | Not started | Integrate the shared panel with VectorCraft's command and multi-window model, protect updates, and verify document targeting before installation. Initial source inspection only. |
+| DeckCraft 0.17.0 | In progress | An isolated assistant port has provisional source conflict resolutions; build, review and installation remain unverified. |
+| ArtCraft Launcher 0.17.0 | In progress | Isolated source commit `4b51723` passed native and UI suites, scoped strict Clippy, formatting, WASM and synthetic adapter checks. Signed packaging and installed checks remain. |
+| VectorCraft assistant | In progress | Integrate the shared panel with VectorCraft's command and multi-window model, protect updates, and verify document targeting before installation. Initial source inspection identified the need to guard document and view identity at dispatch. |
 
 Isolated candidates are under `/private/tmp/` and are not release artifacts. No app or launcher
 replacement is claimed by this ledger. The launcher source adapter must see both the reviewed
