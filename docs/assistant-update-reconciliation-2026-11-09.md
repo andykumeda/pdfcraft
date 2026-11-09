@@ -8,11 +8,11 @@ protected route.
 
 | Workstream | State | Acceptance and current evidence |
 | --- | --- | --- |
-| Shared libraries | In progress | A first candidate passed scoped checks and 318 updater tests (four ignored), but lacked the apps' existing isolation API. A second candidate retains it; full gates and publication remain. |
-| GridCraft 0.18.0 | In progress | The isolated UI candidate compiles against the second, unpublished shared candidate. Assistant behavior, release build and installation remain unverified. |
-| WordCraft 0.17.0 | In progress | Integrate the assistant with the official release, including safe document and window targeting. Isolated candidate tests are compiling; installation remains unverified. |
-| PdfCraft 0.20.0 | In progress | Reconcile the assistant and official release, including automation, update protection and OCR packaging. An isolated patch has unresolved conflicts; build and installation remain unverified. |
-| DeckCraft 0.17.0 | In progress | An isolated assistant port has provisional source conflict resolutions; build, review and installation remain unverified. |
+| Shared libraries | In progress | The isolation-preserving 83e-based candidate passed scoped check, formatting, strict Clippy and 318 updater tests (four ignored). Full workspace gates and publication remain. |
+| GridCraft 0.18.0 | In progress | The isolated UI compiles against the unpublished shared candidate; 37 assistant tests, three updater tests and a light/dark title-toolbar test passed. Full CI, release build and installation remain unverified. |
+| WordCraft 0.17.0 | In progress | The focused host suite passed 12 tests (one ignored), including document/window guards; a negative control failed as expected. Further changes to refuse ambiguous multi-window turns need testing. Build and installation remain unverified. |
+| PdfCraft 0.20.0 | In progress | Isolated source conflicts were resolved; an OCR review-cache regression is being tested. Build, OCR packaging and installation remain unverified. |
+| DeckCraft 0.17.0 | In progress | Isolated UI and desktop checks passed without optional craft-fonts. Assistant tests, release build, review and installation remain unverified. |
 | ArtCraft Launcher 0.17.0 | In progress | Isolated source commit `4b51723` passed native and UI suites, scoped strict Clippy, formatting, WASM and synthetic adapter checks. Signed packaging and installed checks remain. |
 | VectorCraft assistant | In progress | Integrate the shared panel with VectorCraft's command and multi-window model, protect updates, and verify document targeting before installation. Initial source inspection identified the need to guard document and view identity at dispatch. |
 
