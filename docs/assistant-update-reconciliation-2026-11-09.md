@@ -1,9 +1,8 @@
 # Assistant-integrated updates — 2026-11-09
 
-**Paused again at the owner's request.** The resumed task-owned build and test processes were
-stopped, and a process inventory showed no Cargo, rustc or xtask processes. Preserve source
-candidates and caches until the owner requests resumption and verification completes, then
-perform the requested cleanup. Do not restart builds without that request.
+**Resumed at the owner's request.** Run builds serially with one job and low priority to limit
+impact on the owner's work. Preserve source candidates and caches until verification completes,
+then perform the requested cleanup.
 
 The official releases diverged from the older releases on which the installed assistant builds
 were based. The protected launcher rejected the resulting automatic merges. Reconciliation must
@@ -14,20 +13,20 @@ protected route.
 | Workstream | State | Acceptance and current evidence |
 | --- | --- | --- |
 | Shared libraries | Verified | Merge `b3474c019d28054396931e8e295cec1b44e60009` passed locked workspace Clippy and split verification: 2,884 tests passed, 34 ignored, and one mode-bit test passed separately. Earlier failures and test-environment isolation are recorded in its reconciliation document. The owner explicitly approved publication, and the commit was pushed to `andykumeda/craft-libs` branch `codex/assistant-upstream-20261109`. |
-| GridCraft 0.18.0 | In progress | The isolated UI compiles against the unpublished shared candidate; 37 assistant tests, three updater tests and a light/dark title-toolbar test passed. Full CI, release build and installation remain unverified. |
+| GridCraft 0.18.0 | In progress | The isolated UI compiles against the published shared commit; 37 assistant tests, three updater tests and a light/dark title-toolbar test passed. Full CI, release build and installation remain unverified. |
 | WordCraft 0.17.0 | In progress | The focused assistant suite passed 36 tests (two ignored); screenshot binding and title-bar tests passed, and the document-switch negative control failed as expected. Ambiguous multi-window turns and queued input are conservatively restricted. Full gates and installation remain unverified. |
 | PdfCraft 0.20.0 | In progress | Isolated UI check, 30 assistant tests, three updater tests, split-pane targeting and four shared-session automation tests passed. An OCR cache regression failed before its fix and passed afterward. Full gates, OCR packaging and installation remain unverified. |
 | DeckCraft 0.17.0 | In progress | Isolated UI and desktop checks passed without optional craft-fonts. Assistant safety changes and test compilation are unverified; the build was paused to preserve disk space. Release build and installation remain unverified. |
 | ArtCraft Launcher 0.17.0 | Deployed | Source commit `4b51723` passed native and UI suites, scoped strict Clippy, formatting, WASM and synthetic adapter checks. Its locally signed package was verified and installed on both Macs; installed certificate, marker, source and native hash passed independently. The live assistant-preserving route was checked on Mini; MacBook live UI remains untested. Existing auto-install settings triggered protected app-update attempts on Mini startup; conflicts and a running PdfCraft prevented replacement. |
-| VectorCraft assistant | In progress | An isolated prototype includes a guarded panel, helper bridge and packaging drafts. Two initial view-target tests passed with a negative control; later close/reopen, draft, helper, packaging and integration changes remain untested. Temporary local dependency paths remain. |
+| VectorCraft assistant | In progress | An isolated prototype includes a guarded panel, helper bridge and packaging drafts. Fifteen focused assistant tests, an MCP routing test, desktop check and scoped strict Clippy passed. Full gates, published newer shared input, packaging and live acceptance remain. |
 | CLI and MCP delivery | In progress | Integrated GUI packagers do not update separate CLI executables. Mini's Codex registrations reference PDF 0.18.0, Grid 0.16.0, Word 0.15.0 and Deck 0.9.0; the Deck binary failed signature verification. On MacBook the Word, Grid and Deck wrappers refuse startup because approval records are missing, while PDF's 0.18.0 wrapper starts. Build and verify matching CLIs, preserve each host's wrapper and connection options, update approved paths/records and exercise real MCP startup; no CLI or configuration has been changed. |
 
 Isolated candidates are under `/private/tmp/` and are not release artifacts. The VectorCraft
 prototype additionally needs a tested non-reused view identity and end-to-end assistant, draft,
 chooser, update and packaging checks. The launcher installer draft has passed eight synthetic
 tests with signature/archive operations stubbed; its final process check still has a launch race,
-so the launcher must remain closed throughout a real replacement. No app or launcher
-replacement is claimed by this ledger. The launcher source adapter must see both the reviewed
+so the launcher must remain closed throughout a real replacement. Only the launcher replacement
+recorded above is claimed by this ledger. The launcher source adapter must see both the reviewed
 assistant source and the exact official tag in the resulting history; an unreviewed patch or
 ordinary upstream binary is not an eligible replacement. Both Macs need separate installed-path
 verification if updated.
