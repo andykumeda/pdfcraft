@@ -1,8 +1,7 @@
 # Assistant-integrated updates — 2026-11-09
 
-**Paused at the owner's request to reduce CPU use.** All task-owned Cargo, rustc and xtask
-processes were stopped; source candidates, test logs and build caches are retained for resumption.
-Do not run builds or remove the remaining task files until the owner resumes the work.
+**Resumed at the owner's request.** Run large builds one at a time to reduce CPU use. Preserve
+source candidates and caches until verification completes, then perform the requested cleanup.
 
 The official releases diverged from the older releases on which the installed assistant builds
 were based. The protected launcher rejected the resulting automatic merges. Reconciliation must
@@ -12,7 +11,7 @@ protected route.
 
 | Workstream | State | Acceptance and current evidence |
 | --- | --- | --- |
-| Shared libraries | Blocked | Merge `b3474c019d28054396931e8e295cec1b44e60009` passed locked workspace Clippy and split verification: 2,884 tests passed, 34 ignored, and one mode-bit test passed separately. Earlier failures and test-environment isolation are recorded in its reconciliation document. Automatic approval review rejected publishing this commit and history to `andykumeda/craft-libs`; reproducible app delivery awaits approval. |
+| Shared libraries | Verified | Merge `b3474c019d28054396931e8e295cec1b44e60009` passed locked workspace Clippy and split verification: 2,884 tests passed, 34 ignored, and one mode-bit test passed separately. Earlier failures and test-environment isolation are recorded in its reconciliation document. The owner explicitly approved publication, and the commit was pushed to `andykumeda/craft-libs` branch `codex/assistant-upstream-20261109`. |
 | GridCraft 0.18.0 | In progress | The isolated UI compiles against the unpublished shared candidate; 37 assistant tests, three updater tests and a light/dark title-toolbar test passed. Full CI, release build and installation remain unverified. |
 | WordCraft 0.17.0 | In progress | The focused assistant suite passed 36 tests (two ignored); screenshot binding and title-bar tests passed, and the document-switch negative control failed as expected. Ambiguous multi-window turns and queued input are conservatively restricted. Full gates and installation remain unverified. |
 | PdfCraft 0.20.0 | In progress | Isolated UI check, 30 assistant tests, three updater tests, split-pane targeting and four shared-session automation tests passed. An OCR cache regression failed before its fix and passed afterward. Full gates, OCR packaging and installation remain unverified. |
@@ -51,7 +50,7 @@ external caches remain for continuing verification.
   `pdfcraft-ci-paused-20261109.txt` until cleanup.
 - VectorCraft's prototype passed focused tests and scoped Clippy but still needs full gates,
   pinned published shared inputs, matching CLI, packaging and live acceptance.
-- Shared commit `b3474c019d28054396931e8e295cec1b44e60009` remains local only. Automatic
-  approval review rejected its push to the existing `andykumeda/craft-libs` fork; do not use
-  another route to bypass that rejection. The user asked for cleanup after builds complete, so
-  the external task build folder, staged source and verified rollback archives remain in place.
+- Shared commit `b3474c019d28054396931e8e295cec1b44e60009` has since been published to the
+  existing `andykumeda/craft-libs` fork with explicit owner approval. The user asked for cleanup
+  after builds complete, so the external task build folder, staged source and verified rollback
+  archives remain in place.
