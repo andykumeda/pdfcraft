@@ -1,8 +1,8 @@
 # Assistant-integrated updates — 2026-11-09
 
-**Resumed at the owner's request.** Run builds serially with one job and low priority to limit
-impact on the owner's work. Preserve source candidates and caches until verification completes,
-then perform the requested cleanup.
+**Resumed at the owner's request.** The owner subsequently authorized parallel builds and full
+available CPU. Preserve source candidates and caches until verification completes, then perform
+the requested cleanup.
 
 The official releases diverged from the older releases on which the installed assistant builds
 were based. The protected launcher rejected the resulting automatic merges. Reconciliation must
@@ -15,18 +15,18 @@ protected route.
 | Shared libraries | Verified | Merge `b3474c019d28054396931e8e295cec1b44e60009` passed locked workspace Clippy and split verification: 2,884 tests passed, 34 ignored, and one mode-bit test passed separately. Earlier failures and test-environment isolation are recorded in its reconciliation document. The owner explicitly approved publication, and the commit was pushed to `andykumeda/craft-libs` branch `codex/assistant-upstream-20261109`. |
 | GridCraft 0.18.0 | Deployed | Source merge `b28dd31f` passed all ten CI gates with 3,655 tests passed and four ignored. Signed app and matching CLI are installed on both Macs; both configured MCP routes passed synthetic workbook edit/readback, and both assistant panels passed toolbar/helper handshake checks. No live inference was run. The manual one-job build did not exercise the two-job launcher adapter. Delivery record `7a0adae3` is pushed. Automatic review rejected removal of redundant staged old bundles; verified rollback ZIPs remain. |
 | WordCraft 0.17.0 | Deployed | Full local CI passed all nine stages with exact shared, font and translation inputs. Signed source `b291ac20` and its matching CLI are installed on both Macs; both configured MCP routes passed synthetic edit/undo/redo/save/reopen/render, and both assistant panels passed the helper handshake. No live inference was run. Ambiguous multi-window turns and queued visual input are conservatively restricted. Delivery record `cd218e51` is pushed; rollback ZIPs and prior staged bundles are retained. |
-| PdfCraft 0.20.0 | In progress | Isolated UI check, 30 assistant tests, three updater tests, split-pane targeting and four shared-session automation tests passed. An OCR cache regression failed before its fix and passed afterward. Full gates, OCR packaging and installation remain unverified. |
-| DeckCraft 0.17.0 | Verified | Reviewed two-parent merge `e035264a` passed all eight CI stages with pinned fonts. Thirteen assistant safety tests and two updater-protection tests passed. Matching signed GUI/CLI release build is in progress; installation and live acceptance remain. Assistant-origin self-control and ambiguous queued visual input are blocked. |
+| PdfCraft 0.20.0 | Deployed | Corrected source `b09ee0ec` passed local CI; optional cargo-deny was unavailable and skipped. Signed app and matching CLI are installed on both Macs; configured MCP routes passed synthetic PDF edits/save/reopen, assistant/helper smoke passed, and OCR model hashes matched. No live inference was run. Existing old CLI processes on Mini must restart to use 0.20.0. Delivery record `73ef1ca4f` is pushed. |
+| DeckCraft 0.17.0 | Deployed | Reviewed two-parent merge `e035264a` passed all eight CI stages with pinned fonts. Signed app and matching CLI are installed on both Macs; configured MCP routes and assistant/helper checks passed with synthetic presentations. No live inference was run. Assistant-origin self-control and ambiguous queued visual input are blocked. Delivery record `83c2985d` is committed locally; no upstream push or new remote. |
 | ArtCraft Launcher 0.17.0 | Deployed | Source commit `4b51723` passed native and UI suites, scoped strict Clippy, formatting, WASM and synthetic adapter checks. Its locally signed package was verified and installed on both Macs; installed certificate, marker, source and native hash passed independently. The live assistant-preserving route was checked on Mini; MacBook live UI remains untested. Existing auto-install settings triggered protected app-update attempts on Mini startup; conflicts and a running PdfCraft prevented replacement. |
 | VectorCraft assistant | In progress | An isolated prototype includes a guarded panel, helper bridge and packaging drafts. Fifteen focused assistant tests, an MCP routing test, desktop check and scoped strict Clippy passed. Newer shared merge `476bd7e` passed workspace lint and split tests (2,911 passed, 34 ignored, one filesystem-mode test passed separately) and is published. Final pinned-source checks, full gates, packaging and live acceptance remain. |
-| CLI and MCP delivery | In progress | Integrated GUI packagers do not update separate CLI executables. Matching Grid 0.18.0 and Word 0.17.0 CLIs and their existing MCP routes were updated and tested on both Macs; the MacBook Word wrapper has a verified new approval record. Mini's remaining registrations referenced PDF 0.18.0 and Deck 0.9.0; the Deck binary failed signature verification. On MacBook the Deck wrapper refuses startup because its approval record is missing, while PDF's 0.18.0 wrapper starts. Build and verify the remaining matching CLIs, preserve each host's wrapper and connection options, update approved paths/records and exercise real MCP startup. |
+| CLI and MCP delivery | Deployed | Matching Grid 0.18.0, Word 0.17.0, PDF 0.20.0 and Deck 0.17.0 CLIs and their existing MCP routes were installed and tested on both Macs; existing wrappers and connection options were retained. Mini's preexisting PDF 0.18.0 MCP processes remain running and must restart to use the new executable. VectorCraft had no existing CLI or MCP registration. |
 
 Isolated candidates are under `/private/tmp/` and are not release artifacts. The VectorCraft
 prototype additionally needs a tested non-reused view identity and end-to-end assistant, draft,
 chooser, update and packaging checks. The launcher installer draft has passed eight synthetic
 tests with signature/archive operations stubbed; its final process check still has a launch race,
-so the launcher must remain closed throughout a real replacement. Only the launcher replacement
-recorded above is claimed by this ledger. The launcher source adapter must see both the reviewed
+so the launcher must remain closed throughout a real replacement. The launcher and four app
+replacements recorded above are verified independently. The launcher source adapter must see both the reviewed
 assistant source and the exact official tag in the resulting history; an unreviewed patch or
 ordinary upstream binary is not an eligible replacement. Both Macs need separate installed-path
 verification if updated.
