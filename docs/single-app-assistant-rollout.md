@@ -34,6 +34,38 @@ Storage correction: MacBook APFS reports about12.2GB immediately unallocated, wh
 capacity. The earlier11GiB `df` observation was not total available storage; it is not a rollout
 blocker. Builds remain on Mini for shared artifact reuse, not because MacBook lacks capacity.
 
+## PdfCraft 0.20.0 reconciliation — 2026-11-09
+
+| Workstream | State | Acceptance and evidence |
+| --- | --- | --- |
+| Official source and assistant | In progress | Resolve the 0.20.0 release and retain assistant, OCR review, split panes, automation, and managed updates. Textual conflicts resolved; formatting, a locked UI check and 30 locked assistant unit tests against locally resolved shared commit b347 passed. Earlier local-path checks passed three updater unit tests and four automation shared-session tests. The split-pane test edits only the explicitly targeted document; an OCR review identity regression failed before its cleanup and passed afterward. These checks used an uncommitted shared-library candidate and the exact upstream 7ee print source. Generated attribution was refreshed; `cargo --offline --locked xtask layers` passed (40 crates), and `cargo --offline --locked xtask assets` passed (250 repository assets, seven bundled, 22 fetched at build time). The lock advances Tokio from 1.53.1 to the minimum compatible 1.53.2 and adds assistant dependencies. The local CI bundle passed with cargo-deny skipped; a locked release build, signing and live acceptance remain pending. |
+| Signed package and installation | Not started | Qualify source, OCR resources, signed package and assistant behavior before the protected launcher replaces the normal app on either Mac. |
+
+The corrected local `cargo --offline --locked xtask ci` completed its ten listed steps against
+shared b347 and the pinned font and translation inputs. The local `deny` step explicitly skipped
+because cargo-deny was unavailable; advisories and dependency bans remain unverified. The first
+run lacked OCR models and failed the OCR tests; the rerun used installed ONNX models whose hashes
+match `ATTRIBUTION.toml`. Official 0.20.0 also reproduced the APFS non-UTF-8 filename probe and
+minimum-width menu test failures. The updated tests verify the volume's rejection fails closed,
+and open the collapsed menu to reach File and Open while checking the Assistant button at minimum
+width. Both focused tests and the corrected full test suite passed. This is not package or live
+installation acceptance.
+
+The existing deployment described below remains the last verified installation. The focused UI
+check is not a release build. The assistant tests initially had one sandbox-denied loopback bind;
+the complete 30-test suite passed when the synthetic temporary listener was permitted. No
+0.20.0 package, installation or live behavior is claimed at this checkpoint.
+
+### PdfCraft matching CLI and MCP delivery
+
+| Workstream | State | Acceptance / remaining verification |
+| --- | --- | --- |
+| PdfCraft 0.20.0 CLI | In progress | `cargo check --offline --locked -p pdfcraft-cli` passed against local b347. Build `pdfcraft-cli` from the exact verified integrated source with locked inputs; verify version, signature and archive before staging a versioned installation. Retain rollback and do not replace a running server. |
+| Codex MCP on both Macs | Not started | Inventory existing command and arguments without exposing credentials. Mini currently points at `/Users/andy/.local/share/pdfcraft/0.18.0/pdfcraft-cli mcp` (verified 0.18.0); MacBook uses `/Users/andy/.local/share/pdfcraft/pdfcraft-mcp-wrapper mcp` and its shared SHA-256-checking core; CLI 0.18.0 and a synthetic MCP initialize passed on 2026-11-09. Preserve existing connection/root arguments and other configuration, retarget only the existing PdfCraft command after the matching CLI is verified, and restart only a task-owned server. Run MCP initialize/tool-list and disposable synthetic PDF read/edit/save/reopen on each host; verify its headless routing. Do not touch user documents or active conversations. |
+
+The integrated standard app package contains the GUI executable, not the separately distributed
+CLI. The configured headless MCP server is independent of the app's embedded assistant bridge.
+
 ## PDF source verification checkpoint
 
 Full `cargo xtask ci` passed all10 gates (log `/private/tmp/pdfcraft-single-app-ci.log`),

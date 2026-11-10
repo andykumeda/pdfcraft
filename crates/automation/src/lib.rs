@@ -22,6 +22,7 @@ mod content;
 mod conventions;
 pub mod file_access;
 mod forms;
+mod hairlines;
 mod layers;
 mod links;
 #[cfg(feature = "mcp")]
@@ -48,7 +49,6 @@ use serde_json::{Value, json};
 pub use pdfcraft_render::Pixels;
 pub use tools::{ToolDef, tools};
 
-use file_access::foreign_share;
 use text_cache::TextCache;
 
 mod assemble;
@@ -71,10 +71,16 @@ use pages::{DEFAULT_DPI, MAX_DPI, encode_png, rendered_content};
 use pages::{FIND_FIRST_BATCH, FIND_MAX_WARNING_BYTES, FIND_MAX_WARNINGS, extract_parallel};
 #[cfg(test)]
 pub(crate) use paths::MAX_INPUT;
-use paths::{child, lexical, unused, write_atomic};
+use paths::{child, lexical, write_atomic};
 pub(crate) use paths::{read_input, read_input_bytes};
 #[cfg(test)]
 use paths::{write_atomic_synced, write_atomic_with};
+
+struct OcrReview {
+    handle: u64,
+    guard: pdfcraft_engine::ocr::OcrGuard,
+    pages: Vec<pdfcraft_engine::ocr::OcrPage>,
+}
 
 /// A headless PdfCraft session driven by tool calls.
 pub struct Automation {
@@ -92,6 +98,11 @@ pub struct Automation {
     /// Documents that lost a listing to the cap. A page of one with no listing is refused rather
     /// than read as "a number is a position", which the page may no longer match.
     evicted: HashSet<DocId>,
+    /// Review sessions held for `ocr_words` (a guard and the pages read), by document.
+    ocr_reviews: HashMap<DocId, OcrReview>,
+    next_ocr_review: u64,
+    /// What object_copy copied, for object_paste into any open document.
+    objects_clipboard: Option<pdfcraft_engine::ObjectClipboard>,
     /// Saved-source identities prevent reused document ids in another session from hitting caches.
     cache_sources: HashMap<DocId, Weak<Vec<u8>>>,
 }
@@ -112,6 +123,9 @@ impl Automation {
             texts: TextCache::default(),
             listed: HashMap::new(),
             evicted: HashSet::new(),
+            ocr_reviews: HashMap::new(),
+            next_ocr_review: 0,
+            objects_clipboard: None,
             cache_sources: HashMap::new(),
         }
     }
@@ -182,6 +196,7 @@ impl Automation {
         let sources: HashMap<_, _> = self.session.docs().iter().map(|doc| (doc.id, Arc::downgrade(&doc.saved_bytes()))).collect();
         let same = |id: &DocId| self.cache_sources.get(id).zip(sources.get(id)).is_some_and(|(old, new)| old.ptr_eq(new));
         self.renderers.retain(|id, _| same(id));
+        self.ocr_reviews.retain(|id, _| same(id));
         self.evicted.retain(|id| sources.contains_key(id));
         self.listed.retain(|(id, _), _| {
             if same(id) {

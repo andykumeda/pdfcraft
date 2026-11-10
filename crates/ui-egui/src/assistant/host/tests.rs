@@ -92,6 +92,24 @@ fn explicit_document_ids_creation_background_edits_and_normal_undo_work() {
 }
 
 #[test]
+fn assistant_targets_explicit_documents_across_split_panes() {
+    let mut app = PdfCraftApp::new();
+    let mut guard = Guard::new(&app, String::new(), Vec::new());
+    let first = success(&mut app, &mut guard, "doc_create", json!({"from":"blank"}))["doc"].as_u64().unwrap();
+    let second = success(&mut app, &mut guard, "doc_create", json!({"from":"blank"}))["doc"].as_u64().unwrap();
+    app.split_tab(0, false);
+    assert_ne!(app.place_of(0), app.place_of(1));
+    let active = app.active_ids().unwrap().1;
+    guard = Guard::new(&app, String::new(), Vec::new());
+    let target = if active == DocId(first) { second } else { first };
+    success(&mut app, &mut guard, "doc_set_info", json!({"doc":target,"key":"Title","value":"Split target"}));
+    assert_eq!(app.session.get(DocId(target)).unwrap().info.title.as_deref(), Some("Split target"));
+    assert_ne!(app.session.get(active).unwrap().info.title.as_deref(), Some("Split target"));
+    assert_eq!(app.active_ids().unwrap().1, active);
+    assert_ne!(app.place_of(0), app.place_of(1));
+}
+
+#[test]
 fn normal_mcp_save_open_and_root_confinement_replace_side_panel_file_grants() {
     let directory = Directory::new();
     let root = directory.0.join("allowed");

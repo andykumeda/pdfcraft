@@ -22,11 +22,15 @@ pub(crate) struct Updates {
     updater: Updater,
     /// The Updates dialog is showing.
     pub(crate) open: bool,
-    /// Ask for a newer release at start; the desktop app turns it on, so tests never reach the network.
+    /// Ask for a newer release at start, unless Preferences says not to; the desktop app turns
+    /// it on, so tests never reach the network.
     #[cfg(not(target_arch = "wasm32"))]
     startup_check: bool,
     #[cfg(not(target_arch = "wasm32"))]
     check_requested: bool,
+    /// How many times `on_exit` called [`Updates::exiting`].
+    #[cfg(test)]
+    exits: u32,
 }
 
 impl Default for Updates {
@@ -40,6 +44,20 @@ impl Default for Updates {
             startup_check: false,
             #[cfg(not(target_arch = "wasm32"))]
             check_requested: false,
+            #[cfg(test)]
+            exits: 0,
+        }
+    }
+}
+
+impl Updates {
+    /// Starts the helper of an update that waits for the app to exit. Later calls do nothing.
+    pub(crate) fn exiting(&mut self) {
+        #[cfg(not(target_arch = "wasm32"))]
+        self.updater.start_pending_update();
+        #[cfg(test)]
+        {
+            self.exits += 1;
         }
     }
 }
@@ -101,10 +119,12 @@ impl PdfCraftApp {
         #[cfg(not(target_arch = "wasm32"))]
         {
             let Some(ctx) = self.ctx.clone() else { return };
+            // Settled on the first frame: a preference turned on later waits for the next start.
+            let at_start = std::mem::take(&mut self.updates.startup_check) && self.update_check_at_start;
             let updates = &mut self.updates;
             if std::mem::take(&mut updates.check_requested) {
                 updates.updater.check_now(&ctx);
-            } else if updates.startup_check {
+            } else if at_start {
                 updates.updater.check_at_start(&ctx);
             }
             updates.updater.tick(&ctx);
@@ -147,6 +167,7 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         app.updates.updater.dismiss_status();
                     }
                     CheckResultResponse::CheckAgain => app.updates.check_requested = true,
+                    CheckResultResponse::RestartToUpdate => app.updates.updater.restart_to_update(),
                 }
             }
             return;
@@ -205,6 +226,23 @@ pub(crate) fn dialog(app: &mut PdfCraftApp, ctx: &egui::Context) {
                         .color(t.text_muted),
                     );
                 }
+                Status::Installing => {
+                    ui.label(tl!("Preparing the update…"));
+                }
+                Status::Ready => {
+                    if ui.add_enabled(can_restart_for_update(app), egui::Button::new(tl!("Restart to update"))).clicked() {
+                        app.updates.updater.restart_to_update();
+                    }
+                }
+                Status::Managed => {
+                    ui.label(tl!("App updates are managed by ArtCraft Launcher."));
+                }
+                Status::Updated(version) => {
+                    ui.label(format!("Updated to {version}."));
+                }
+                Status::InstallFailed(error) => {
+                    ui.label(format!("Update failed: {error}"));
+                }
             }
         }
         #[cfg(target_arch = "wasm32")]
@@ -258,5 +296,18 @@ mod preview_tests {
         assert!(can_restart_for_update(&app));
         app.enable_shared_assistant();
         assert!(can_restart_for_update(&app), "an unstarted helper does not block app updates");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use eframe::App as _;
+
+    #[test]
+    fn on_exit_calls_the_update_exit_hook_once() {
+        let mut app = PdfCraftApp::new();
+        app.on_exit(None);
+        assert_eq!(app.updates.exits, 1);
     }
 }
