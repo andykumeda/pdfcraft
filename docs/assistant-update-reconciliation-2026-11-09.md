@@ -18,26 +18,28 @@ protected route.
 | PdfCraft 0.20.0 | Deployed | Corrected source `b09ee0ec` passed local CI; optional cargo-deny was unavailable and skipped. Signed app and matching CLI are installed on both Macs; configured MCP routes passed synthetic PDF edits/save/reopen, assistant/helper smoke passed, and OCR model hashes matched. No live inference was run. Existing old CLI processes on Mini must restart to use 0.20.0. Delivery record `73ef1ca4f` is pushed. |
 | DeckCraft 0.17.0 | Deployed | Reviewed two-parent merge `e035264a` passed all eight CI stages with pinned fonts. Signed app and matching CLI are installed on both Macs; configured MCP routes and assistant/helper checks passed with synthetic presentations. No live inference was run. Assistant-origin self-control and ambiguous queued visual input are blocked. Delivery record `83c2985d` is committed locally; no upstream push or new remote. |
 | ArtCraft Launcher 0.17.0 | Deployed | Source commit `4b51723` passed native and UI suites, scoped strict Clippy, formatting, WASM and synthetic adapter checks. Its locally signed package was verified and installed on both Macs; installed certificate, marker, source and native hash passed independently. The live assistant-preserving route was checked on Mini; MacBook live UI remains untested. Existing auto-install settings triggered protected app-update attempts on Mini startup; conflicts and a running PdfCraft prevented replacement. |
-| VectorCraft assistant | In progress | An isolated prototype includes a guarded panel, helper bridge and packaging drafts. Fifteen focused assistant tests, an MCP routing test, desktop check and scoped strict Clippy passed. Newer shared merge `476bd7e` passed workspace lint and split tests (2,911 passed, 34 ignored, one filesystem-mode test passed separately) and is published. Final pinned-source checks, full gates, packaging and live acceptance remain. |
-| CLI and MCP delivery | Deployed | Matching Grid 0.18.0, Word 0.17.0, PDF 0.20.0 and Deck 0.17.0 CLIs and their existing MCP routes were installed and tested on both Macs; existing wrappers and connection options were retained. Mini's preexisting PDF 0.18.0 MCP processes remain running and must restart to use the new executable. VectorCraft had no existing CLI or MCP registration. |
+| VectorCraft 0.21.0 | Deployed | Signed assistant-enabled source `5f6cb582` and matching CLI installed on both Macs with guarded managed update policies. Parent `6cefb540` passed all 12 CI gates; the final panel-width fix passed 17 assistant tests and feature-enabled Clippy. Both installed apps passed synthetic SVG edit/undo, visible panel, helper and safe-quit checks; the signed CLI initialized isolated MCP with 34 tools. No live inference or persistent MCP registration was performed. Source is committed locally on `codex/vectorcraft-assistant`; no personal fork is configured. Policy backups and guarded reversal stages remain on both Macs. |
+| CLI and MCP delivery | Deployed | Matching Grid 0.18.0, Word 0.17.0, PDF 0.20.0 and Deck 0.17.0 CLIs and their existing MCP routes were installed and tested on both Macs; existing wrappers and connection options were retained. Mini's preexisting PDF 0.18.0 MCP processes remain running and must restart to use the new executable. VectorCraft 0.21.0 CLI is installed on both Macs and passed isolated MCP initialization; no MCP registration was created. |
 
-Isolated candidates are under `/private/tmp/` and are not release artifacts. The VectorCraft
-prototype additionally needs a tested non-reused view identity and end-to-end assistant, draft,
-chooser, update and packaging checks. The launcher installer draft has passed eight synthetic
-tests with signature/archive operations stubbed; its final process check still has a launch race,
-so the launcher must remain closed throughout a real replacement. The launcher and four app
-replacements recorded above are verified independently. The launcher source adapter must see both the reviewed
-assistant source and the exact official tag in the resulting history; an unreviewed patch or
-ordinary upstream binary is not an eligible replacement. Both Macs need separate installed-path
-verification if updated.
+## Final delivery and cleanup status
 
-After builds and verification are complete, remove the task-owned temporary build caches,
-checkouts and staging files, including the dedicated external-drive build folder. Retain committed
-source and recovery backups required for installed apps.
+The launcher and installed apps use assistant-preserving source routes; exact release and
+assistant ancestry was verified before installation. VectorCraft's official release is the
+freshness source and its local assistant branch is the managed build source. Its full CI passed
+on the parent of the final small panel-width fix; the final fix received focused tests, Clippy,
+and native signed-app acceptance on both Macs. The launcher Vector adapter has not yet performed
+a live update. Live model inference was not tested. Existing Mini PdfCraft 0.18.0 MCP processes
+must restart to use the installed CLI.
 
-To restore system-disk headroom during the work, the redundant internal GridCraft and VectorCraft
-build caches were cleaned after their copies were made on the external drive. Source checkouts and
-external caches remain for continuing verification.
+Cleanup remains incomplete. Automatic command review rejected deleting the task-owned PdfCraft
+CI cache (`/Volumes/X10 Pro/codex-craft-build-20261109/pdfcraft-ci-target`) because `rm -f` style
+commands were not permitted; no alternate deletion was attempted. The PdfCraft release cache
+and local temporary cache remain too. Earlier automatic review also rejected removing the two
+Grid staged old-app and rollback-check paths on each Mac. Preserve all independently verified
+rollback ZIPs, policy backups, Vector reversal stages, and user data. Other task-owned caches,
+checkouts, and stages remain pending a permitted cleanup.
+
+The following checkpoint is historical and does not describe current deployment status.
 
 ## Pause checkpoint
 
