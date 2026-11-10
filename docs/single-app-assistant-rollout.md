@@ -39,7 +39,7 @@ blocker. Builds remain on Mini for shared artifact reuse, not because MacBook la
 | Workstream | State | Acceptance and evidence |
 | --- | --- | --- |
 | Official source and assistant | In progress | Resolve the 0.20.0 release and retain assistant, OCR review, split panes, automation, and managed updates. Textual conflicts resolved; formatting, a locked UI check and 30 locked assistant unit tests against locally resolved shared commit b347 passed. Earlier local-path checks passed three updater unit tests and four automation shared-session tests. The split-pane test edits only the explicitly targeted document; an OCR review identity regression failed before its cleanup and passed afterward. These checks used an uncommitted shared-library candidate and the exact upstream 7ee print source. Generated attribution was refreshed; `cargo --offline --locked xtask layers` passed (40 crates), and `cargo --offline --locked xtask assets` passed (250 repository assets, seven bundled, 22 fetched at build time). The lock advances Tokio from 1.53.1 to the minimum compatible 1.53.2 and adds assistant dependencies. The local CI bundle passed with cargo-deny skipped; a locked release build, signing and live acceptance remain pending. |
-| Signed package and installation | Not started | Qualify source, OCR resources, signed package and assistant behavior before the protected launcher replaces the normal app on either Mac. |
+| Signed package and installation | Deployed | Signed 0.20.0 package and matching CLI installed and verified on both Macs; see delivery evidence below. The protected launcher adapter was not exercised. |
 
 The corrected local `cargo --offline --locked xtask ci` completed its ten listed steps against
 shared b347 and the pinned font and translation inputs. The local `deny` step explicitly skipped
@@ -60,11 +60,35 @@ the complete 30-test suite passed when the synthetic temporary listener was perm
 
 | Workstream | State | Acceptance / remaining verification |
 | --- | --- | --- |
-| PdfCraft 0.20.0 CLI | In progress | `cargo check --offline --locked -p pdfcraft-cli` passed against local b347. Build `pdfcraft-cli` from the exact verified integrated source with locked inputs; verify version, signature and archive before staging a versioned installation. Retain rollback and do not replace a running server. |
-| Codex MCP on both Macs | Not started | Inventory existing command and arguments without exposing credentials. Mini currently points at `/Users/andy/.local/share/pdfcraft/0.18.0/pdfcraft-cli mcp` (verified 0.18.0); MacBook uses `/Users/andy/.local/share/pdfcraft/pdfcraft-mcp-wrapper mcp` and its shared SHA-256-checking core; CLI 0.18.0 and a synthetic MCP initialize passed on 2026-11-09. Preserve existing connection/root arguments and other configuration, retarget only the existing PdfCraft command after the matching CLI is verified, and restart only a task-owned server. Run MCP initialize/tool-list and disposable synthetic PDF read/edit/save/reopen on each host; verify its headless routing. Do not touch user documents or active conversations. |
+| PdfCraft 0.20.0 CLI | Deployed | Signed CLI built from b09, installed in its own versioned directory on both Macs, and exercised through the configured MCP routes. Existing old processes were not replaced. |
+| Codex MCP on both Macs | Deployed | Mini points to the new versioned CLI with arguments preserved; MacBook retains its SHA-256-checking wrapper and arguments, with the approved version advanced. Each exact configured route passed a disposable synthetic edit/save/reopen. Existing MCP processes need a restart to use the new CLI. |
 
 The integrated standard app package contains the GUI executable, not the separately distributed
 CLI. The configured headless MCP server is independent of the app's embedded assistant bridge.
+
+### PdfCraft 0.20.0 delivery — 2026-11-09
+
+The normal `/Applications/PdfCraft.app` on Mini and MacBook now carries the signed integrated
+0.20.0 build from `b09ee0eccfe0b9b51abee41fcbd5e64e453f1cc2`, with official underlying
+`v0.20.0` / `2ad7717f87ad6f15b14bdf22cddc1019d6fd0aed` and assistant bridge 1. The
+same-source, signed CLI is installed separately at `~/.local/share/pdfcraft/0.20.0/pdfcraft-cli`.
+Both apps were closed immediately before an atomic directory exchange; existing 0.18.0 CLI
+processes were not stopped and must be restarted by their owners to use the new executable.
+
+| Workstream | State | Evidence / remaining checks |
+| --- | --- | --- |
+| Source and local CI | Verified | Merge `b09ee0ecc` has parents `b6b0ee057` and the official release and retains the existing task ledger. The ten-step local `cargo xtask ci` completed with pinned fonts, translations and hash-verified OCR models; cargo-deny was unavailable and explicitly skipped, so dependency advisory/ban checks are unverified. Earlier no-model, APFS filename and minimum-width failures and their targeted corrections are recorded above. |
+| Signed package | Verified | Strict signature and source, release, bridge and repository stamps passed on the extracted ZIP; both OCR model hashes match `ATTRIBUTION.toml`. The signed package and CLI are not notarized. The managed launcher adapter was not exercised for this cutover. |
+| Mini | Deployed | The existing Codex PdfCraft command now points to the 0.20.0 CLI with `mcp` arguments unchanged. Its exact route passed synthetic MCP initialize, edit, save and reopen. An isolated installed-app smoke opened the signed helper composer, typed and cleared synthetic text, and exited normally with its control listener released. Report: `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/pdfcraft-top-toolbar-d3_7wrqb/report.json`. |
+| MacBook | Deployed | Existing Codex wrapper and `mcp` arguments remain; a verified 0.20.0 executable and approved SHA-256 were added and the wrapper's approved-current pointer updated. Its exact route passed synthetic MCP initialize, edit, save and reopen. The isolated installed-app/helper smoke passed and exited normally with its listener released. Report: `/var/folders/z6/7ct4dgns2236tw0d27zdb9s40000gn/T/pdfcraft-top-toolbar-xv82chll/report.json`. |
+
+No model inference, real-document fidelity, VoiceOver, IME or clipboard acceptance was performed.
+Each Mac retains its independently verified previous 0.18.2 ZIP at
+`~/Library/Application Support/Craft/retired-apps/2026-11-09-pdfcraft-b09.noindex/PdfCraft-0.18.2-rollback.zip`.
+The staged new archives and previous app copies remain at
+`/private/tmp/pdfcraft-b09-stage-mini.JevugM` on Mini and
+`/private/tmp/pdfcraft-b09-stage-book.ITIVMX` on MacBook. The Mini's prior Codex configuration
+and MacBook's prior approved-version file are retained in their respective retired-apps folders.
 
 ## PDF source verification checkpoint
 
